@@ -82,12 +82,21 @@ end)
 
 if isr15 == false then 
 
-game.Players.LocalPlayer.Character["Nike Shoebox Costume"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["gradcap_18"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["HatAccessory"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["RedcliffKnight_HelmetAccessory"].Handle.Mesh:Destroy()
+local hatdeleter = char.Model["gradcap_18"]
+local ag = hatdeleter.Handle:FindFirstChild("Mesh")
+ag:Destroy()
 
+local hatdeleter = char.Model["HatAccessory"]
+local ag = hatdeleter.Handle:FindFirstChild("Mesh")
+ag:Destroy()
 
+local hatdeleter = char.Model["RedcliffKnight_HelmetAccessory"]
+local ag = hatdeleter.Handle:FindFirstChild("Mesh")
+ag:Destroy()
+
+local hatdeleter = char.Model["Nike Shoebox Costume"]
+local ag = hatdeleter.Handle:FindFirstChild("Mesh")
+ag:Destroy()
 print("r6 meng")
 
 else
