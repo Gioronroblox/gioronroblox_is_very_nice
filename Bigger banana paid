@@ -49,7 +49,7 @@ local Align = function(Part0, Part1,Mesh)
 end 
 
 local hat = Align(char['Nike Shoebox Costume'].Handle,char['Right Arm'],false) 
-local cf = char['Right Arm'].CFrame*CFrame.new(0,3.5,1.5)*CFrame.Angles(math.rad(180),math.rad(180),0)  
+local cf = char['Right Arm'].CFrame*CFrame.new(0,3.5,0)*CFrame.Angles(math.rad(180),math.rad(180),0)  
 hat[1].CFrame = cf:Inverse() * char['Right Arm'].CFrame  
 spawn(function()
     char.AncestryChanged:wait()
@@ -57,7 +57,7 @@ spawn(function()
 end)
 
 local hat = Align(char['gradcap_18'].Handle,char['Right Arm'],false) 
-local cf = char['Right Arm'].CFrame*CFrame.new(0,3.5,0)*CFrame.Angles(math.rad(180),math.rad(180),0)
+local cf = char['Right Arm'].CFrame*CFrame.new(0,2.5,1.5)*CFrame.Angles(math.rad(180),math.rad(180),0)
 hat[1].CFrame = cf:Inverse() * char['Right Arm'].CFrame 
 spawn(function()
     char.AncestryChanged:wait()
