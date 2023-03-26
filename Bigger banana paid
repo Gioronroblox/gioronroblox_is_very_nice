@@ -65,7 +65,7 @@ spawn(function()
 end)
 
 local hat = Align(char['RedcliffKnight_HelmetAccessory'].Handle,char['Right Arm'],false)
-local cf = char['Right Arm'].CFrame*CFrame.new(0,-4,0)*CFrame.Angles(math.rad(180),math.rad(0),0)
+local cf = char['Right Arm'].CFrame*CFrame.new(0,-4,0)*CFrame.Angles(math.rad(180),math.rad(90),0)
 hat[1].CFrame = cf:Inverse() * char['Right Arm'].CFrame 
 spawn(function()
     char.AncestryChanged:wait()
@@ -73,7 +73,7 @@ spawn(function()
 end)
 
 local hat = Align(char['Nike Shoebox Costume'].Handle,char['Right Arm'],false) 
-local cf = char['Right Arm'].CFrame*CFrame.new(0,2.5,1)*CFrame.Angles(math.rad(90),math.rad(90),0)
+local cf = char['Right Arm'].CFrame*CFrame.new(0,2.5,1)*CFrame.Angles(math.rad(180),math.rad(90),0)
 hat[1].CFrame = cf:Inverse() * char['Right Arm'].CFrame 
 spawn(function()
     char.AncestryChanged:wait()
