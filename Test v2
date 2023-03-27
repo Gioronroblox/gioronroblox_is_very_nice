@@ -2597,4 +2597,7 @@ end
 wait(6)
 effx:Destroy()
 effx2:Destroy()
-effx3:De
+effx3:Destroy()
+elocacenter:Destroy()
+end))
+end
