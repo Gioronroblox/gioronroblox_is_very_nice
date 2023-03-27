@@ -958,7 +958,7 @@ weit.Elasticity=0
 
 game:GetService("Players").LocalPlayer.Character["RCap"].Handle.att1_Handle.Parent = weit
 weit.att1_Handle.Rotation = Vector3.new(-0,0,0)
-weit.att1_Handle.Position = Vector3.new(-0,0,-1)
+weit.att1_Handle.Position = Vector3.new(-0,0,-0)
 
 game:GetService("Players").LocalPlayer.Character["Reindeernose"].Handle.att1_Handle.Parent = weit
 weit.att1_Handle.Rotation = Vector3.new(-0,0,0)
