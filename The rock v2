@@ -1,6 +1,5 @@
 --by gioronroblox
 
-game.Players.LocalPlayer.Character["RobloxVisor2019"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["SeeMonkey"].Handle.Mesh:Destroy() --Pink Hair
 game.Players.LocalPlayer.Character["Pink Hair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy() --LavanderHair
@@ -960,9 +959,9 @@ weit.Elasticity=0
 
 game:GetService("Players").LocalPlayer.Character["Despacitegg"].Handle.att1_Handle.Parent = weit
 weit.att1_Handle.Rotation = Vector3.new(-0,0,0)
-weit.att1_Handle.Position = Vector3.new(-0,0,-0)
+weit.att1_Handle.Position = Vector3.new(-0,0,-3)
 
-game:GetService("Players").LocalPlayer.Character["RobloxVisor2019"].Handle.att1_Handle.Parent = weit
+game:GetService("Players").LocalPlayer.Character["Reindeernose"].Handle.att1_Handle.Parent = weit
 weit.att1_Handle.Rotation = Vector3.new(-0,0,0)
 weit.att1_Handle.Position = Vector3.new(-0,0,-1)
 
