@@ -988,7 +988,7 @@ LeftShoulder = Torso["Left Shoulder"]
 RightHip = Torso["Right Hip"]
 LeftHip = Torso["Left Hip"]
 Character.Archivable = true
-
+Player:ClearCharacterAppearance()
 
 IT = Instance.new
 CF = CFrame.new
