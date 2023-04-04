@@ -971,7 +971,7 @@ Player = game:GetService("Players").LocalPlayer
 PlayerGui = Player.PlayerGui
 Cam = workspace.CurrentCamera
 Backpack = Player.Backpack
-Character = Workspace.non
+Character = Player.Character
 Humanoid = Character.Humanoid
 Mouse = Player:GetMouse()
 RootPart = Character["HumanoidRootPart"]
@@ -1019,7 +1019,7 @@ local ROOTC0 = CF(0, 0, 0) * ANGLES(RAD(-90), RAD(0), RAD(180))
 local NECKC0 = CF(0, 1, 0) * ANGLES(RAD(-90), RAD(0), RAD(180))
 local RIGHTSHOULDERC0 = CF(-0.5, 0, 0) * ANGLES(RAD(0), RAD(90), RAD(0))
 local LEFTSHOULDERC0 = CF(0.5, 0, 0) * ANGLES(RAD(0), RAD(-90), RAD(0))
-local DAMAGEMULTIPLIER = 1
+local DAMAGEMULTIPLIER = 0
 local ANIM = "Idle"
 local ATTACK = false
 local EQUIPPED = false
@@ -1701,7 +1701,6 @@ function ApplyDamage(Humanoid,Damage,TorsoPart)
 end
 
 function ApplyAoE(POSITION,RANGE,MINDMG,MAXDMG,FLING,INSTAKILL)
-	
 end
 
 --//=================================\\
