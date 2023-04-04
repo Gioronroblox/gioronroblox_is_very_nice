@@ -3,8 +3,9 @@ game.Players.LocalPlayer.Character["Pink Hair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy() --LavanderHair
 game.Players.LocalPlayer.Character["LavanderHair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Robloxclassicred"].Handle.Mesh:Destroy()
- --VarietyShades02
- --TennisBall
+--game.Players.LocalPlayer.Character["Surfboard"].Handle.Handle:Destroy()
+game.Players.LocalPlayer.Character["VANS_Umbrella"].Handle.Mesh:Destroy()
+
 
 local c = game.Players.LocalPlayer.Character
 for i, v in pairs({"Right Arm", "Left Arm"}) do
@@ -22,10 +23,10 @@ for i, v in pairs({"Right Leg", "Left Leg"}) do
     Leg.Parent = c
 end
 
-local v3_net, v3_808 = Vector3.new(0, 25.1, 0), Vector3.new(-8, 0, -8)
+local v3_net, v3_808 = Vector3.new(0, 25.1, 0), Vector3.new(8, 0, 8)
 		local function getNetlessVelocity(realPartVelocity)
 			local mag = realPartVelocity.Magnitude
-			if mag > -1 then
+			if mag > 1 then
 				local unit = realPartVelocity.Unit
 				if (unit.Y > 0.25) or (unit.Y < -0.75) then
 					return unit * (25.1 / unit.Y)
@@ -668,10 +669,10 @@ if R15toR6 then
 		end
 		local R6joints = {
 			neck = {
-				Parent = R6parts.torso,
+				Parent = Scarf,
 				Name = "Neck",
-				Part0 = R6parts.torso,
-				Part1 = R6parts.head,
+				Part0 = Scarf, --R6parts.torso
+				Part1 = Scarf, --R6parts.head
 				C0 = cf(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0),
 				C1 = cf(0, -0.5, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0)
 			},
@@ -790,11 +791,11 @@ end
 
 local biggesthandle = nil
 for i, v in pairs(c:GetChildren()) do
-    if v:IsA("Accessory") then
+    if v:IsA("Accessory") and v.Name == "VANS_Umbrella" then
         local handle = gp(v, "Handle", "BasePart")
         if biggesthandle then
             if biggesthandle.Size.Magnitude < handle.Size.Magnitude then
-                biggesthandle = handle
+                biggesthandle = Handle
             end
        else
             biggesthandle = gp(v, "Handle", "BasePart")
@@ -880,21 +881,21 @@ local hat2 = gp(cplayer, "SeeMonkey", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Torso"]
-att2.Position = Vector3.new(0, -0, 0)
+att2.Position = Vector3.new(0, -1, 0)
 att2.Rotation = Vector3.new(90, 0, 0)
 
 local hat2 = gp(cplayer, "Pink Hair", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Left Arm"]
-att2.Position = Vector3.new(0, -0, 0)
+att2.Position = Vector3.new(0, -1, 0)
 att2.Rotation = Vector3.new(90, 0, 0)
 
 local hat2 = gp(cplayer, "Kate Hair", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Right Arm"]
-att2.Position = Vector3.new(-0, -0, 0)
+att2.Position = Vector3.new(-0, -1, 0)
 att2.Rotation = Vector3.new(90, 0, 0) --LavanderHair
 
 local hat2 = gp(cplayer, "LavanderHair", "Accessory")
@@ -909,70 +910,62 @@ local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Left Leg"]
 att2.Position = Vector3.new(-0, 0, 0) 
-att2.Rotation = Vector3.new(90, 0, 0) 
+att2.Rotation = Vector3.new(90, 0, 0)
 
-
-
---[[
-	Originally written by TsarMac
-	Modified by foodman54
-	Rewritten (:soulless:) by GizmoTjaz
-]]
-
--- Services
-local runService = game:GetService("RunService")
-local playerService = game:GetService("Players")
-
--- Variables
-local headHorFactor = 1
-local headVerFactor = .6
-local bodyHorFactor = .5
-local bodyVerFactor = .4
-local updateSpeed = .5 / 2
-
-local plr = playerService.LocalPlayer
-local cam = workspace.CurrentCamera
-local mouse = plr:GetMouse()
-
-local char = plr.Character or plr.CharacterAdded:wait()
-local hum = char:WaitForChild("Humanoid")
-local isR6 = hum.RigType == Enum.HumanoidRigType.R6
-local head = char.Head
-local root = char.HumanoidRootPart
-local torso = isR6 and char.Torso or char.UpperTorso
-local neck = isR6 and torso.Neck or head.Neck
-local waist = not isR6 and torso.Waist
-
-local neckC0 = neck.C0
-local waistC0 = not isR6 and waist.C0
-
-neck.MaxVelocity = 1/3
-
-runService.RenderStepped:Connect(function ()
-
-	-- Check if every required body part exists and whether the CurrentCamera's CameraSubject is the Humanoid
-	if torso and head and ((isR6 and neck) or (neck and waist)) and cam.CameraSubject == hum then
-
-		local camCF = cam.CFrame
-		local headCF = head.CFrame
-
-		local torsoLV = torso.CFrame.lookVector
-
-		local dist = (headCF.p - camCF.p).magnitude
-		local diff = headCF.Y - camCF.Y
-
-		local asinDiffDist = math.asin(diff / dist)
-		local whateverThisDoes = ((headCF.p - camCF.p).Unit:Cross(torsoLV)).Y
-
-		if isR6 then
-			neck.C0 = neck.C0:lerp(neckC0 * CFrame.Angles(-1 * asinDiffDist * headVerFactor, 0, -1 * whateverThisDoes * headHorFactor), updateSpeed)
-		else
-			neck.C0 = neck.C0:lerp(neckC0 * CFrame.Angles(asinDiffDist * headVerFactor, -1 * whateverThisDoes * headHorFactor, 0), updateSpeed)
-			waist.C0 = waist.C0:lerp(waistC0 * CFrame.Angles(asinDiffDist * bodyVerFactor, -1 * whateverThisDoes * bodyHorFactor, 0), updateSpeed)
-		end
-
-	end
+_G.loop = true
+local player = game.Players.LocalPlayer
+local char = player.Character
+local Align = function(Part0, Part1,Mesh)
+    local Aligns = {
+        AlignOrientation = Instance.new("AlignOrientation", Part0),
+        AlignPosition = Instance.new("AlignPosition", Part0)
+    }
+    
+    local Attachments = {
+        Attach0 = Instance.new("Attachment", Part0),
+        Attach1 = Instance.new("Attachment", Part1)
+    }
+    local m = Part0:FindFirstChildOfClass('SpecialMesh')--This will get the first "SpecialMesh" it finds if it does not find any, then it will return nil
+    if Mesh and m then --If Mesh is set to true and it finds a mesh it will destroy it
+        m:Destroy()
+    end
+    Part0:BreakJoints()
+    Aligns.AlignOrientation.Attachment0 = Attachments.Attach0
+    Aligns.AlignOrientation.Attachment1 = Attachments.Attach1
+    Aligns.AlignOrientation.Responsiveness = math.huge
+    Aligns.AlignOrientation.RigidityEnabled = true
+    
+    Aligns.AlignPosition.Attachment0 = Attachments.Attach0
+    Aligns.AlignPosition.Attachment1 = Attachments.Attach1
+    Aligns.AlignPosition.Responsiveness = math.huge
+    Aligns.AlignPosition.RigidityEnabled = true
+        Aligns.AlignPosition.MaxForce = 999999999
+        spawn(function()
+            while _G.loop do 
+                local mag = (Part0.Position - (Part1.CFrame*Attachments.Attach0.CFrame:Inverse()).p).magnitude--magnitude can get the distance between two cframe or position
+                if mag >= 5 then 
+                Part0.CFrame = Part1.CFrame*Attachments.Attach0.CFrame:Inverse()
+                end
+                Part0.Velocity = Vector3.new(0,35,0)
+                game['Run Service'].Heartbeat:wait()
+                end
+        end)
+ return {Attachments.Attach0, Attachments, Aligns}
+        
+end 
+local hat = Align(char['VANS_Umbrella'].Handle,char['HumanoidRootPart'],false)
+local cf = char['HumanoidRootPart'].CFrame*CFrame.new(0,-20,-0)*CFrame.Angles(math.rad(0),math.rad(0),0)
+hat[1].CFrame = cf:Inverse() * char['HumanoidRootPart'].CFrame
+spawn(function()
+    char.AncestryChanged:wait()--if you respawn, it will stop the  loop to avoid lag of using it over and over
+    _G.loop = false 
 end)
+for i,v in pairs (char:GetChildren()) do
+	if v:IsA("Accessory") then
+		v.Handle.Massless = true
+		v.Handle.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
+	end
+end
 
 Player = game:GetService("Players").LocalPlayer
 PlayerGui = Player.PlayerGui
