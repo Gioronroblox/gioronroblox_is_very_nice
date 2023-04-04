@@ -1,32 +1,6 @@
 game.Players.LocalPlayer.Character["Necklace"].Handle.Mesh:Destroy()
 
 loadstring(game:HttpGet(("https://pastebin.com/raw/GgH0dUDy"),true))() --reanim
-local lp = game:GetService("Players").LocalPlayer
-local rs = game:GetService("RunService")
-local stepped = rs.Stepped
-local heartbeat = rs.Heartbeat
-local renderstepped = rs.RenderStepped
-local sg = game:GetService("StarterGui")
-local ws = game:GetService("Workspace")
-local cf = CFrame.new
-local v3 = Vector3.new
-local v3_0 = Vector3.zero
-local inf = math.huge
-
-local cplayer = lp.Character
-
-local v3 = Vector3.new
-
-local function gp(parent, name, className)
-    if typeof(parent) == "Instance" then
-        for i, v in pairs(parent:GetChildren()) do
-            if (v.Name == name) and v:IsA(className) then
-                return v
-            end
-        end
-    end
-    return nil
-end
 
 local hat2 = gp(cplayer, "Necklace", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
