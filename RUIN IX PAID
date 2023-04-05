@@ -4,7 +4,6 @@ game.Players.LocalPlayer.Character["LavanderHair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Robloxclassicred"].Handle.Mesh:Destroy()--
 game.Players.LocalPlayer.Character["SeeMonkey"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Surfboard"].Handle.Handle:Destroy() ---LongHairBeanie
-game.Players.LocalPlayer.Character["MeshPartAccessory"].Handle.Handle:Destroy()
 
 game:GetService("Players").LocalPlayer.Character.MeshPartAccessory.Name = 'ala 3 :V'--HawkmanWings
  --Surfboard
