@@ -3,10 +3,13 @@ game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy() --Lavander
 game.Players.LocalPlayer.Character["LavanderHair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Robloxclassicred"].Handle.Mesh:Destroy()--
 game.Players.LocalPlayer.Character["SeeMonkey"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["AJBackAccessory"].Handle.Handle:Destroy() ---LongHairBeanie
-game.Players.LocalPlayer.Character["MeshPartAccessory"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["Surfboard"].Handle.Handle:Destroy() ---LongHairBeanie
+game.Players.LocalPlayer.Character["MeshPartAccessory"].Handle.Handle:Destroy()
 
-
+game:GetService("Players").LocalPlayer.Character.MeshPartAccessory.Name = 'ala 3 :V'--HawkmanWings
+ --Surfboard
+ --VarietyShades02
+ --TennisBall
 
 local c = game.Players.LocalPlayer.Character
 for i, v in pairs({"Right Arm", "Left Arm"}) do
@@ -878,7 +881,7 @@ local function gp(parent, name, className)
     return nil
 end
 
-local hat2 = gp(cplayer, "SeeMonkey", "Accessory")
+local hat2 = gp(cplayer, "LUAhEAD", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Torso"]
@@ -3504,13 +3507,13 @@ rightwing[3].second.asd.Weld.C0 = Lerp(rightwing[3].second.asd.Weld.C0, CFrame.n
 
 rightwing[1].second.asd.Transparency = 1  --this no work sometimes...
 
-game:GetService("Players").LocalPlayer.Character["MeshPartAccessory"].Handle.att1_Handle.Parent = rightwing[1].second.asd
+game:GetService("Players").LocalPlayer.Character["ala 3 :V"].Handle.att1_Handle.Parent = rightwing[1].second.asd
 rightwing[1].second.asd.att1_Handle.Rotation = Vector3.new(-10,160,-0)
 rightwing[1].second.asd.att1_Handle.Position = Vector3.new(3.25,-0.75,1)
 
-game:GetService("Players").LocalPlayer.Character["AJBackAccessory"].Handle.att1_Handle.Parent = leftwing[1].second.asd
-leftwing[1].second.asd.att1_Handle.Rotation = Vector3.new(-10,190,-0)
-leftwing[1].second.asd.att1_Handle.Position = Vector3.new(3.25,-0.5,0) --LongHairBeanie
+game:GetService("Players").LocalPlayer.Character["Surfboard"].Handle.att1_Handle.Parent = rightwing[3].second.asd
+rightwing[3].second.asd.att1_Handle.Rotation = Vector3.new(-0,90,-90)
+rightwing[3].second.asd.att1_Handle.Position = Vector3.new(2,-1,0)
 
 drew = true
 local debounce = false
