@@ -1,0 +1,513 @@
+-- [D4C's Dimensional Travel and Cloning] --
+
+-- Based on the ability of Funny Valentine's Stand, Dirty Deeds Done Dirt Cheap, from Part 7 of JoJo's Bizarre Adventure.
+
+-- Everything in this script was written by Tsuagon (except for the parts that were converted by ttyyuu12345's model to script plugin).
+
+----------------------------------------------------------------------------------------------------
+
+-- Player Stuff --
+
+local player = game:GetService("Players").LocalPlayer
+local char = player.Character
+local head = char.Head
+local rarm = char:FindFirstChild("Right Arm") or char:FindFirstChild("RightUpperArm")
+local larm = char:FindFirstChild("Left Arm") or char:FindFirstChild("LeftUpperArm")
+local rleg = char:FindFirstChild("Right Leg") or char:FindFirstChild("RightUpperLeg")
+local lleg = char:FindFirstChild("Left Leg") or char:FindFirstChild("LeftUpperLeg")
+local torso = char:FindFirstChild("Torso") or char:FindFirstChild("UpperTorso")
+local root = char.HumanoidRootPart
+local humanoid = char.Humanoid
+
+char.Archivable = true
+
+local mouse = player:GetMouse()
+
+----------------------------------------------------------------------------------------------------
+
+-- General Stuff -- 
+
+local tween = game:GetService("TweenService")
+
+isindimension = false
+clonecreated = false
+
+-- Visual Effects
+
+local indimensiontint = Instance.new("ColorCorrectionEffect")
+indimensiontint.Brightness = 0
+indimensiontint.TintColor = Color3.new(1, 1, 1)
+indimensiontint.Parent = game:GetService("Lighting")
+indimensiontint.Enabled = true
+
+local dimensionalflash = Instance.new("ColorCorrectionEffect")
+dimensionalflash.Brightness = 0
+dimensionalflash.TintColor = Color3.new(1, 1, 1)
+dimensionalflash.Parent = game:GetService("Lighting")
+indimensiontint.Enabled = true
+
+-- Sounds
+
+local dimensionvc = Instance.new("Sound", head)
+dimensionvc.Volume = 3.5
+dimensionvc.SoundId = "rbxassetid://7096933070"
+
+local dimensiontravelsfx = Instance.new("Sound", torso)
+dimensiontravelsfx.Volume = 2.5
+dimensiontravelsfx.SoundId = "rbxassetid://7096933834"
+
+local flagsfx = Instance.new("Sound")
+flagsfx.Volume = 5.5
+flagsfx.SoundId = "rbxassetid://7082619175"
+
+local clonecreatesfx = Instance.new("Sound")
+clonecreatesfx.Volume = 5.5
+clonecreatesfx.SoundId = "rbxassetid://7082620048"
+
+local dimensionambience = Instance.new("Sound", workspace)
+dimensionambience.Volume = 3.5
+dimensionambience.Looped = true
+dimensionambience.SoundId = "rbxassetid://5113213873"
+
+-- Clone Stuff
+
+local charclone = char:Clone()
+
+-- D4C Flag
+
+local d4cflag = Instance.new("Part") --Converted with ttyyuu12345's model to script plugin v4
+d4cflag.Name = "D4CFlag"
+d4cflag.Parent = workspace
+d4cflag.Rotation = Vector3.new(0, 90, 0)
+d4cflag.Color = Color3.new(0.972549, 0.972549, 0.972549)
+d4cflag.Size = Vector3.new(6.213772773742676, 0.002194769214838743, 4.0567193031311035)
+d4cflag.Anchored = true
+d4cflag.Material = Enum.Material.SmoothPlastic
+d4cflag.CanCollide = false
+d4cflag.Transparency = 1
+
+local flagdecald4cflag = Instance.new("Decal")
+flagdecald4cflag.Parent = d4cflag
+flagdecald4cflag.Texture = "http://www.roblox.com/asset/?id=7748927842"
+flagdecald4cflag.Face = Enum.NormalId.Top
+flagdecald4cflag.Transparency = 1
+
+-- D4C's Dimension
+
+local d4cdimension = Instance.new("Model") --Converted with ttyyuu12345's model to script plugin v4
+d4cdimension.Name = "D4C's Dimension"
+d4cdimension.Parent = workspace
+
+local sanddune1 = Instance.new("Part")
+sanddune1.Parent = d4cdimension
+sanddune1.CFrame = CFrame.new(-82.603241, 13814.1377, -58.244278, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+sanddune1.Position = Vector3.new(-82.60324096679688, 13814.1376953125, -58.24427795410156)
+sanddune1.Color = Color3.new(1, 0.8, 0.6)
+sanddune1.Size = Vector3.new(148.88247680664062, 148.88247680664062, 148.88247680664062)
+sanddune1.Anchored = true
+sanddune1.BottomSurface = Enum.SurfaceType.Smooth
+sanddune1.BrickColor = BrickColor.new("Pastel brown")
+sanddune1.Material = Enum.Material.Sand
+sanddune1.TopSurface = Enum.SurfaceType.Smooth
+sanddune1.brickColor = BrickColor.new("Pastel brown")
+sanddune1.Shape = Enum.PartType.Ball
+
+local sanddune2 = Instance.new("Part")
+sanddune2.Parent = d4cdimension
+sanddune2.CFrame = CFrame.new(-62.4164734, 13833.8975, 48.8685875, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+sanddune2.Position = Vector3.new(-62.416473388671875, 13833.8974609375, 48.868587493896484)
+sanddune2.Color = Color3.new(1, 0.8, 0.6)
+sanddune2.Size = Vector3.new(148.88247680664062, 148.88247680664062, 148.88247680664062)
+sanddune2.Anchored = true
+sanddune2.BottomSurface = Enum.SurfaceType.Smooth
+sanddune2.BrickColor = BrickColor.new("Pastel brown")
+sanddune2.Material = Enum.Material.Sand
+sanddune2.TopSurface = Enum.SurfaceType.Smooth
+sanddune2.brickColor = BrickColor.new("Pastel brown")
+sanddune2.Shape = Enum.PartType.Ball
+
+local sanddune3 = Instance.new("Part")
+sanddune3.Parent = d4cdimension
+sanddune3.CFrame = CFrame.new(-183.497894, 13831.4512, 70.9595795, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+sanddune3.Position = Vector3.new(-183.49789428710938, 13831.451171875, 70.95957946777344)
+sanddune3.Color = Color3.new(1, 0.8, 0.6)
+sanddune3.Size = Vector3.new(148.88247680664062, 148.88247680664062, 148.88247680664062)
+sanddune3.Anchored = true
+sanddune3.BottomSurface = Enum.SurfaceType.Smooth
+sanddune3.BrickColor = BrickColor.new("Pastel brown")
+sanddune3.Material = Enum.Material.Sand
+sanddune3.TopSurface = Enum.SurfaceType.Smooth
+sanddune3.brickColor = BrickColor.new("Pastel brown")
+sanddune3.Shape = Enum.PartType.Ball
+
+local sanddune4 = Instance.new("Part")
+sanddune4.Parent = d4cdimension
+sanddune4.CFrame = CFrame.new(-293.163269, 13846.9023, 69.4509659, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+sanddune4.Position = Vector3.new(-293.16326904296875, 13846.90234375, 69.45096588134766)
+sanddune4.Color = Color3.new(1, 0.8, 0.6)
+sanddune4.Size = Vector3.new(148.88247680664062, 148.88247680664062, 148.88247680664062)
+sanddune4.Anchored = true
+sanddune4.BottomSurface = Enum.SurfaceType.Smooth
+sanddune4.BrickColor = BrickColor.new("Pastel brown")
+sanddune4.Material = Enum.Material.Sand
+sanddune4.TopSurface = Enum.SurfaceType.Smooth
+sanddune4.brickColor = BrickColor.new("Pastel brown")
+sanddune4.Shape = Enum.PartType.Ball
+
+local sanddune5 = Instance.new("Part")
+sanddune5.Parent = d4cdimension
+sanddune5.CFrame = CFrame.new(-160.894058, 13829.8584, -159.438004, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+sanddune5.Position = Vector3.new(-160.89405822753906, 13829.8583984375, -159.43800354003906)
+sanddune5.Color = Color3.new(1, 0.8, 0.6)
+sanddune5.Size = Vector3.new(148.88247680664062, 148.88247680664062, 148.88247680664062)
+sanddune5.Anchored = true
+sanddune5.BottomSurface = Enum.SurfaceType.Smooth
+sanddune5.BrickColor = BrickColor.new("Pastel brown")
+sanddune5.Material = Enum.Material.Sand
+sanddune5.TopSurface = Enum.SurfaceType.Smooth
+sanddune5.brickColor = BrickColor.new("Pastel brown")
+sanddune5.Shape = Enum.PartType.Ball
+
+local sanddune6 = Instance.new("Part")
+sanddune6.Parent = d4cdimension
+sanddune6.CFrame = CFrame.new(-295.558502, 13826.6279, -119.640701, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+sanddune6.Position = Vector3.new(-295.5585021972656, 13826.6279296875, -119.64070129394531)
+sanddune6.Color = Color3.new(1, 0.8, 0.6)
+sanddune6.Size = Vector3.new(148.88247680664062, 148.88247680664062, 148.88247680664062)
+sanddune6.Anchored = true
+sanddune6.BottomSurface = Enum.SurfaceType.Smooth
+sanddune6.BrickColor = BrickColor.new("Pastel brown")
+sanddune6.Material = Enum.Material.Sand
+sanddune6.TopSurface = Enum.SurfaceType.Smooth
+sanddune6.brickColor = BrickColor.new("Pastel brown")
+sanddune6.Shape = Enum.PartType.Ball
+
+local wall1 = Instance.new("Part")
+wall1.Name = "Wall1"
+wall1.Parent = d4cdimension
+wall1.CFrame = CFrame.new(-12.3331642, 13915.2295, -54.2163391, -5.96046448e-08, 0, -0.999999881, 0, 1, 0, 0.999999881, 0, -5.96046448e-08)
+wall1.Orientation = Vector3.new(0, -90, 0)
+wall1.Position = Vector3.new(-12.33316421508789, 13915.2294921875, -54.216339111328125)
+wall1.Rotation = Vector3.new(-180, -89.97000122070312, -180)
+wall1.Color = Color3.new(0.0666667, 0.0666667, 0.0666667)
+wall1.Transparency = 1
+wall1.Size = Vector3.new(426.1641845703125, 190.8221893310547, 2)
+wall1.Anchored = true
+wall1.BottomSurface = Enum.SurfaceType.Smooth
+wall1.BrickColor = BrickColor.new("Really black")
+wall1.Material = Enum.Material.SmoothPlastic
+wall1.TopSurface = Enum.SurfaceType.Smooth
+wall1.brickColor = BrickColor.new("Really black")
+
+local wall2 = Instance.new("Part")
+wall2.Name = "Wall2"
+wall2.Parent = d4cdimension
+wall2.CFrame = CFrame.new(-178.827469, 13920.0146, -181.557175, -0.999999881, 0, 5.96046448e-08, 0, 1, 0, -5.96046448e-08, 0, -0.999999881)
+wall2.Orientation = Vector3.new(0, 180, 0)
+wall2.Position = Vector3.new(-178.8274688720703, 13920.0146484375, -181.5571746826172)
+wall2.Rotation = Vector3.new(-180, 0, -180)
+wall2.Color = Color3.new(0.0666667, 0.0666667, 0.0666667)
+wall2.Transparency = 1
+wall2.Size = Vector3.new(426.1641845703125, 190.8221893310547, 2)
+wall2.Anchored = true
+wall2.BottomSurface = Enum.SurfaceType.Smooth
+wall2.BrickColor = BrickColor.new("Really black")
+wall2.Material = Enum.Material.SmoothPlastic
+wall2.TopSurface = Enum.SurfaceType.Smooth
+wall2.brickColor = BrickColor.new("Really black")
+
+local wall3 = Instance.new("Part")
+wall3.Name = "Wall3"
+wall3.Parent = d4cdimension
+wall3.CFrame = CFrame.new(-345.321838, 13964.5283, 10.8859558, 0, 0, 1, 0, 1, 0, -1, 0, 0)
+wall3.Orientation = Vector3.new(0, 90, 0)
+wall3.Position = Vector3.new(-345.32183837890625, 13964.5283203125, 10.885955810546875)
+wall3.Rotation = Vector3.new(0, 90, 0)
+wall3.Color = Color3.new(0.0666667, 0.0666667, 0.0666667)
+wall3.Transparency = 1
+wall3.Size = Vector3.new(426.1641845703125, 190.8221893310547, 2)
+wall3.Anchored = true
+wall3.BottomSurface = Enum.SurfaceType.Smooth
+wall3.BrickColor = BrickColor.new("Really black")
+wall3.Material = Enum.Material.SmoothPlastic
+wall3.TopSurface = Enum.SurfaceType.Smooth
+wall3.brickColor = BrickColor.new("Really black")
+
+local wall4 = Instance.new("Part")
+wall4.Name = "Wall4"
+wall4.Parent = d4cdimension
+wall4.CFrame = CFrame.new(-178.827499, 13969.3135, 138.226776, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+wall4.Position = Vector3.new(-178.82749938964844, 13969.3134765625, 138.22677612304688)
+wall4.Color = Color3.new(0.0666667, 0.0666667, 0.0666667)
+wall4.Transparency = 1
+wall4.Size = Vector3.new(426.1641845703125, 190.8221893310547, 2)
+wall4.Anchored = true
+wall4.BottomSurface = Enum.SurfaceType.Smooth
+wall4.BrickColor = BrickColor.new("Really black")
+wall4.Material = Enum.Material.SmoothPlastic
+wall4.TopSurface = Enum.SurfaceType.Smooth
+wall4.brickColor = BrickColor.new("Really black")
+
+local floor = Instance.new("Part")
+floor.Name = "Floor"
+floor.Parent = d4cdimension
+floor.CFrame = CFrame.new(-182.866577, 13869.7354, -37.2638092, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+floor.Position = Vector3.new(-182.8665771484375, 13869.7353515625, -37.26380920410156)
+floor.Color = Color3.new(1, 0.8, 0.6)
+floor.Size = Vector3.new(370.185791015625, 8.334754943847656, 368.66412353515625)
+floor.Anchored = true
+floor.BottomSurface = Enum.SurfaceType.Smooth
+floor.BrickColor = BrickColor.new("Pastel brown")
+floor.Material = Enum.Material.Sand
+floor.TopSurface = Enum.SurfaceType.Smooth
+floor.brickColor = BrickColor.new("Pastel brown")
+
+local skysphere = Instance.new("Part")
+skysphere.Name = "Sky Sphere"
+skysphere.Parent = d4cdimension
+skysphere.CFrame = CFrame.new(-177.746857, 13874.7412, -18.8979797, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+skysphere.Position = Vector3.new(-177.74685668945312, 13874.7412109375, -18.897979736328125)
+skysphere.Color = Color3.new(0.0352941, 0.537255, 0.811765)
+skysphere.Size = Vector3.new(318.41998291015625, 318.41998291015625, 318.41998291015625)
+skysphere.Anchored = true
+skysphere.BottomSurface = Enum.SurfaceType.Smooth
+skysphere.BrickColor = BrickColor.new("Electric blue")
+skysphere.CanCollide = false
+skysphere.Material = Enum.Material.Glass
+skysphere.TopSurface = Enum.SurfaceType.Smooth
+skysphere.brickColor = BrickColor.new("Electric blue")
+skysphere.Shape = Enum.PartType.Ball
+
+local skymesh = Instance.new("SpecialMesh")
+skymesh.Parent = skysphere
+skymesh.MeshId = "rbxassetid://749436186"
+skymesh.Scale = Vector3.new(189.7936553955078, 189.7936553955078, 189.7936553955078)
+skymesh.MeshType = Enum.MeshType.FileMesh
+
+local skydecal = Instance.new("Decal")
+skydecal.Name = "Sky"
+skydecal.Parent = skysphere
+skydecal.Texture = "http://www.roblox.com/asset/?id=15436783"
+skydecal.Face = Enum.NormalId.Top
+
+local tplocation = Instance.new("Part")
+tplocation.Name = "Teleport Location"
+tplocation.Parent = d4cdimension
+tplocation.CFrame = CFrame.new(-155.975861, 13873.9033, -52.8710709, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+tplocation.Position = Vector3.new(-155.97586059570312, 13873.9033203125, -52.871070861816406)
+tplocation.Transparency = 1
+tplocation.Size = Vector3.new(9.682449340820312, 0.0010000000474974513, 8.473712921142578)
+tplocation.Anchored = true
+tplocation.BottomSurface = Enum.SurfaceType.Smooth
+tplocation.Material = Enum.Material.SmoothPlastic
+tplocation.TopSurface = Enum.SurfaceType.Smooth
+
+local revolverpart = Instance.new("Part")
+revolverpart.Name = "Revolver"
+revolverpart.Parent = d4cdimension
+revolverpart.CFrame = CFrame.new(-195.631638, 13873.9551, -45.3890228, 0, -0.709113657, -0.705094218, 1, 0, 0, 0, -0.705094218, 0.709113657)
+revolverpart.Orientation = Vector3.new(0, -44.84000015258789, 90)
+revolverpart.Position = Vector3.new(-195.6316375732422, 13873.955078125, -45.38902282714844)
+revolverpart.Rotation = Vector3.new(0, -44.84000015258789, 90)
+revolverpart.Size = Vector3.new(1.1851348876953125, 1.6059741973876953, 3.303058624267578)
+revolverpart.Anchored = true
+revolverpart.BottomSurface = Enum.SurfaceType.Smooth
+revolverpart.Material = Enum.Material.SmoothPlastic
+revolverpart.TopSurface = Enum.SurfaceType.Smooth
+
+local revolvermesh = Instance.new("SpecialMesh")
+revolvermesh.Parent = revolverpart
+revolvermesh.MeshId = "rbxassetid://574986846"
+revolvermesh.Scale = Vector3.new(0.009999999776482582, 0.009999999776482582, 0.009999999776482582)
+revolvermesh.TextureId = "rbxassetid://574986956"
+revolvermesh.MeshType = Enum.MeshType.FileMesh
+
+local americanflag = Instance.new("Model")
+americanflag.Name = "American Flag"
+americanflag.Parent = d4cdimension
+
+local flagpart = Instance.new("Part")
+flagpart.Name = "Flag"
+flagpart.Parent = americanflag
+flagpart.CFrame = CFrame.new(-194.35173, 13881.8965, -50.3574944, -0.48550415, 0.100754142, -0.868409395, 0.0491667278, 0.99491173, 0.087943323, 0.872851312, 7.4505806e-09, -0.487986892)
+flagpart.Orientation = Vector3.new(-5.050000190734863, -119.33000183105469, 2.8299999237060547)
+flagpart.Position = Vector3.new(-194.3517303466797, 13881.896484375, -50.35749435424805)
+flagpart.Rotation = Vector3.new(-169.77999877929688, -60.27000045776367, -168.27999877929688)
+flagpart.Color = Color3.new(0.792157, 0.796078, 0.819608)
+flagpart.Size = Vector3.new(8.213314056396484, 3.825040578842163, 0.001000046730041504)
+flagpart.Anchored = true
+flagpart.BottomSurface = Enum.SurfaceType.Smooth
+flagpart.BrickColor = BrickColor.new("Ghost grey")
+flagpart.Material = Enum.Material.SmoothPlastic
+flagpart.TopSurface = Enum.SurfaceType.Smooth
+flagpart.brickColor = BrickColor.new("Ghost grey")
+
+local flagdecal = Instance.new("Decal")
+flagdecal.Name = "Flag Decal"
+flagdecal.Parent = flagpart
+flagdecal.Texture = "http://www.roblox.com/asset/?id=3110045580"
+
+local flagpole = Instance.new("Part")
+flagpole.Name = "Pole"
+flagpole.Parent = americanflag
+flagpole.CFrame = CFrame.new(-196.812225, 13878.0703, -46.7035408, 0.100753523, -0.775414646, 0.623362899, 0.994911671, 0.0785250142, -0.0631276071, 4.91738319e-07, 0.62655139, 0.779380322)
+flagpole.Orientation = Vector3.new(3.619999885559082, 38.650001525878906, 85.48999786376953)
+flagpole.Position = Vector3.new(-196.81222534179688, 13878.0703125, -46.70354080200195)
+flagpole.Rotation = Vector3.new(4.630000114440918, 38.560001373291016, 82.5999984741211)
+flagpole.Color = Color3.new(0.627451, 0.372549, 0.207843)
+flagpole.Size = Vector3.new(11.932415962219238, 1, 0.43390655517578125)
+flagpole.Anchored = true
+flagpole.BottomSurface = Enum.SurfaceType.Smooth
+flagpole.BrickColor = BrickColor.new("Dark orange")
+flagpole.Material = Enum.Material.Wood
+flagpole.TopSurface = Enum.SurfaceType.Smooth
+flagpole.brickColor = BrickColor.new("Dark orange")
+flagpole.Shape = Enum.PartType.Cylinder
+
+local saintsheartpart = Instance.new("Part")
+saintsheartpart.Name = "Saint's Heart"
+saintsheartpart.Parent = d4cdimension
+saintsheartpart.CFrame = CFrame.new(-201.816559, 13873.9238, -28.6692924, 0.860717893, -0.50251019, -0.0815404654, 0.0383635461, 0.223740965, -0.973894179, 0.507634997, 0.835120261, 0.211855695)
+saintsheartpart.Orientation = Vector3.new(76.87999725341797, -21.049999237060547, 9.729999542236328)
+saintsheartpart.Position = Vector3.new(-201.81655883789062, 13873.923828125, -28.669292449951172)
+saintsheartpart.Rotation = Vector3.new(77.7300033569336, -4.679999828338623, 30.280000686645508)
+saintsheartpart.Color = Color3.new(0.768627, 0.156863, 0.109804)
+saintsheartpart.Size = Vector3.new(0.8700000047683716, 0.8199999928474426, 0.7357237339019775)
+saintsheartpart.Anchored = true
+saintsheartpart.BottomSurface = Enum.SurfaceType.Smooth
+saintsheartpart.BrickColor = BrickColor.new("Bright red")
+saintsheartpart.Material = Enum.Material.Sand
+saintsheartpart.TopSurface = Enum.SurfaceType.Smooth
+saintsheartpart.brickColor = BrickColor.new("Bright red")
+
+local heartmesh = Instance.new("SpecialMesh")
+heartmesh.Parent = saintsheartpart
+heartmesh.MeshId = "rbxassetid://1676456804"
+heartmesh.Scale = Vector3.new(0.029999999329447746, 0.029999999329447746, 0.029999999329447746)
+heartmesh.MeshType = Enum.MeshType.FileMesh
+
+local heartlight = Instance.new("PointLight")
+heartlight.Parent = saintsheartpart
+heartlight.Color = Color3.new(1, 1, 0)
+heartlight.Brightness = 5.079999923706055
+heartlight.Enabled = true
+
+local corpse = Instance.new("Part")
+corpse.Name = "Saint's Corpse"
+corpse.Parent = d4cdimension
+corpse.CFrame = CFrame.new(-201.358368, 13873.8594, -29.4610214, 0.860718012, -0.50908196, 3.7252903e-09, 0.0383634046, 0.0648620054, -0.99715662, 0.507634401, 0.858270645, 0.0753580108)
+corpse.Orientation = Vector3.new(85.68000030517578, 0, 30.600000381469727)
+corpse.Position = Vector3.new(-201.35836791992188, 13873.859375, -29.461021423339844)
+corpse.Rotation = Vector3.new(85.68000030517578, 0, 30.600000381469727)
+corpse.Size = Vector3.new(5.7445068359375, 3.2587881088256836, 5.992485046386719)
+corpse.Anchored = true
+corpse.BottomSurface = Enum.SurfaceType.Smooth
+corpse.Material = Enum.Material.SmoothPlastic
+corpse.TopSurface = Enum.SurfaceType.Smooth
+
+local corpsemesh = Instance.new("SpecialMesh")
+corpsemesh.Parent = corpse
+corpsemesh.MeshId = "rbxassetid://5060511169"
+corpsemesh.TextureId = "rbxassetid://5060511240"
+corpsemesh.MeshType = Enum.MeshType.FileMesh
+
+
+----------------------------------------------------------------------------------------------------
+
+-- Main Script --
+
+function dimensionaltravel()
+	if isindimension == true then return end
+	local rootcframe = root.CFrame
+	d4cflag.CFrame = head.CFrame * CFrame.new(0, 3, 0)
+	dimensionvc:Play()
+	dimensiontravelsfx:Play()
+	humanoid.WalkSpeed = 0
+	humanoid.JumpPower = 0
+	wait(0.3)
+	flagsfx:Play()
+	coroutine.resume(coroutine.create(function()
+		tween:Create(d4cflag, TweenInfo.new(0.7), {Transparency = 0}):Play();
+		tween:Create(flagdecald4cflag, TweenInfo.new(0.7), {Transparency = 0}):Play();
+		wait(0.2)
+		tween:Create(d4cflag, TweenInfo.new(1), {CFrame = root.CFrame * CFrame.new(0, -12, 0)}):Play();
+		wait(0.1)
+		tween:Create(root, TweenInfo.new(0.5), {CFrame = root.CFrame * CFrame.new(0, -12, 0)}):Play();
+		wait(0.4)
+		tween:Create(dimensionalflash, TweenInfo.new(1), {Brightness = 5}):Play();
+	end))
+	wait(0.9)
+	humanoid.WalkSpeed = 16
+	humanoid.JumpPower = 50
+	isindimension = true
+	root.CFrame = tplocation.CFrame * CFrame.new(0, 2, 0)
+	wait(0.6)
+	dimensionambience:Play()
+	tween:Create(indimensiontint, TweenInfo.new(0.1), {TintColor = Color3.new(0.215686, 0.596078, 0.886275)}):Play();
+	tween:Create(dimensionalflash, TweenInfo.new(0.5), {Brightness = 0}):Play();
+	function exitdimension()
+		if isindimension == false then return end
+		workspace.CurrentCamera.CameraSubject = humanoid
+		isindimension = false
+		dimensionambience:Stop()
+		flagsfx:Play()
+		root.CFrame = rootcframe
+		tween:Create(indimensiontint, TweenInfo.new(0.1), {TintColor = Color3.new(1, 1, 1)}):Play();
+		tween:Create(dimensionalflash, TweenInfo.new(1), {Brightness = 5}):Play();
+		wait(0.5)
+		tween:Create(dimensionalflash, TweenInfo.new(0.5), {Brightness = 0}):Play();
+	end
+end
+
+function clonecreate()
+	if isindimension == true then return end
+	if clonecreated == true then return end
+	clonecreated = true
+	clonecreatesfx.Parent = charclone.Head
+	clonecreatesfx:Play()
+	charclone.Parent = workspace
+	charclone.HumanoidRootPart.CFrame = root.CFrame + root.CFrame.lookVector * 5
+end
+
+function cloneteleport()
+	if charclone.Parent == nil then return end
+	clonecreated = false
+	root.CFrame = charclone.HumanoidRootPart.CFrame
+	charclone.Parent = nil
+	if isindimension == true then
+		isindimension = false
+		workspace.CurrentCamera.CameraSubject = humanoid
+		dimensionambience:Stop()
+		flagsfx:Play()
+		tween:Create(indimensiontint, TweenInfo.new(0.1), {TintColor = Color3.new(1, 1, 1)}):Play();
+		tween:Create(dimensionalflash, TweenInfo.new(1), {Brightness = 5}):Play();
+		wait(0.5)
+		tween:Create(dimensionalflash, TweenInfo.new(0.5), {Brightness = 0}):Play();
+	end
+end
+
+mouse.KeyDown:Connect(function(key)
+	if key == "q" and isindimension == false then
+		dimensionaltravel()
+	elseif key == "q" and isindimension == true then
+		exitdimension()
+	end
+	
+	if key == "b" and isindimension == false then
+		clonecreate()
+	end
+	if key == "v" then
+		cloneteleport()
+	end
+	
+	local lookingatclone = false
+	if key == "j" and isindimension == true and clonecreated == true and lookingatclone == false then
+		dimensionambience:Pause()
+		tween:Create(indimensiontint, TweenInfo.new(0.1), {TintColor = Color3.new(1, 1, 1)}):Play();
+		workspace.CurrentCamera.CameraSubject = charclone
+	elseif key == "j" and isindimension == true and clonecreated == true and lookingatclone == true then
+		dimensionambience:Resume()
+		tween:Create(indimensiontint, TweenInfo.new(0.1), {TintColor = Color3.new(0.215686, 0.596078, 0.886275)}):Play();
+		workspace.CurrentCamera.CameraSubject = humanoid
+	end
+end)
