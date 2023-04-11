@@ -1,0 +1,942 @@
+game.Players.LocalPlayer.Character.Head.face:Destroy()
+--game.Players.LocalPlayer.Character.Head.Mesh:Destroy()
+
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 99 --you can upgrade the speed if you like.
+
+
+
+--[[
+    FDless reanimate by MyWorld
+    aka no client sided instances
+    damn this shit is op for its times
+    "what else do i optimize here"
+]]
+
+local reclaim = true --if you lost control over a part this will move your primary part to the part so you get it back
+local novoid = true --prevents parts from going under workspace.FallenPartsDestroyHeight if you control them
+local antiragdoll = true --removes instances that are usually used for ragdolling form your character
+local addPartsOnRun = false --allows u to add more parts and joints to the simulation after it started
+local discharscripts = true --disables all localScripts parented to your character before reanimation
+local R15toR6 = true --adds fake r6 parts and joints for animations if your character is r15
+local hatcollide = false --makes hats cancollide (credit to ShownApe) (use method 0)
+local humState16 = true --enables collisions for limbs before the humanoid dies (using hum:ChangeState)
+local walkSpeed = 13 --your walkspeed (can be changed at runtime)
+local jumpPower = 50 --your jump power (can be changed at runtime)
+local allowshiftlock = true --allows the user to use shiftlock (can be changed at runtime)
+local gravity = 196.2 --how fast the characters velocity increases while falling (can be changed at runtime)
+local simrad = 1000 --sets simulation radius to this with sethiddenproperty (nil to disable)
+local loadtime = game:GetService("Players").RespawnTime + 0.5 --anti respawn delay
+local method = 0 --reanimation method
+--methods:
+--0 - breakJoints (takes [loadtime] seconds to load)
+--1 - limbs
+--2 - limbs + anti respawn
+--3 - limbs + breakJoints after [loadtime] seconds
+--4 - remove humanoid + breakJoints
+local flingparts = { --the fling function will use the first part available for flinging from this table
+    "Torso", "RightUpperArm", "LeftUpperArm", "LowerTorso", "HumanoidRootPart", "Right Leg", "Left Leg", "Torso", "Head"
+}
+--the fling function
+--usage: fling(target, duration, velocity)
+--target can be set to: basePart, CFrame, Vector3, character model or humanoid (flings at mouse.Hit if argument not provided)
+--duration (fling time in seconds) can be set to a number or a string convertable to a number (0.5s if not provided)
+--velocity (fling part rotation velocity) can be set to a vector3 value (Vector3.new(20000, 20000, 20000) if not provided)
+local ctrlclicktp = true --makes you teleport where u point ur mouse cursor at when click and hold ctrl down
+local clickfling = 2 --click fling mode
+--false - click fling disabled
+--0 - click fling without prediction
+--1 - with prediction if pointing at a character, otherwise not flinging
+--2 - with prediction if pointing at a character, otherwise no prediction
+local maxflingtrsp = 0.5 --max transparency of the fling part (if its above this it will be set to this)
+
+local ws, rs = game:GetService("Workspace"), game:GetService("RunService")
+local plrs, uis = game:GetService("Players"), game:GetService("UserInputService")
+local lp, gs = plrs.LocalPlayer, game:GetService("GuiService")
+local stepped, heartbeat, renderstepped = rs.Stepped, rs.Heartbeat, rs.RenderStepped
+local twait, tdelay, tspawn = task.wait, task.delay, task.spawn
+local tinsert, tfind, osclock = table.insert, table.find, os.clock
+local sin, abs, sine, clamp, mrandom = math.sin, math.abs, osclock(), math.clamp, math.random
+local cf, v3, angles = CFrame.new, Vector3.new, CFrame.Angles
+local v3_0, v3_101, v3_010, v3_001, cf_0 = v3(0, 0, 0), v3(1, 0, 1), v3(0, 1, 0), v3(0, 0, 1), cf(0, 0, 0)
+local c = lp.Character
+if not c then return end
+if not c:IsDescendantOf(ws) then return end
+local c1 = c
+c.AncestryChanged:Connect(function()
+    if c1 then
+        if c1:IsDescendantOf(ws) then
+            c = c1
+        else
+            c = nil
+        end
+    end
+end)
+local function gp(parent, name, className)
+    if typeof(parent) == "Instance" then
+        for i, v in pairs(parent:GetChildren()) do
+            if (v.Name == name) and v:IsA(className) then
+                return v
+            end
+        end
+    end
+    return nil
+end
+local hum = c:FindFirstChildOfClass("Humanoid")
+local rootpart = gp(c, "HumanoidRootPart", "BasePart") or gp(c, "Torso", "BasePart") or gp(c, "UpperTorso", "BasePart") or (hum and hum.RootPart) or c:FindFirstChildWhichIsA("BasePart")
+if not rootpart then return end
+local head, torso = gp(c, "Head", "BasePart"), gp(c, "Torso", "BasePart") or gp(c, "UpperTorso", "BasePart")
+
+reclaim = reclaim and (c.PrimaryPart or rootpart)
+novoid = novoid and (ws.FallenPartsDestroyHeight + 1)
+flingparts = ((type(flingparts) == "table") and flingparts) or ((type(flingparts) == "string") and {flingparts}) or {}
+hatcollide = hatcollide and (method == 0)
+R15toR6 = R15toR6 and hum and (hum.RigType == Enum.HumanoidRigType.R15)
+local shp = getfenv().sethiddenproperty
+simrad = shp and tonumber(simrad)
+
+if hatcollide then
+    for i, v in pairs(flingparts) do
+        flingparts[i] = gp(c, v, "BasePart") or gp(gp(c, v, "Accessory"), "Handle", "BasePart") or {Anchored = true}
+    end
+else
+    for i, v in pairs(flingparts) do
+        flingparts[i] = gp(c, v, "BasePart") or {Anchored = true}
+    end
+end
+
+if method == 0 then
+    lp.Character = nil
+    lp.Character = c
+    twait(loadtime)
+elseif method == 2 then
+    lp.Character = nil
+    lp.Character = c
+elseif method == 3 then
+    lp.Character = nil
+    lp.Character = c
+    tdelay(loadtime, pcall, c.BreakJoints, c)
+elseif method == 4 then
+    if hum then
+        hum:Destroy()
+        hum = nil
+    end
+end
+if not c then return end
+
+local cam = ws.CurrentCamera
+local enumCamS, camt, camcf = Enum.CameraType.Scriptable, cam.CameraType, cam.CFrame
+local camcon0, camcon1 = nil, nil
+local function onnewcamera()
+    if camcon0 then 
+        camcon0:Disconnect()
+        camcon0 = nil
+    end
+    cam = ws.CurrentCamera
+    if not c then 
+        if cam.CameraType == enumCamS then
+            cam.CameraType = camt
+        end
+        return camcon1:Disconnect() 
+    end
+    camcon0 = cam.Changed:Connect(function(p)
+        if not c then
+            camcon0:Disconnect()
+            return camcon1:Disconnect()
+        end
+        if (p == "CFrame") and (cam.CFrame ~= camcf) then
+            cam.CFrame = camcf
+        elseif (p == "CameraSubject") or (p == "CameraType") then
+            local subj = cam.CameraSubject
+            if subj and subj:IsA("Humanoid") and (subj.Parent == c) and (cam.CameraType ~= enumCamS) then
+                cam.CameraType = enumCamS
+            end
+        end
+    end)
+    local subj = cam.CameraSubject
+    if subj and subj:IsA("Humanoid") and (subj.Parent == c) and (cam.CameraType ~= enumCamS) then
+        cam.CameraType = enumCamS
+    end
+    cam.CFrame = camcf
+end
+camcon1 = ws:GetPropertyChangedSignal("CurrentCamera"):Connect(onnewcamera)
+onnewcamera()
+if discharscripts then
+    for i, v in pairs(c:GetChildren()) do
+        if v:IsA("LocalScript") then
+            v.Disabled = true
+        end
+    end
+end
+
+if humState16 and hum and (hum.Health > 0) then
+    hum:ChangeState(16)
+end
+local keepneck = head and torso and ((method == 1) or (method == 2) or (method == 3))
+local joints, cframes, lastpositions = {}, {}, {}
+local function ondes(v)
+    if antiragdoll and v:IsA("HingeConstraint") or v:IsA("BallSocketConstraint") then
+        v:Destroy()
+    elseif addPartsOnRun then
+        if v:IsA("JointInstance") then
+            tinsert(joints, {
+                Name = v.Name,
+                C0 = v.C0,
+                C1 = v.C1,
+                Part0 = v.Part0,
+                Part1 = v.Part1
+            })
+            if keepneck then
+                if (v.Part0 == head) and (v.Part1 == torso) then
+                    return
+                elseif (v.Part0 == torso) and (v.Part1 == head) then
+                    return
+                end
+            end
+            if not hatcollide then
+                v:Destroy()
+            end
+        elseif v:IsA("BasePart") then
+            cframes[v] = v.CFrame
+            lastpositions[v] = v.Position
+        end
+    end
+end
+if addPartsOnRun then
+    for i, v in pairs(c:GetDescendants()) do
+        ondes(v)
+    end
+    c.DescendantAdded:Connect(ondes)
+else
+    addPartsOnRun = true
+    for i, v in pairs(c:GetDescendants()) do
+        ondes(v)
+    end
+    addPartsOnRun = false
+    c.DescendantAdded:Connect(ondes)
+end
+
+local cfr, shiftlock, firstperson, xzvel, Yvel, v3_0150 = cframes[rootpart], false, false, v3_0, 0, v3_010 * 1.5
+local camoff = cf(v3_0, camcf.LookVector)
+camoff = camoff - v3_001 * (camcf.Position - (cfr.Position + v3_0150)).Magnitude
+
+if hatcollide then
+    hatcollide = c:FindFirstChildOfClass("BodyColors") or gp(c, "Health", "Script") or gp(c, "Animate", "LocalScript")
+    if torso and rootpart and hatcollide then
+        torso:Destroy()
+        rootpart:Destroy()
+        hatcollide:Destroy()
+    end
+    c:BreakJoints()
+end
+local refreshjoints = nil
+refreshjoints = function(part, refreshed)
+    if not part then return end
+    refreshed = refreshed or {}
+    tinsert(refreshed, part)
+    for i, v in pairs(joints) do
+        local part0, part1 = v.Part0, v.Part1
+        if part1 and (part0 == part) then
+            cframes[part1] = cframes[part] * v.C0 * v.C1:Inverse()
+            if not tfind(refreshed, part1) then
+                refreshjoints(part1, refreshed)
+            end
+        elseif part0 and (part1 == part) then
+            cframes[part0] = cframes[part] * v.C1 * v.C0:Inverse()
+            if not tfind(refreshed, part0) then
+                refreshjoints(part0, refreshed)
+            end
+        end
+    end
+end
+
+if R15toR6 then
+    local R6parts = { 
+        head = {Name = "Head", Anchored = true},
+        torso = {Name = "Torso", Anchored = true},
+        root = {Name = "HumanoidRootPart", Anchored = true},
+        leftArm = {Name = "Left Arm", Anchored = true},
+        rightArm = {Name = "Right Arm", Anchored = true},
+        leftLeg = {Name = "Left Leg", Anchored = true},
+        rightLeg = {Name = "Right Leg", Anchored = true}
+    }
+    for i, v in pairs(R6parts) do
+        cframes[v] = cfr
+    end
+    tinsert(joints, {
+        Name = "Neck",
+        Part0 = R6parts.torso, Part1 = R6parts.head,
+        C0 = cf(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0),
+        C1 = cf(0, -0.5, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0)
+    })
+    tinsert(joints, {
+        Name = "RootJoint" ,
+        Part0 = R6parts.root, Part1 = R6parts.torso,
+        C0 = cf(0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0),
+        C1 = cf(0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0)
+    })
+    tinsert(joints, {
+        Name = "Right Shoulder",
+        Part0 = R6parts.torso, Part1 = R6parts.rightArm,
+        C0 = cf(1, 0.5, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0),
+        C1 = cf(-0.5, 0.5, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0)
+    })
+    tinsert(joints, {
+        Name = "Left Shoulder",
+        Part0 = R6parts.torso, Part1 = R6parts.leftArm,
+        C0 = cf(-1, 0.5, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0),
+        C1 = cf(0.5, 0.5, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0)
+    })
+    tinsert(joints, {
+        Name = "Right Hip",
+        Part0 = R6parts.torso, Part1 = R6parts.rightLeg,
+        C0 = cf(1, -1, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0),
+        C1 = cf(0.5, 1, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0)
+    })
+    tinsert(joints, {
+        Name = "Left Hip" ,
+        Part0 = R6parts.torso, Part1 = R6parts.leftLeg,
+        C0 = cf(-1, -1, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0),
+        C1 = cf(-0.5, 1, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0)
+    })
+    tinsert(joints, {
+        Part0 = R6parts.root, Part1 = rootpart,
+        C0 = cf_0, C1 = cf_0
+    })
+    refreshjoints(rootpart)
+    local function getpart(name)
+        for i, _ in pairs(cframes) do
+            if (i.Name == name) and (type(i) ~= "table") then
+                return i
+            end
+        end
+        return nil
+    end
+    local function makejoint(p0, p1, p2)
+        p1, p2 = getpart(p1), getpart(p2)
+        if not (p1 and p2) then return end
+        for i, v in pairs(joints) do
+            if (v.Part0 == p1) and (v.Part1 == p2) then
+                joints[i] = nil
+            elseif (v.Part0 == p2) and (v.Part1 == p1) then
+                joints[i] = nil
+            end
+        end
+        tinsert(joints, {
+            Part0 = p0, Part1 = p1,
+            C0 = cf_0,
+            C1 = cframes[p1]:Inverse() * cframes[p0]
+        })
+    end
+    makejoint(R6parts.head, "Head", "UpperTorso")
+    makejoint(R6parts.leftArm, "LeftUpperArm", "UpperTorso")
+    makejoint(R6parts.rightArm, "RightUpperArm", "UpperTorso")
+    makejoint(R6parts.leftLeg, "LeftUpperLeg", "LowerTorso")
+    makejoint(R6parts.rightLeg, "RightUpperLeg", "LowerTorso")
+    makejoint(R6parts.torso, "LowerTorso", "HumanoidRootPart")
+end
+
+local raycastparams = RaycastParams.new()
+raycastparams.FilterType = Enum.RaycastFilterType.Blacklist
+local rayfilter = {}
+local characters = {}
+local function refreshrayfilter()
+    for i, v in pairs(rayfilter) do
+        if not tfind(characters, v) then
+            rayfilter[i] = nil
+        end
+    end
+    for i, v in pairs(characters) do
+        if not tfind(rayfilter, v) then
+            tinsert(rayfilter, v)
+        end
+    end
+    raycastparams.FilterDescendantsInstances = rayfilter
+end
+local function oncharacter(plr, c)
+    characters[plr] = c
+    refreshrayfilter()
+end
+local function onplayer(v)
+    oncharacter(v, v.Character)
+    v.CharacterAdded:Connect(function(c)
+        oncharacter(v, c)
+    end)
+end
+for i, v in pairs(plrs:GetPlayers()) do onplayer(v) end
+plrs.PlayerAdded:Connect(onplayer)
+plrs.PlayerRemoving:Connect(function(v)
+    oncharacter(v, nil)
+end)
+
+local mradN05 = math.rad(-0.5)
+local enumMLC = Enum.MouseBehavior.LockCenter
+local enumMB2 = Enum.UserInputType.MouseButton2
+local enumMLCP = Enum.MouseBehavior.LockCurrentPosition
+local enumMD = Enum.MouseBehavior.Default
+local enumMW = Enum.UserInputType.MouseWheel
+
+local mode, modes = "default", {default = {}}
+local function addmode(key, mode)
+    if (type(key) ~= "string") or (type(mode) ~= "table") then
+        return
+    end
+    for i, v in pairs(mode) do
+        if type(v) ~= "function" then
+            mode[i] = nil
+        end
+    end
+    if key == "default" then
+        modes.default = mode
+    elseif #key == 1 then
+        key = Enum.KeyCode[key:sub(1, 1):upper()]
+        modes[key] = mode
+    end
+end
+
+local keyW, keyA, keyS, keyD, keySpace, keyShift = Enum.KeyCode.W, Enum.KeyCode.A, Enum.KeyCode.S, Enum.KeyCode.D, Enum.KeyCode.Space, Enum.KeyCode.LeftShift
+local movementkeys = {
+	[keyW] = false,
+	[keyA] = false,
+	[keyS] = false,
+	[keyD] = false,
+	[keySpace] = false
+}
+uis.InputBegan:Connect(function(a)
+	if gs.MenuIsOpen or uis:GetFocusedTextBox() then
+		return
+	end
+    a = a.KeyCode
+    if movementkeys[a] == false then
+        movementkeys[a] = true
+    elseif a == keyShift then
+        shiftlock = allowshiftlock and not shiftlock
+    elseif modes[a] then
+        if mode == a then
+            mode = "default"
+        else
+            mode = a
+        end
+    end
+end)
+uis.InputEnded:Connect(function(a)
+	if movementkeys[a.KeyCode] then
+		movementkeys[a.KeyCode] = false
+	end
+end)
+uis.InputChanged:Connect(function(a, b)
+	if (not b) and (a.UserInputType == enumMW) then
+		camoff = camoff + a.Position * v3_001 * (0.75 - camoff.Z / 4)
+		if camoff.Z > 0 then
+			camoff = camoff - camoff.Position
+		end
+		firstperson = camoff.Z == 0
+	end
+end)
+
+local lostPart = nil
+
+local v3_xz, v3_net = v3_101 * 10, v3_010 * 25.01
+local function getNetlessVelocity(realPartVelocity)
+    --if true then return v3_0 end
+    --if true then return realPartVelocity end
+    if realPartVelocity.Magnitude > 25.01 then
+        realPartVelocity = realPartVelocity.Unit * 25.01
+    end
+    return realPartVelocity * v3_xz + v3_net
+end
+
+local function getjoint(name)
+    for i, v in pairs(joints) do
+        if v.Name == name then
+            return v
+        end
+    end
+    return {C0 = cf_0, C1 = cf_0}
+end
+
+local defaultflingvel = v3(20000, 20000, 20000)
+local mouse, flingcf, flingvel, flingid, currentflingpart = lp:GetMouse(), nil, nil, 0, nil
+local function fling(target, duration, rotVelocity)
+    currentflingpart = nil
+    for i, v in pairs(flingparts) do
+        if v and (not v.Anchored) and v:IsDescendantOf(ws) and (v.ReceiveAge == 0) then
+            currentflingpart = v
+            break
+        end
+    end
+    if not currentflingpart then 
+        return twait() and false
+    end
+    if typeof(target) == "Instance" then
+        if target:IsA("BasePart") then
+            target = target.Position
+        elseif target:IsA("Model") then
+            target = gp(target, "HumanoidRootPart", "BasePart") or gp(target, "Torso", "BasePart") or gp(target, "UpperTorso", "BasePart") or target:FindFirstChildWhichIsA("BasePart")
+            if target then
+                target = target.Position
+            else
+                return twait() and false
+            end
+        elseif target:IsA("Humanoid") then
+            target = target.Parent
+            if not (target and target:IsA("Model")) then
+                return twait() and false
+            end
+            target = gp(target, "HumanoidRootPart", "BasePart") or gp(target, "Torso", "BasePart") or gp(target, "UpperTorso", "BasePart") or target:FindFirstChildWhichIsA("BasePart")
+            if target then
+                target = target.Position
+            else
+                return twait() and false
+            end
+        else
+            return twait() and false
+        end
+    elseif typeof(target) == "CFrame" then
+        target = target.Position
+    elseif typeof(target) ~= "Vector3" then
+        target = mouse.Hit
+        if target then
+            target = target.Position
+        else
+            return twait() and false
+        end
+    end
+    if type(duration) ~= "number" then
+        duration = tonumber(duration) or 0.5
+    end
+    if typeof(rotVelocity) ~= "Vector3" then
+        rotVelocity = defaultflingvel
+    end
+    if (type(maxflingtrsp) == "number") and (currentflingpart.Transparency > maxflingtrsp) then
+        currentflingpart.Transparency = maxflingtrsp
+    end
+    flingcf = cf(target)
+    flingvel = rotVelocity
+    flingid = flingid + 1
+    local thisfling = flingid
+    twait(duration)
+    if flingid == thisfling then
+        flingcf = nil
+        currentflingpart = nil
+    end
+    return true
+end
+
+local pflingid = 0
+local function predictionfling(target, duration, rotVelocity, stopOnVelMag)
+    if typeof(target) ~= "Instance" then 
+        target = mouse.Target
+        if not target then
+            return twait() and false
+        end
+    end
+    if target:IsA("Humanoid") or target:IsA("BasePart") then 
+        target = target.Parent 
+    end
+    if target:IsA("Accessory") then
+        target = target.Parent
+    end
+    if (not target:IsA("Model")) or (target == c) then
+        return twait() and false
+    end
+    target = gp(target, "HumanoidRootPart", "BasePart") or gp(target, "Torso", "BasePart") or gp(target, "UpperTorso", "BasePart")
+    if not (target and target:IsDescendantOf(ws)) then
+        return twait() and false
+    end
+    if stopOnVelMag then
+        duration = tonumber(duration) or 5
+        stopOnVelMag = tonumber(stopOnVelMag) or 1000
+    elseif type(stopOnVelMag) == "boolean" then
+        duration = tonumber(duration) or 1
+        stopOnVelMag = nil
+    else 
+        duration = tonumber(duration) or 5
+        stopOnVelMag = 1000
+    end
+    local stopTime = sine + duration
+    pflingid = pflingid + 1
+    local thisfling = pflingid
+    local con = nil
+    con = heartbeat:Connect(function(deltaTime)
+        if (thisfling ~= pflingid) or (sine > stopTime) or (stopOnVelMag and (target.Velocity.Magnitude > stopOnVelMag)) or (not (target and target:IsDescendantOf(ws))) then
+            return con:Disconnect()
+        end
+        fling(target.Position + target.Velocity * (sin(sine * 15) + 1), 0, rotVelocity)
+    end)
+    twait()
+    return true
+end
+
+if ctrlclicktp then
+    ctrlclicktp = Enum.KeyCode.LeftControl
+    local tpoff = v3_010 * 3
+    if clickfling == 0 then
+        mouse.Button1Down:Connect(function()
+            if uis:IsKeyDown(ctrlclicktp) then
+                if mouse.Target then
+                    local pos = mouse.Hit.Position + tpoff
+                    cfr = cf(pos, pos + camoff.LookVector * v3_101)
+                end
+            else
+                fling()
+            end
+        end)
+    elseif clickfling == 1 then
+        mouse.Button1Down:Connect(function()
+            if uis:IsKeyDown(ctrlclicktp) then
+                if mouse.Target then
+                    local pos = mouse.Hit.Position + tpoff
+                    cfr = cf(pos, pos + camoff.LookVector * v3_101)
+                end
+            else
+                predictionfling()
+            end
+        end)
+    elseif clickfling == 2 then
+        mouse.Button1Down:Connect(function()
+            if uis:IsKeyDown(ctrlclicktp) then
+                if mouse.Target then
+                    local pos = mouse.Hit.Position + tpoff
+                    cfr = cf(pos, pos + camoff.LookVector * v3_101)
+                end
+            elseif not predictionfling() then
+                fling()
+            end
+        end)
+    else
+        mouse.Button1Down:Connect(function()
+            if mouse.Target and uis:IsKeyDown(ctrlclicktp) then
+                local pos = mouse.Hit.Position + tpoff
+                cfr = cf(pos, pos + camoff.LookVector * v3_101)
+            end
+        end)
+    end
+else
+    if clickfling == 0 then
+        mouse.Button1Down:Connect(fling)
+    elseif clickfling == 1 then
+        mouse.Button1Down:Connect(predictionfling)
+    elseif clickfling == 2 then
+        mouse.Button1Down:Connect(function()
+            if not predictionfling() then fling() end
+        end)
+    end
+end
+
+local noYvelTime, deltaTime, lastsine, pose, con = 1, 0, sine, nil, nil
+local function mainFunction()
+    if not c then 
+        uis.MouseBehavior = enumMD
+        onnewcamera()
+        local c = lp.Character
+        if c then
+            cam.CameraSubject = c:FindFirstChildOfClass("Humanoid")
+        end
+        return con and con:Disconnect() 
+    end
+    
+    sine = osclock()
+    local delta = sine - lastsine
+    deltaTime = clamp(delta * 10, 0, 1)
+    lastsine = sine
+    
+    if shiftlock then
+        if allowshiftlock then
+            uis.MouseBehavior = enumMLC
+            local rotation = uis:GetMouseDelta() * mradN05
+    		camoff = cf(camoff.Position, camoff.Position + camoff.LookVector) * angles(rotation.Y, rotation.X, 0)
+    	else
+    	    shiftlock = false
+    	end
+    elseif firstperson then
+        uis.MouseBehavior = enumMLC
+        local rotation = uis:GetMouseDelta() * mradN05
+		camoff = cf(camoff.Position, camoff.Position + camoff.LookVector) * angles(rotation.Y, rotation.X, 0)
+    elseif uis:IsMouseButtonPressed(enumMB2) then
+        uis.MouseBehavior = enumMLCP
+        local rotation = uis:GetMouseDelta() * mradN05
+		camoff = cf(camoff.Position, camoff.Position + camoff.LookVector) * angles(rotation.Y, rotation.X, 0)
+    else
+        uis.MouseBehavior = enumMD
+    end
+    
+    local raycastresult, onground = ws:Raycast(cfr.Position, v3_010 * ws.FallenPartsDestroyHeight - cfr.Position, raycastparams), nil
+	if raycastresult then
+	    onground = (cfr.Y - raycastresult.Position.Y) < 3.01
+		if onground then
+		    Yvel = 0
+		    cfr = cfr + v3_010 * (raycastresult.Position.Y + 3 - cfr.Y) * clamp(delta * 20, 0, 1)
+			if movementkeys[keySpace] then
+			    Yvel = jumpPower
+			end
+	    else
+			Yvel = Yvel - gravity * delta
+			if cfr.Y + Yvel * delta < raycastresult.Position.Y then
+			    Yvel = 0
+			    cfr = cfr + v3_010 * (raycastresult.Position.Y + 3 - cfr.Y)
+			end
+		end
+	else
+	    Yvel = 0
+	    onground = false
+	end
+	xzvel = v3_0
+	if movementkeys[keyW] then
+		xzvel = xzvel + (camoff.LookVector * v3_101).Unit
+	end
+	if movementkeys[keyS] then
+		xzvel = xzvel - (camoff.LookVector * v3_101).Unit
+	end
+	if movementkeys[keyA] then
+		xzvel = xzvel - (camoff.RightVector * v3_101).Unit
+	end
+	if movementkeys[keyD] then
+		xzvel = xzvel + (camoff.RightVector * v3_101).Unit
+	end
+	if xzvel.Magnitude > 0 then
+	    xzvel = xzvel.Unit * walkSpeed
+    	cfr = cfr:Lerp(cf(cfr.Position, cfr.Position + xzvel), deltaTime)
+	end
+    if shiftlock or firstperson then
+	    cfr = cf(cfr.Position, cfr.Position + camoff.LookVector * v3_101)
+    end
+	cfr = cfr + (xzvel + v3_010 * Yvel) * delta
+	
+	camcf = cf(cfr.Position, cfr.Position + camoff.LookVector) + (camoff.LookVector * camoff.Z) + v3_0150
+	if shiftlock and not firstperson then
+	    camcf = camcf + camcf.RightVector * 1.75
+	end
+	cam.CFrame = camcf
+	
+    if onground then
+        if xzvel == v3_0 then
+            pose = "idle"
+        else
+            pose = "walk"
+        end
+    elseif Yvel > 0 then
+        pose = "jump"
+    else
+        pose = "fall"
+    end
+    local lerpfunc = modes[mode][pose]
+    lerpfunc = lerpfunc or modes.default[pose]
+    if lerpfunc then
+        lerpfunc()
+    end
+    
+    cframes[rootpart] = cfr
+    refreshjoints(rootpart)
+    
+    if abs(Yvel) > 1 then
+	    noYvelTime = 0
+	else
+	    noYvelTime = clamp(noYvelTime + delta, 0, 1)
+	    xzvel = xzvel*(1-noYvelTime)
+	end
+    
+    local idleoff = delta / 5
+    local x, y, z = sin((sine - 0.01875) * 32) * idleoff, sin(sine * 32) * idleoff, sin((sine + 0.0375) * 32) * idleoff
+    idleoff = angles(x, y, z) + v3(x, y, z)
+    
+    for i, v in pairs(cframes) do
+        if (not i.Anchored) and i:IsDescendantOf(ws) then
+            if i.ReceiveAge == 0 then
+                if (i == currentflingpart) and flingcf then
+                    flingcf = flingcf * angles(0, flingvel.Unit.Y * -deltaTime, 0)
+                    v = flingcf
+                    i.RotVelocity = flingvel
+                else
+                    i.RotVelocity = v3_0
+                end
+                local vel = (v.Position - lastpositions[i]) / delta
+                lastpositions[i] = v.Position
+                if vel.Magnitude < 0.15 then
+                    v = v * idleoff
+                end
+                if (i == reclaim) and lostPart then
+                    v = lostPart.CFrame
+                    lostPart = nil
+                    i.Velocity = v3_0
+                else
+                    i.Velocity = getNetlessVelocity(vel*noYvelTime + xzvel)
+                end
+                if novoid and (v.Y < novoid) then
+                    v = v + v3_010 * (novoid - v.Y)
+                end
+                i.CFrame = v
+            else
+                lastpositions[i] = i.Position
+                if reclaim and (i ~= reclaim) then
+                    lostPart = i
+                end
+            end
+        end
+    end
+    if simrad then
+        shp(lp, "SimulationRadius", simrad)
+    end
+end
+
+con = heartbeat:Connect(mainFunction)
+mainFunction()
+
+local RootJoint = getjoint("RootJoint")
+local RightShoulder = getjoint("Right Shoulder")
+local LeftShoulder = getjoint("Left Shoulder")
+local RightHip = getjoint("Right Hip")
+local LeftHip = getjoint("Left Hip")
+local Neck = getjoint("Neck")
+
+local legcfR, legcfL, raydir = cf(1, -1, 0), cf(-1, -1, 0), v3_010 * -2
+local function raycastlegs() --this returns 2 values: right leg raycast offset, left leg raycast offset
+    local rY, lY = ws:Raycast((cfr * legcfR).Position, raydir, raycastparams), ws:Raycast((cfr * legcfL).Position, raydir, raycastparams)
+    return rY and (rY.Position.Y - (cfr.Y-3)) or 0, lY and (lY.Position.Y - (cfr.Y-3)) or 0
+end
+
+local function velbycfrvec() --this returns 2 values: forward/backwards movement (from -1 to 1), right/left movement (from -1 to 1)
+    local fw, rt = cfr.LookVector * xzvel / walkSpeed, cfr.RightVector * xzvel / walkSpeed
+    return fw.X + fw.Z, rt.X + rt.Z
+end
+
+addmode("default", {
+    idle = function()
+        LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -0.85 + 0.5 * sin(sine * 3), -0.6 - 0.75 * sin(sine * 3)) * angles(-1.2217304763960306 + 0.017453292519943295 * sin((sine + 2) * 6), -1.0471975511965976, -0.6981317007977318 + 0.5235987755982988 * sin((sine + 60) * 3)), deltaTime) 
+        RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 0.25 + 0.5 * sin((sine + 30) * -3), 0.2 - 0.1 * sin(sine * 3)) * angles(0, 1.3962634015954636 - 0.17453292519943295 * sin(sine * -4), -0.5235987755982988 - 0.5235987755982988 * sin((sine - 60) * -3)), deltaTime) 
+        LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.25 - 0.5 * sin((sine + 30) * 3), -0.1 * sin(sine * 3)) * angles(0, -1.3962634015954636 + 0.17453292519943295 * sin(sine * 4), 0.5235987755982988 + 0.5235987755982988 * sin((sine + 60) * 3)), deltaTime) 
+        RootJoint.C0 = RootJoint.C0:Lerp(cf(1 * sin(sine * 3), 1.25 + 1 * sin(sine * 3), -1.5 * sin((sine + 30) * 3)) * angles(-1.1344640137963142 + 0.17453292519943295 * sin(sine * 1), 0.1308996938995747 * sin(sine * 3), 3.141592653589793), deltaTime) 
+        RightHip.C0 = RightHip.C0:Lerp(cf(1, -1.25 + 0.5 * sin((sine - 30) * 3), -1) * angles(-0.5235987755982988, 1.2217304763960306, -0.17453292519943295 + 0.5235987755982988 * sin(sine * 3)), deltaTime) 
+        --AccessoryWeld.C0 = AccessoryWeld.C0:Lerp(cf(8.658513905857035e-09, 0.7000002861022949, -0.050000011920928955) * angles(0, 0, 0), deltaTime) 
+        Neck.C0 = Neck.C0:Lerp(cf(0, 1, -0.1) * angles(-2.181661564992912 + 0.2617993877991494 * sin(sine * 100), 0.17453292519943295, 3.3161255787892263 + 0.017453292519943295 * sin((sine + 2.5) * 3)), deltaTime) 
+        --LeftLeg,-1,0,0,,-70,1,2,6,-0.85,0.5,0,3,-60,3,0,,-0.6,-0.75,0,3,-40,30,60,3,RightArm,1,0,0,1,-0,-10,0,,0.25,0.5,30,-3,80,-10,0,-4,0.2,-0.1,0,3,-30,-30,-60,-3,LeftArm,-1,0,0,1,-0,0,0,1,0.25,-0.5,30,3,-80,10,0,4,0,-0.1,0,3,30,30,60,3,Torso,0,1,0,3,-65,10,0,1,1.25,1,0,3,-0,7.5,0,3,0,-1.5,30,3,180,10,0,0,RightLeg,1,0,0,0,-30,0,0,1,-1.25,0.5,-30,3,70,0,0,1,-1,1,90,,-10,30,0,3,PrimeRaven_Handle,8.658513905857035e-09,0,0,1,0,0,0,1,0.7000002861022949,0,0,1,0,0,0,1,-0.050000011920928955,0,0,1,0,0,0,1,Head,0,0,0,1,-125,15,0,100,1,0,0,1,10,0,0,-10,-.1,0,0,1,190,1,2.5,3
+    end,
+    walk = function()
+        RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 0.5 * sin(sine * -3), 1 + 0.24 * sin(sine * 3)) * angles(0, 2.0943951023931953 + 0.5235987755982988 * sin(sine * -3), -0.5235987755982988), deltaTime) 
+RightHip.C0 = RightHip.C0:Lerp(cf(1 - 0.25 * sin(sine * -3), -1 + 0.25 * sin(sine * 1), -0.8 - 0.5 * sin(sine * 3)) * angles(-0.08726646259971647 * sin(sine * 1), 1.3962634015954636 - 0.2617993877991494 * sin(sine * 3), -0.5235987755982988 - 0.17453292519943295 * sin(sine * 3)), deltaTime) 
+RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 2 + 1.5 * sin(sine * 3), 0) * angles(-2.443460952792061, 0, 2.792526803190927 + 0.17453292519943295 * sin(sine * 4)), deltaTime) 
+--AccessoryWeld.C0 = AccessoryWeld.C0:Lerp(cf(-0.01117706298828125, -0.05389392375946045, -0.8308497667312622) * angles(0, 0, 0), deltaTime) 
+LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1, 0) * angles(0, -1.5707963267948966, 0), deltaTime) 
+LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 1, -0.5 + 0.4 * sin(sine * 3)) * angles(0, -1.5707963267948966, -2.443460952792061 + 0.5235987755982988 * sin((sine + 30) * 3)), deltaTime) 
+Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-0.6981317007977318, 0, 3.490658503988659), deltaTime) 
+--AccessoryWeld.C0 = AccessoryWeld.C0:Lerp(cf(0, 0.6299999952316284, -0.23000000417232513) * angles(0, 0, 0), deltaTime) 
+--RightArm,1,0,0,1,0,0,0,1,0,0.5,0,-3,120,30,0,-3,1,0.24,0,3,-30,0,0,1,RightLeg,1,-0.25,0,-3,0,-5,0,1,-1.,0.25,0,1,80,-15,0,3,-0.8,-0.5,0,3,-30,-10,0,3,Torso,0,0,0,1,-140,0,0,1,2,1.5,0,3,-0,0,0,1,0,0,0,1,160,10,0,4,NebulaBlade_Handle,-0.01117706298828125,0,0,1,-0,0,0,1,-0.05389392375946045,0,0,1,0,0,0,1,-0.8308497667312622,0,0,1,-0,0,0,1,LeftLeg,-1,0,0,1,-0,0,0,1,-1,0,0,1,-90,0,0,1,0,0,0,1,0,0,0,1,LeftArm,-1,0,0,1,-0,60,0,0,1,0,0,1,-90,-30,0,-0,-0.5,0.4,0,3,-140,30,30,3,Head,0,0,0,1,-40,0,0,1,1,0,0,1,-0,0,0,1,0,0,0,1,200,0,0,1,MediHood_Handle,0,0,0,1,0,0,0,1,0.6299999952316284,0,0,1,0,0,0,1,-0.23000000417232513,0,0,1,0,0,0,1
+    end,
+    jump = function()
+        
+    end,
+    fall = function()
+        
+    end
+})
+
+addmode("e", {
+    idle = function()
+Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.5707963267948966, 0, 3.141592653589793), deltaTime) 
+RightHip.C0 = RightHip.C0:Lerp(cf(1.1, 0, -0.25) * angles(0, 1.5707963267948966, 0.8726646259971648), deltaTime) 
+RootJoint.C0 = RootJoint.C0:Lerp(cf(0, -0.9 + 0.2 * sin(sine * 1), 0) * angles(-2.443460952792061, 0.17453292519943295 * sin(sine * 2), 3.141592653589793 + 0.17453292519943295 * sin(sine * 3)), deltaTime) 
+LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 1, -0.5) * angles(0.5235987755982988 + 0.5235987755982988 * sin(sine * 200), -0.8726646259971648, -1.5707963267948966 + 0.05235987755982989 * sin(sine * 1)), deltaTime) 
+LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1.2, -1) * angles(0, -1.5707963267948966, 0.6981317007977318), deltaTime) 
+RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 1, -1) * angles(1.5707963267948966, -1.0471975511965976 + 0.5235987755982988 * sin(sine * 100), -1.5707963267948966), deltaTime) 
+--Head,0,0,0,1,-90,0,0,1,1,0,0,1,-0,0,0,1,0,0,0,1,180,0,0,1,RightLeg,1.1,0,0,1,0,0,0,1,,0,0,1,90,0,0,1,-0.25,0,0,1,50,0,0,1,Torso,0,0,0,1,-140,0,0,2,-0.9,0.2,0,1,-0,10,0,2,0,0,0,1,180,10,0,3,LeftArm,-1,0,0,1,30,30,0,200,1,0.,0,2,-50,30,0,,-0.5,0,0,1,-90,3,0,1,LeftLeg,-1,0,0,1,-0,0,0,1,-1.2,0,0,1,-90,0,0,1,-1,0,0,1,40,0,0,1,RightArm,1,0,0,1,90,0,0,1,1,0,0,1,-60,30,0,100,-1.,0,0,1,-90,0,0,10
+    end
+})
+
+addmode("r", {
+    idle = function()
+LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-0.5, 0.5, -0.5) * angles(1.5707963267948966 + 0.17453292519943295 * sin(sine * 1000), -2.443460952792061 + 0.08726646259971647 * sin(sine * 10), -1.2217304763960306 + 0.08726646259971647 * sin(sine * -5)), deltaTime) 
+Neck.C0 = Neck.C0:Lerp(cf(0, 1 - 0.1 * sin(sine * 4), 0) * angles(-2.0943951023931953, 0, 3.141592653589793), deltaTime) 
+RootJoint.C0 = RootJoint.C0:Lerp(cf(0.5 * sin(sine * 3), 4 + 2 * sin((sine + 0.5) * 3), 1.5 * sin(sine * 3)) * angles(-1.5707963267948966 + 0.6981317007977318 * sin((sine + 30) * 3), 0, 3.141592653589793 + 0.17453292519943295 * sin(sine * 3)), deltaTime) 
+RightShoulder.C0 = RightShoulder.C0:Lerp(cf(0.5, 0.5, -0.5) * angles(1.5707963267948966 + 0.17453292519943295 * sin(sine * -1000), 2.443460952792061 + 0.08726646259971647 * sin(sine * 10), 1.2217304763960306 + 0.08726646259971647 * sin(sine * 5)), deltaTime) 
+RightHip.C0 = RightHip.C0:Lerp(cf(1, -0.75 + 1 * sin(sine * 3), -1) * angles(-0.6981317007977318, 1.2217304763960306 - 0.17453292519943295 * sin((sine + 30) * 3), 0.3490658503988659 * sin((sine - 30) * -3)), deltaTime) 
+LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1.5 - 0.5 * sin(sine * 5), -1 - 0.5 * sin((sine + 90) * -3)) * angles(-0.6981317007977318 - 1.5707963267948966 * sin(sine * 3), -1.2217304763960306, 0.5235987755982988 * sin((sine - 30) * 3)), deltaTime) 
+--LeftArm,-0.5,0,0,1,90,10,0,1000,0.5,.,0,10,-140,5,0,10,-0.5,0,0,1,-70,5,0,-5,Head,0,0,0,1,-120,0,0,1,1.,-0.1,0,4,-0,0,0,1,0,,0,1,180,0,0,1,Torso,0,0.5,0,3,-90,40,30,3,4,2,0.5,3,-0,0,0,0,0,1.5,0,3,180,10,0,3,RightArm,0.5,0,0,1,90,10,0,-1000,0.5,0,0,10,140,5,0,10,-0.5,0,0,1,70,5,0,5,RightLeg,1,0,0,1,-40,30,0,0,-0.75,1,0,3,70,-10,30,3,-1,0,90,5,-0,20,-30,-3,LeftLeg,-1,0,0,1,-40,-90,0,3,-1.5,-0.5,0,5,-70,30,0,0,-1,-0.5,90,-3,0,30,-30,3
+    end
+})
+
+addmode("t", {
+    walk = function()
+RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, -10, 0) * angles(0, 1.5707963267948966, 0), deltaTime) 
+RootJoint.C0 = RootJoint.C0:Lerp(cf(0, -10 + 0.5 * sin(sine * 6), 5 + 0.3 * sin(sine * 6)) * angles(-2.0943951023931953 + 0.08726646259971647 * sin(sine * 6), 0.17453292519943295 * sin(sine * 3), 3.141592653589793 + 0.08726646259971647 * sin(sine * 5)), deltaTime) 
+RightHip.C0 = RightHip.C0:Lerp(cf(1, 11.5 + 1 * sin((sine + 60) * 7), -1 + 1 * sin(sine * 7)) * angles(0, -1.5707963267948966 - 0.3490658503988659 * sin((sine + 60) * 6), 0.17453292519943295 + 1.5707963267948966 * sin(sine * 7)), deltaTime) 
+LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, -6, 0) * angles(0, -1.5707963267948966, 0), deltaTime) 
+Neck.C0 = Neck.C0:Lerp(cf(0, 12, 0) * angles(-1.5707963267948966, 0, 3.141592653589793), deltaTime) 
+LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, 11.5 + 1 * sin((sine + 60) * 7), 1 * sin(sine * 7)) * angles(0, 1.5707963267948966 - 0.3490658503988659 * sin((sine + 60) * 7), 0.17453292519943295 - 1.5707963267948966 * sin(sine * 7)), deltaTime) 
+--RightArm,1,0,0,1,0,0,0,1,-10,0,0,1,90,0,0,1,0,0,0,1,0,0,0,1,Torso,0,0,0,1,-120,5,0,6,-10,0.5,0,6,-0,10,0,3,5,0.3,0,6,180,5,0,5,RightLeg,1,0,0,1,0,0,0,1,11.5,1,60,7,-90,-20,60,6,-1,1,0,7,10,90,0,7,LeftArm,-1,0,0,1,-0,0,0,1,-6,3,30,0,-90,0,0,1,0,0,0,0,0,0,0,0,Head,0,0,0,1,-90,0,0,1,12,0,0,1,-0,0,0,1,0,0,0,1,180,0,0,1,LeftLeg,-1,0,0,1,-0,-0,-0,0,11.5,1,60,7,90,-20,60,7,0,1,0,7,10,-90,0,7
+    end
+})
+
+addmode("q",  {
+    walk = function()
+LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1.25 + 0.5 * sin((sine - 30) * 3), -1) * angles(0, -1.5707963267948966, 0.5235987755982988 + 0.5235987755982988 * sin((sine + 30) * -4)), deltaTime) 
+RootJoint.C0 = RootJoint.C0:Lerp(cf(1 * sin(sine * 3), 1.25 + 1 * sin(sine * 3), -1.5 * sin((sine + 30) * 3)) * angles(-1.1344640137963142 + 0.17453292519943295 * sin(sine * 1), 0.1308996938995747 * sin(sine * 3), 3.141592653589793), deltaTime) 
+RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 1 * sin((sine + 30) * -3), -1 - 0.1 * sin(sine * 3)) * angles(-0.5235987755982988 * sin((sine + 60) * -3), 1.9547687622336491 + 0.5235987755982988 * sin((sine + 60) * 3), 1.7453292519943295 - 0.5235987755982988 * sin((sine - 90) * -3)), deltaTime) 
+LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.25 - 0.5 * sin((sine + 30) * 3), -0.1 * sin(sine * 3)) * angles(0, -1.3962634015954636 + 0.17453292519943295 * sin(sine * 4), 0.5235987755982988 + 0.5235987755982988 * sin((sine + 60) * 3)), deltaTime) 
+Neck.C0 = Neck.C0:Lerp(cf(0, 1, -0.1) * angles(-2.181661564992912 + 0.2617993877991494 * sin(sine * 100), 0.17453292519943295, 3.3161255787892263 + 0.017453292519943295 * sin((sine + 2.5) * 3)), deltaTime) 
+RightHip.C0 = RightHip.C0:Lerp(cf(1, -1.25 + 0.5 * sin((sine - 30) * 3), -1) * angles(-0.5235987755982988, 1.0471975511965976, -0.17453292519943295 + 0.5235987755982988 * sin(sine * 3)), deltaTime) 
+--LeftLeg,-1,0,0,1,-0,0,0,1,-1.25,0.5,-30,3,-90,0,0,1,-1,0.5,0,0,30,30,30,-4,Torso,0,1,0,3,-65,10,0,1,1.25,1,0,3,-0,7.5,0,3,0,-1.5,30,3,180,10,0,0,RightArm,1,0,0,1,-0,-30,60,-3,-,1,30,-3,112,30,60,3,-1,-0.1,0,3,100,-30,-90,-3,LeftArm,-1,0,0,1,-0,0,0,1,0.25,-0.5,30,3,-80,10,0,4,0,-0.1,0,3,30,30,60,3,Head,0,0,0,1,-125,15,0,100,1,0,0,1,10,0,0,-10,-.1,0,0,1,190,1,2.5,3,RightLeg,1,0,0,0,-30,0,0,1,-1.25,0.5,-30,3,60,0,0,1,-1,1,90,,-10,30,0,3
+    end
+})
+
+addmode("y",  {
+    idle = function()
+    RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1.75 + 0.25 * sin(sine * 3), 1 + 0.5 * sin((sine + 90) * 3), 0) * angles(3.141592653589793 + 0.5235987755982988 * sin((sine + 30) * 3), -0.5235987755982988 + 0.17453292519943295 * sin((sine + 30) * 3), 0.6981317007977318 - 0.5235987755982988 * sin(sine * 3)), deltaTime) 
+    RightHip.C0 = RightHip.C0:Lerp(cf(1, -0.5 - 1 * sin((sine + 30) * 3), -1) * angles(0, 1.5707963267948966 + 0.08726646259971647 * sin((sine + 30) * 5), -0.5235987755982988 + 0.5235987755982988 * sin((sine - 30) * 3)), deltaTime) 
+    LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1.5, 0.5 - 0.5 * sin((sine + 90) * 3), -0.5) * angles(0, 0, -0.5235987755982988 + 0.5235987755982988 * sin(sine * -3)), deltaTime) 
+    Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.5707963267948966, 0, 3.141592653589793 + 6.283185307179586 * sin(sine * 5)), deltaTime) 
+    RootJoint.C0 = RootJoint.C0:Lerp(cf(1.5 * sin(sine * 5), 4 + 3 * sin((sine + 30) * 3), 0) * angles(-1.5707963267948966 + 0.17453292519943295 * sin(sine * 3), 0.3490658503988659 * sin((sine + 30) * 3), 3.141592653589793 + 0.2617993877991494 * sin((sine + 30) * 1)), deltaTime) 
+    LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1 + 1 * sin((sine + 30) * 3), -0.5 + 1 * sin(sine * 3)) * angles(-0.5235987755982988 * sin((sine + 90) * 3), -1.5707963267948966 - 0.2617993877991494 * sin((sine + 60) * 3), 0.5235987755982988 + 1.0471975511965976 * sin((sine + 90) * 3)), deltaTime) 
+    --RightArm,1.75,0.25,0,3,180,30,30,3,1,0.5,90,3,-30,10,30,3,0,0,0,1,40,-30,-0,3,RightLeg,1,0,0,1,0,0,-90,3,-0.5,-1,30,3,90,5,30,5,-1,0,-30,3,-30,30,-30,3,LeftArm,-1.5,0,0,3,-0,-0,0,3,0.5,-0.5,90,3,-0,30,30,0,-.5,0,0,1,-30,30,0,-3,Head,0,0,0,1,-90,0,0,1,1,0,0,1,-0,0,0,1,0,0,0,1,180,360,0,5,Torso,0,1.5,0,5,-90,10,0,3,4,3,30,3,-0,20,30,3,0,3,30,0,180,15,30,1,LeftLeg,-1,-0,0,1,-0,-30,90,3,-1,1,30,3,-90,-15,60,3,-0.5,1,0,3,30,60,90,3
+    end
+})
+
+addmode("u",  {
+    idle = function()
+   LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -0.75 + 0.25 * sin((sine + 30) * 3), -0.4 + 0.2 * sin(sine * 3)) * angles(0, -1.3962634015954636, 0.5235987755982988 + 0.3490658503988659 * sin((sine + 30) * 3)), deltaTime) 
+RightHip.C0 = RightHip.C0:Lerp(cf(1, -1 + 1.5 * sin((sine + 30) * 3), -0.5 + 0.5 * sin(sine * 3)) * angles(-0.5235987755982988 * sin((sine + 60) * 3), 1.3962634015954636 + 0.08726646259971647 * sin(sine * 3), -0.5235987755982988 + 0.5235987755982988 * sin((sine - 60) * 3)), deltaTime) 
+LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.25 + 0.25 * sin((sine + 30) * 3), 0) * angles(-0.5235987755982988, -1.0471975511965976 - 0.5235987755982988 * sin((sine + 80) * 4), -1.0471975511965976), deltaTime) 
+RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 4 + 1 * sin(sine * 3.5), 0) * angles(-2.0943951023931953 - 0.2617993877991494 * sin(sine * 3), 0, 3.141592653589793), deltaTime) 
+RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 1, -1) * angles(-0.5235987755982988 + 0.5235987755982988 * sin(sine * 100), 0.5235987755982988 * sin(sine * 30), 3.839724354387525), deltaTime) 
+Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-2.0943951023931953 - 0.17453292519943295 * sin(sine * 3), 0.5235987755982988 * sin(sine * 100), 3.141592653589793), deltaTime) 
+--LeftLeg,-1,0,0,1,-0,0,0,1,-0.75,0.25,30,3,-80,0,0,1,-0.4,0.2,0,3,30,20,30,3,RightLeg,1,0,0,1,0,-30,60,3,-1,1.5,30,3,80,5,0,3,-0.5,0.5,0,3,-30,30,-60,3,LeftArm,-1,0,0,1,-30,0,30,1,0.25,0.25,30,3,-60,-30,80,4,-0,0,30,4,-60,0,0,5,Torso,0,0,0,1,-120,-15,0,3,4,1,0,3.5,-0,0,0,1,0,0,0,1,180,0,0,1,RightArm,1,0,0,1,-30,30,0,100,1,0,0,1,0,30,0,30,-1,0,0,1,220,0,0,1,Head,0,0,0,1,-120,-10,0,3,1,0,0,1,-0,30,0,100,0,0,0,1,180,30,0,0
+    end
+})
+
+addmode("i",  {
+    idle = function()
+RightHip.C0 = RightHip.C0:Lerp(cf(1, -0.7, -1.5) * angles(-0.17453292519943295, 2.0943951023931953, -0.7853981633974483 + 0.08726646259971647 * sin(sine * 1)), deltaTime) 
+RootJoint.C0 = RootJoint.C0:Lerp(cf(0, -1, 0) * angles(-1.2217304763960306 - 0.08726646259971647 * sin(sine * 1), 0, 2.9670597283903604 + 0.08726646259971647 * sin(sine * 1)), deltaTime) 
+--AccessoryWeld.C0 = AccessoryWeld.C0:Lerp(cf(-0.2021636962890625, -0.12768173217773438, -0.2653465270996094) * angles(0, 0, 0), deltaTime) 
+RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 0.25 + 0.25 * sin(sine * 1), 0) * angles(-0.5235987755982988 - 0.17453292519943295 * sin(sine * 1), 1.2217304763960306 + 0.5235987755982988 * sin((sine + 30) * 1), 0.5235987755982988 + 0.08726646259971647 * sin(sine * 1)), deltaTime) 
+--AccessoryWeld.C0 = AccessoryWeld.C0:Lerp(cf(8.658513905857035e-09, 0.7000002861022949, -0.050000011920928955) * angles(0, 0, 0), deltaTime) 
+LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -0.5 + 0.1 * sin(sine * 1), -1.25) * angles(-0.3490658503988659 - 0.17453292519943295 * sin((sine + 90) * 2), -1.5707963267948966 + 0.08726646259971647 * sin((sine + 10) * 2.5), 0), deltaTime) 
+LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, -0.1 - 0.2 * sin(sine * 1), -0.2) * angles(0, -3.141592653589793, -1.9198621771937625 + 0.17453292519943295 * sin((sine + 30) * 1)), deltaTime) 
+Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.7453292519943295 + 0.17453292519943295 * sin(sine * 1), 0.17453292519943295 + 0.17453292519943295 * sin((sine + 30) * 1), 3.141592653589793), deltaTime) 
+--RightLeg,1,0,0,1,-10,0,0,1,-0.7,0,0,1,120,0,0,0,-1.5,0,0,1,-45,5,0,1,Torso,0,0,0,1,-70,-5,0,1,-1,0,0,1,-0,0,0,1,0,0,0,1,170,5,0,1,MeshPartAccessory_Handle,-0.2021636962890625,0,0,1,-0,0,0,1,-0.12768173217773438,0,0,1,0,0,0,1,-0.2653465270996094,0,0,1,-0,0,0,1,RightArm,1,0,0,0,-30,-10,0,1,0.25,0.25,0,1,70,30,30,1,-0,0,0,1,30,5,0,1,PrimeRaven_Handle,8.658513905857035e-09,0,0,1,0,0,0,1,0.7000002861022949,0,0,1,0,0,0,1,-0.050000011920928955,0,0,1,0,0,0,1,LeftLeg,-1,0,0,1,-20,-10,90,2,-0.5,0.1,0,1,-90,5,10,2.5,-1.25,0,30,5,-0,0,0,1,LeftArm,-1,0,0,1,-0,0,0,1,-0.1,-0.2,0,1,-180,0,0,1,-0.2,0,0,1,-110,10,30,1,Head,0,0,0,1,-100,10,0,1,1,0,0,1,10,10,30,1,0,0,0,1,180,0,0,1
+    end
+})
+
+addmode("o",  {
+    idle = function()
+RightHip.C0 = RightHip.C0:Lerp(cf(1, -1 + 0.25 * sin(sine * -2), -0.1) * angles(-0.17453292519943295 + 0.17453292519943295 * sin((sine + 990) * -2), 1.2217304763960306, -0.08726646259971647), deltaTime) 
+LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1.25 + 0.25 * sin(sine * -2), -0.5) * angles(-0.2617993877991494 + 0.17453292519943295 * sin((sine + 990) * -2), -1.2217304763960306, 0.5235987755982988), deltaTime) 
+--AccessoryWeld.C0 = AccessoryWeld.C0:Lerp(cf(0, -0.29478001594543457, 0.3294215202331543) * angles(0.3490658503988659, 0, 0), deltaTime) 
+RightShoulder.C0 = RightShoulder.C0:Lerp(cf(0.76, 0.5 + 0.25 * sin(sine * 2), -0.4) * angles(0, 2.9670597283903604, 1.5707963267948966 + 0.17453292519943295 * sin((sine + 10) * 2)), deltaTime) 
+LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-0.76, 0.5 + 0.25 * sin(sine * 2), -0.4) * angles(-0.3490658503988659, -2.9670597283903604, -1.5707963267948966 + 0.17453292519943295 * sin((sine + 10) * -2)), deltaTime) 
+RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0.25 * sin(sine * 2), 0) * angles(-1.3962634015954636 + 0.17453292519943295 * sin((sine + 990) * 2), 0, 3.141592653589793), deltaTime) 
+Neck.C0 = Neck.C0:Lerp(cf(0, 1 + 0.05 * sin(sine * 2), 0) * angles(-1.9198621771937625 + 0.13264502315156904 * sin(sine * 2), 0, 3.141592653589793), deltaTime) 
+--AccessoryWeld.C0 = AccessoryWeld.C0:Lerp(cf(-0.00006103515625, -0.12335777282714844, 0.0023040771484375) * angles(0.08726646259971647, 0, 0), deltaTime) 
+--RightLeg,1,0,0,1,-10,10,990,-2,-1,0.25,0,-2,70,0,0,1,-0.1,0,0,1,-5,10,10,-,LeftLeg,-1,0,0,1,-15,10,990,-2,-1.25,0.25,0,-2,-70,0,0,1,-0.5,0,0,1,30,0,0,1,AzureCrystalHorns_Handle,0,0,0,1,20,0,0,1,-0.29478001594543457,0,0,1,0,0,0,1,0.3294215202331543,0,0,1,-0,0,0,1,RightArm,0.76,0,0,1,-0,0,0,1,0.5,0.25,0,2,170,-0,30,-2,-0.4,0,0,1,90,10,10,2,LeftArm,-0.76,0,0,1,-20,0,0,1,0.5,0.25,0,2,-170,0,10,2,-0.4,0,0,1,-90,10,10,-2,Torso,0,0,0,1,-80,10,990,2,0,0.25,0,2,-0,0,0,1,0,0,0,1,180,0,0,1,Head,0,0,0,1,-110,7.6,0,2,1,0.05,0,2,-0,0,0,1,0,0,0,1,180,30,0,0,RubyOutbackHat_Handle,-0.00006103515625,0,0,1,5,0,0,1,-0.12335777282714844,0,0,1,0,0,0,1,0.0023040771484375,0,0,1,0,0,0,1
+    end
+})
+
+addmode("p",  {
+    walk = function()
+RightHip.C0 = RightHip.C0:Lerp(cf(1, -1 + 0.25 * sin(sine * -4), -0.25 + 0.25 * sin(sine * 4)) * angles(0, 1.5707963267948966 + 0.17453292519943295 * sin(sine * 4), -0.5235987755982988 * sin((sine + 90) * 4)), deltaTime) 
+RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 0.5 + 0.25 * sin(sine * 4), 0.5 * sin(sine * 4)) * angles(0, 1.3962634015954636 + 0.5235987755982988 * sin(sine * 4), -0.5235987755982988 + 0.5235987755982988 * sin((sine + 90) * 4)), deltaTime) 
+LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, -0.25 + 0.25 * sin(sine * 4)) * angles(0, -1.7453292519943295 + 0.17453292519943295 * sin((sine + 30) * 4), -1.7453292519943295 + 0.5235987755982988 * sin((sine + 90) * 4)), deltaTime) 
+RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0.25 * sin(sine * 4), 0) * angles(-1.7453292519943295 + 0.08726646259971647 * sin(sine * 4), 0.08726646259971647 * sin((sine + 30) * 4), 3.141592653589793), deltaTime) 
+Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.9198621771937625 + 0.17453292519943295 * sin(sine * 4), -0.5235987755982988 + 0.17453292519943295 * sin(sine * 4), 3.141592653589793 + 0.17453292519943295 * sin(sine * 4)), deltaTime) 
+LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1 + 0.25 * sin(sine * -4), -0.25 + 0.25 * sin(sine * 4)) * angles(0, -1.5707963267948966 + 0.17453292519943295 * sin(sine * 4), 0.5235987755982988 * sin((sine - 90) * 4)), deltaTime) 
+--RightLeg,1,0,0,1,0,0,0,1,-1,0.25,0,-4,90,10,0,4,-0.25,0.25,0,4,0,-30,90,4,RightArm,1,0,0,1,0,0,0,1,0.5,0.25,0,4,80,30,0,4,,0.5,0,4,-30,30,90,4,LeftArm,-1,0,0,1,-0,0,0,1,0.5,0,0,1,-100,10,30,4,-0.25,0.25,0,4,-100,30,90,4,Torso,0,0,0,1,-100,5,0,4,0,0.25,0,4,-0,5,30,4,0,0,0,1,180,0,0,4,Head,0,0,0,1,-110,10,0,4,1,0,0,1,-30,10,0,4,0,0,0,1,180,10,0,4,LeftLeg,-1,0,0,1,-0,0,0,1,-1.,0.25,0,-4,-90,10,0,4,-0.25,0.25,0,4,0,30,-90,4
+    end
+})
