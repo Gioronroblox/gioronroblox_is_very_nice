@@ -1,28 +1,17 @@
+game.Players.LocalPlayer.Character["SeeMonkey"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Pink Hair"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy() --LavanderHair
+game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy()  
 game.Players.LocalPlayer.Character["LavanderHair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Robloxclassicred"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["Necklace"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["SeeMonkey"].Handle.Mesh:Destroy()--Hat1
-game.Players.LocalPlayer.Character["Hat1"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["Hat1"].Handle.SpecialMesh:Destroy()
+game.Players.LocalPlayer.Character["Necklace"].Handle.SpecialMesh:Destroy()
 
-local c = game.Players.LocalPlayer.Character
-for i, v in pairs({"Right Arm", "Left Arm"}) do
-    local arm = c[v]
-    arm.Parent = nil
-    arm.Transparency = 1
-    arm.Parent = c
-end
+game.Players.LocalPlayer.Character["Left Leg"].Transparency = 1 
+game.Players.LocalPlayer.Character["Right Leg"].Transparency = 1 
+game.Players.LocalPlayer.Character["Left Arm"].Transparency = 1 
+game.Players.LocalPlayer.Character["Right Arm"].Transparency = 1 
 
-local c = game.Players.LocalPlayer.Character
-for i, v in pairs({"Right Leg", "Left Leg"}) do
-    local Leg = c[v]
-    Leg.Parent = nil
-    Leg.Transparency = 1
-    Leg.Parent = c
-end
-
-local v3_net, v3_808 = Vector3.new(0, 25.1, 0), Vector3.new(8, 0, 8)
+local v3_net, v3_808 = Vector3.new(20000, 20000, 2000), Vector3.new(8, 0, 8)
 		local function getNetlessVelocity(realPartVelocity)
 			local mag = realPartVelocity.Magnitude
 			if mag > 1 then
@@ -759,7 +748,7 @@ rightHip = rightHip or fakemotor()
 
 --120 fps
 
-local fps = 0
+local fps = 40
 local event = Instance.new("BindableEvent", c)
 event.Name = "120 fps"
 local floor = math.floor
@@ -819,12 +808,12 @@ biggesthandle.Destroying:Connect(function()
 end)
 
 --biggesthandle:BreakJoints()
---biggesthandle.Anchored = true
+biggesthandle.Anchored = false
 
 --for i, v in pairs(handle1:GetDescendants()) do
    -- if v:IsA("AlignOrientation") then
-        --v.Enabled = false
-   --end
+       -- v.Enabled = false
+  -- end
 --end
 
 --local mouse = lp:GetMouse()
@@ -834,7 +823,7 @@ end)
 --end)
 --mouse.Button1Up:Connect(function()
     --fling = false
---end)
+---end)
 local function doForSignal(signal, vel)
     spawn(function()
         while signal:Wait() and c and handle1 and biggesthandle do
@@ -845,8 +834,8 @@ local function doForSignal(signal, vel)
         end
     end)
 end
-doForSignal(stepped, v3(1, 1, 1))
-doForSignal(renderstepped, v3(1, 1, 1))
+doForSignal(stepped, v3(100, 100, 100))
+doForSignal(renderstepped, v3(100, 100, 100))
 doForSignal(heartbeat, v3(20000, 20000, 20000)) --https://web.roblox.com/catalog/63690008/Pal-Hair
 
 local lp = game:GetService("Players").LocalPlayer
@@ -875,9 +864,27 @@ local function gp(parent, name, className)
     end
     return nil
 end
-
-
-
+ 
+ local hat2 = gp(cplayer, "Hat1", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Torso"]
+att2.Position = Vector3.new(-0, 0.099, -0.525) 
+att2.Rotation = Vector3.new(35, 90, 0) 
+ 
+ local hat2 = gp(cplayer, "Necklace", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Torso"]
+att2.Position = Vector3.new(-0, 0.31, -0.375) 
+att2.Rotation = Vector3.new(35, 90, 0) 
+ 
+local hat2 = gp(cplayer, "SeeMonkey", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Torso"]
+att2.Position = Vector3.new(-0, -0, 0)
+att2.Rotation = Vector3.new(90, 0, 0)
 
 local hat2 = gp(cplayer, "Pink Hair", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
@@ -905,28 +912,9 @@ local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Left Leg"]
 att2.Position = Vector3.new(-0, 0, 0) 
-att2.Rotation = Vector3.new(90, 0, 0)  
-
-local hat2 = gp(cplayer, "Necklace", "Accessory")
-local handle2 = gp(hat2, "Handle", "BasePart")
-local att2 = gp(handle2, "att1_Handle", "Attachment")
-att2.Parent = cplayer["Torso"]
-att2.Position = Vector3.new(-0, 0.31, -0.375) 
-att2.Rotation = Vector3.new(35, 90, 0) 
-
-local hat2 = gp(cplayer, "SeeMonkey", "Accessory")
-local handle2 = gp(hat2, "Handle", "BasePart")
-local att2 = gp(handle2, "att1_Handle", "Attachment")
-att2.Parent = cplayer["Torso"]
-att2.Position = Vector3.new(-0, -0, -0) 
 att2.Rotation = Vector3.new(90, 0, 0) 
+ 
 
-local hat2 = gp(cplayer, "Hat1", "Accessory")
-local handle2 = gp(hat2, "Handle", "BasePart")
-local att2 = gp(handle2, "att1_Handle", "Attachment")
-att2.Parent = cplayer["Torso"]
-att2.Position = Vector3.new(-0, 0.099, -0.525) 
-att2.Rotation = Vector3.new(35, 90, 0) 
 
 local NotificationBindable = Instance.new("BindableFunction")
 local Msgreq = function(Title,Text,Duration,Button1Text,Button2Text)
