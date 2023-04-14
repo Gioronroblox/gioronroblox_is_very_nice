@@ -1,3 +1,4 @@
+game.Players.LocalPlayer.Character["fff_fox"].Handle.Mesh:Destroy()
 --BRO THIS SCRIPT DON'T USE SCRIPT = IDKNUMBER, SCRIPT.PARENT = CHARACTER???
 loadstring(game:HttpGet(("https://pastebin.com/raw/ug4TNhzr"),true))() --reanim 
 
@@ -369,11 +370,10 @@ local function AlignHat(p1,p2,nomesh)
 end
 
 pcall(function()
-	Railgun = game:GetService("Players").LocalPlayer.Character["AJBackAccessory"].Handle
+	Railgun = game:GetService("Players").LocalPlayer.Character["fff_fox"].Handle
 	AlignHat(Railgun,gun,false)
-	Railgun.Attachment.Rotation = Vector3.new(90, 90, 0)
-	Railgun.Attachment.Position = Vector3.new(2.4, -0, -0)
-	--Railgun.Attachment.CFrame = CFrame.new(-0, 0, 0, -0, 0, -0, 0, 0, 0, 0, -0)
+	Railgun.Attachment.Rotation = Vector3.new(0, 0, 0)
+	Railgun.Attachment.Position = Vector3.new(0, 0, 0)
 end)
 
 local Mouse = plr:GetMouse()
