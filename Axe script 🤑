@@ -253,7 +253,7 @@ Hitbox.Transparency = 5
 
 game:GetService("Players").LocalPlayer.Character["MeshPartAccessory"].Handle.att1_Handle.Parent = Hitbox
 Hitbox.att1_Handle.Rotation = Vector3.new(-85,0,40)
-Hitbox.att1_Handle.Position = Vector3.new(1.25,0,-0)
+Hitbox.att1_Handle.Position = Vector3.new(1.25,0,-0.75)
 
 --Handle.Transparency  = 1
 
