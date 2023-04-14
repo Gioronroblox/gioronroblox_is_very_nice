@@ -1,8 +1,8 @@
 loadstring(game:HttpGet('https://pastebin.com/raw/ug4TNhzr'))()
 
-game.Players.LocalPlayer.Character["fff_fox"].Handle.Mesh:Destroy() --Pink Hair
+game.Players.LocalPlayer.Character["PrimeRaven"].Handle.Mesh:Destroy() --Pink Hair
 
-local hat2 = gp(cplayer, "fff_fox", "Accessory")
+local hat2 = gp(cplayer, "PrimeRaven", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Torso"]
