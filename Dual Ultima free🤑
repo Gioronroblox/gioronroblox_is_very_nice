@@ -1009,7 +1009,7 @@ local Align = function(Part0, Part1,Mesh)
         
 end 
 local hat = Align(char['Back_AccAccessory'].Handle,char['Left Arm'],false)
-local cf = char['Left Arm'].CFrame*CFrame.new(0,-0.75,-2.5)*CFrame.Angles(math.rad(45),math.rad(-180),0)
+local cf = char['Left Arm'].CFrame*CFrame.new(0,-0.75,-2.5)*CFrame.Angles(math.rad(45),math.rad(-90),0)
 hat[1].CFrame = cf:Inverse() * char['Left Arm'].CFrame
 spawn(function()
     char.AncestryChanged:wait()--if you respawn, it will stop the  loop to avoid lag of using it over and over
