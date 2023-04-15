@@ -1,0 +1,2659 @@
+game.Players.LocalPlayer.Character["SeeMonkey"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["Pink Hair"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy() --LavanderHair
+game.Players.LocalPlayer.Character["LavanderHair"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["Robloxclassicred"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["MeshPartAccessory"].Handle.Handle:Destroy()
+game.Players.LocalPlayer.Character["gaytek"].Handle.Mesh:Destroy()
+
+
+local c = game.Players.LocalPlayer.Character
+for i, v in pairs({"Right Arm", "Left Arm"}) do
+    local arm = c[v]
+    arm.Parent = nil
+    arm.Transparency = 1
+    arm.Parent = c
+end
+
+local c = game.Players.LocalPlayer.Character
+for i, v in pairs({"Right Leg", "Left Leg"}) do
+    local Leg = c[v]
+    Leg.Parent = nil
+    Leg.Transparency = 1
+    Leg.Parent = c
+end
+
+local v3_net, v3_808 = Vector3.new(0, 25.1, 0), Vector3.new(8, 0, 8)
+		local function getNetlessVelocity(realPartVelocity)
+			local mag = realPartVelocity.Magnitude
+			if mag > 1 then
+				local unit = realPartVelocity.Unit
+				if (unit.Y > 0.25) or (unit.Y < -0.75) then
+					return unit * (25.1 / unit.Y)
+				end
+			end 
+			return v3_net + realPartVelocity * v3_808
+		end
+		local simradius = "shp" --simulation radius (net bypass) method
+--simulation radius (net bypass) method
+--"shp" - sethiddenproperty
+--"ssr" - setsimulationradius
+--false - disable
+local antiragdoll = true --removes hingeConstraints and ballSocketConstraints from your character
+local newanimate = false --disables the animate script and enables after reanimation
+local discharscripts = true --disables all localScripts parented to your character before reanimation
+local R15toR6 = true --tries to convert your character to r6 if its r15
+local hatcollide = true --makes hats cancollide (only method 0)
+local humState16 = true --enables collisions for limbs before the humanoid dies (using hum:ChangeState)
+local addtools = false --puts all tools from backpack to character and lets you hold them after reanimation
+local hedafterneck = false --disable aligns for head and enable after neck is removed
+local loadtime = game:GetService("Players").RespawnTime + 0.5 --anti respawn delay
+local method = 0 --reanimation method
+--methods:
+--0 - breakJoints (takes [loadtime] seconds to laod)
+--1 - limbs
+--2 - limbs + anti respawn
+--3 - limbs + breakJoints after [loadtime] seconds
+--4 - remove humanoid + breakJoints
+--5 - remove humanoid + limbs
+local alignmode = 3 --AlignPosition mode
+--modes:
+--1 - AlignPosition rigidity enabled true
+--2 - 2 AlignPositions rigidity enabled both true and false
+--3 - AlignPosition rigidity enabled false
+
+healthHide = healthHide and ((method == 0) or (method == 2) or (method == 000)) and gp(c, "Head", "BasePart")
+
+local lp = game:GetService("Players").LocalPlayer
+local rs = game:GetService("RunService")
+local stepped = rs.Stepped
+local heartbeat = rs.Heartbeat
+local renderstepped = rs.RenderStepped
+local sg = game:GetService("StarterGui")
+local ws = game:GetService("Workspace")
+local cf = CFrame.new
+local v3 = Vector3.new
+local v3_0 = v3(0, 0, 0)
+local inf = math.huge
+
+local c = lp.Character
+
+if not (c and c.Parent) then
+	return
+end
+
+c.Destroying:Connect(function()
+	c = nil
+end)
+
+local function gp(parent, name, className)
+	if typeof(parent) == "Instance" then
+		for i, v in pairs(parent:GetChildren()) do
+			if (v.Name == name) and v:IsA(className) then
+				return v
+			end
+		end
+	end
+	return nil
+end
+
+local function align(Part0, Part1)
+	Part0.CustomPhysicalProperties = PhysicalProperties.new(0.0001, 0.0001, 0.0001, 0.0001, 0.0001)
+
+	local att0 = Instance.new("Attachment", Part0)
+	att0.Orientation = v3_0
+	att0.Position = v3_0
+	att0.Name = "att0_" .. Part0.Name
+	local att1 = Instance.new("Attachment", Part1)
+	att1.Orientation = v3_0
+	att1.Position = v3_0
+	att1.Name = "att1_" .. Part1.Name
+
+	if (alignmode == 1) or (alignmode == 2) then
+		local ape = Instance.new("AlignPosition", att0)
+		ape.ApplyAtCenterOfMass = false
+		ape.MaxForce = inf
+		ape.MaxVelocity = inf
+		ape.ReactionForceEnabled = false
+		ape.Responsiveness = 200
+		ape.Attachment1 = att1
+		ape.Attachment0 = att0
+		ape.Name = "AlignPositionRtrue"
+		ape.RigidityEnabled = true
+	end
+
+	if (alignmode == 2) or (alignmode == 3) then
+		local apd = Instance.new("AlignPosition", att0)
+		apd.ApplyAtCenterOfMass = false
+		apd.MaxForce = inf
+		apd.MaxVelocity = inf
+		apd.ReactionForceEnabled = false
+		apd.Responsiveness = 200
+		apd.Attachment1 = att1
+		apd.Attachment0 = att0
+		apd.Name = "AlignPositionRfalse"
+		apd.RigidityEnabled = false
+	end
+
+	local ao = Instance.new("AlignOrientation", att0)
+	ao.MaxAngularVelocity = inf
+	ao.MaxTorque = inf
+	ao.PrimaryAxisOnly = false
+	ao.ReactionTorqueEnabled = false
+	ao.Responsiveness = 200
+	ao.Attachment1 = att1
+	ao.Attachment0 = att0
+	ao.RigidityEnabled = false
+
+	if type(getNetlessVelocity) == "function" then
+	    local realVelocity = v3_0
+        local steppedcon = stepped:Connect(function()
+            Part0.Velocity = realVelocity
+        end)
+        local heartbeatcon = heartbeat:Connect(function()
+            realVelocity = Part0.Velocity
+            Part0.Velocity = getNetlessVelocity(realVelocity)
+        end)
+        Part0.Destroying:Connect(function()
+            Part0 = nil
+            steppedcon:Disconnect()
+            heartbeatcon:Disconnect()
+        end)
+    end
+end
+
+local function respawnrequest()
+	local ccfr = ws.CurrentCamera.CFrame
+	local c = lp.Character
+	lp.Character = nil
+	lp.Character = c
+	local con = nil
+	con = ws.CurrentCamera.Changed:Connect(function(prop)
+	    if (prop ~= "Parent") and (prop ~= "CFrame") then
+	        return
+	    end
+	    ws.CurrentCamera.CFrame = ccfr
+	    con:Disconnect()
+    end)
+end
+
+local destroyhum = (method == 4) or (method == 5)
+local breakjoints = (method == 0) or (method == 4)
+local antirespawn = (method == 0) or (method == 2) or (method == 3)
+
+hatcollide = hatcollide and (method == 0)
+
+addtools = addtools and gp(lp, "Backpack", "Backpack")
+
+local fenv = getfenv()
+local shp = fenv.sethiddenproperty or fenv.set_hidden_property or fenv.set_hidden_prop or fenv.sethiddenprop
+local ssr = fenv.setsimulationradius or fenv.set_simulation_radius or fenv.set_sim_radius or fenv.setsimradius or fenv.set_simulation_rad or fenv.setsimulationrad
+
+if shp and (simradius == "shp") then
+	spawn(function()
+		while c and heartbeat:Wait() do
+			shp(lp, "SimulationRadius", inf)
+		end
+	end)
+elseif ssr and (simradius == "ssr") then
+	spawn(function()
+		while c and heartbeat:Wait() do
+			ssr(inf)
+		end
+	end)
+end
+
+antiragdoll = antiragdoll and function(v)
+	if v:IsA("HingeConstraint") or v:IsA("BallSocketConstraint") then
+		v.Parent = nil
+	end
+end
+
+if antiragdoll then
+	for i, v in pairs(c:GetDescendants()) do
+		antiragdoll(v)
+	end
+	c.DescendantAdded:Connect(antiragdoll)
+end
+
+if antirespawn then
+	respawnrequest()
+end
+
+if method == 0 then
+	wait(loadtime)
+	if not c then
+		return
+	end
+end
+
+if discharscripts then
+	for i, v in pairs(c:GetChildren()) do
+		if v:IsA("LocalScript") then
+			v.Disabled = true
+		end
+	end
+elseif newanimate then
+	local animate = gp(c, "Animate", "LocalScript")
+	if animate and (not animate.Disabled) then
+		animate.Disabled = true
+	else
+		newanimate = false
+	end
+end
+
+if addtools then
+	for i, v in pairs(addtools:GetChildren()) do
+		if v:IsA("Tool") then
+			v.Parent = c
+		end
+	end
+end
+
+pcall(function()
+	settings().Physics.AllowSleep = false
+	settings().Physics.PhysicsEnvironmentalThrottle = Enum.EnviromentalPhysicsThrottle.Disabled
+end)
+
+local OLDscripts = {}
+
+for i, v in pairs(c:GetDescendants()) do
+	if v.ClassName == "Script" then
+		table.insert(OLDscripts, v)
+	end
+end
+
+local scriptNames = {}
+
+for i, v in pairs(c:GetDescendants()) do
+	if v:IsA("BasePart") then
+		local newName = tostring(i)
+		local exists = true
+		while exists do
+			exists = false
+			for i, v in pairs(OLDscripts) do
+				if v.Name == newName then
+					exists = true
+				end
+			end
+			if exists then
+				newName = newName .. "_"    
+			end
+		end
+		table.insert(scriptNames, newName)
+		Instance.new("Script", v).Name = newName
+	end
+end
+
+c.Archivable = true
+local hum = c:FindFirstChildOfClass("Humanoid")
+if hum then
+	for i, v in pairs(hum:GetPlayingAnimationTracks()) do
+		v:Stop()
+	end
+end
+local cl = c:Clone()
+if hum and humState16 then
+    hum:ChangeState(Enum.HumanoidStateType.Physics)
+    if destroyhum then
+        wait(1.6)
+    end
+end
+if hum and hum.Parent and destroyhum then
+    hum:Destroy()
+end
+
+if not c then
+    return
+end
+
+local head = gp(c, "Head", "BasePart")
+local torso = gp(c, "Torso", "BasePart") or gp(c, "UpperTorso", "BasePart")
+local root = gp(c, "HumanoidRootPart", "BasePart")
+if hatcollide and c:FindFirstChildOfClass("Accessory") then
+    local anything = c:FindFirstChildOfClass("BodyColors") or gp(c, "Health", "Script")
+    if not (torso and root and anything) then
+        return
+    end
+    torso:Destroy()
+    root:Destroy()
+    if shp then
+        for i,v in pairs(c:GetChildren()) do
+            if v:IsA("Accessory") then
+                shp(v, "BackendAccoutrementState", 0)
+            end 
+        end
+    end
+    anything:Destroy()
+    if head then
+       head:Destroy()
+    end
+end
+
+for i, v in pairs(cl:GetDescendants()) do
+	if v:IsA("BasePart") then
+		v.Transparency = 1
+		v.Anchored = false
+	end
+end
+
+local model = Instance.new("Model", c)
+model.Name = model.ClassName
+
+model.Destroying:Connect(function()
+	model = nil
+end)
+
+for i, v in pairs(c:GetChildren()) do
+	if v ~= model then
+		if addtools and v:IsA("Tool") then
+			for i1, v1 in pairs(v:GetDescendants()) do
+				if v1 and v1.Parent and v1:IsA("BasePart") then
+					local bv = Instance.new("BodyVelocity", v1)
+					bv.Velocity = v3_0
+					bv.MaxForce = v3(1000, 1000, 1000)
+					bv.P = 1250
+					bv.Name = "bv_" .. v.Name
+				end
+			end
+		end
+		v.Parent = model
+	end
+end
+
+if breakjoints then
+	model:BreakJoints()
+else
+	if head and torso then
+		for i, v in pairs(model:GetDescendants()) do
+			if v:IsA("Weld") or v:IsA("Snap") or v:IsA("Glue") or v:IsA("Motor") or v:IsA("Motor6D") then
+				local save = false
+				if (v.Part0 == torso) and (v.Part1 == head) then
+					save = true
+				end
+				if (v.Part0 == head) and (v.Part1 == torso) then
+					save = true
+				end
+				if save then
+					if hedafterneck then
+						hedafterneck = v
+					end
+				else
+					v:Destroy()
+				end
+			end
+		end
+	end
+	if method == 3 then
+		spawn(function()
+			wait(loadtime)
+			if model then
+				model:BreakJoints()
+			end
+		end)
+	end
+end
+
+cl.Parent = c
+for i, v in pairs(cl:GetChildren()) do
+	v.Parent = c
+end
+cl:Destroy()
+
+local modelDes = {}
+for i, v in pairs(model:GetDescendants()) do
+	if v:IsA("BasePart") then
+		i = tostring(i)
+		v.Destroying:Connect(function()
+			modelDes[i] = nil
+		end)
+		modelDes[i] = v
+	end
+end
+local modelcolcon = nil
+local function modelcolf()
+	if model then
+		for i, v in pairs(modelDes) do
+			v.CanCollide = false
+		end
+	else
+		modelcolcon:Disconnect()
+	end
+end
+modelcolcon = stepped:Connect(modelcolf)
+modelcolf()
+
+for i, scr in pairs(model:GetDescendants()) do
+	if (scr.ClassName == "Script") and table.find(scriptNames, scr.Name) then
+		local Part0 = scr.Parent
+		if Part0:IsA("BasePart") then
+			for i1, scr1 in pairs(c:GetDescendants()) do
+				if (scr1.ClassName == "Script") and (scr1.Name == scr.Name) and (not scr1:IsDescendantOf(model)) then
+					local Part1 = scr1.Parent
+					if (Part1.ClassName == Part0.ClassName) and (Part1.Name == Part0.Name) then
+						align(Part0, Part1)
+						break
+					end
+				end
+			end
+		end
+	end
+end
+
+if (typeof(hedafterneck) == "Instance") and head then
+	local aligns = {}
+	local con = nil
+	con = hedafterneck.Changed:Connect(function(prop)
+	    if (prop == "Parent") and not hedafterneck.Parent then
+	        con:Disconnect()
+    		for i, v in pairs(aligns) do
+    			v.Enabled = true
+    		end
+		end
+	end)
+	for i, v in pairs(head:GetDescendants()) do
+		if v:IsA("AlignPosition") or v:IsA("AlignOrientation") then
+			i = tostring(i)
+			aligns[i] = v
+			v.Destroying:Connect(function()
+			    aligns[i] = nil
+			end)
+			v.Enabled = false
+		end
+	end
+end
+
+for i, v in pairs(c:GetDescendants()) do
+	if v and v.Parent then
+		if v.ClassName == "Script" then
+			if table.find(scriptNames, v.Name) then
+				v:Destroy()
+			end
+		elseif not v:IsDescendantOf(model) then
+			if v:IsA("Decal") then
+				v.Transparency = 1
+			elseif v:IsA("ForceField") then
+				v.Visible = false
+			elseif v:IsA("Sound") then
+				v.Playing = false
+			elseif v:IsA("BillboardGui") or v:IsA("SurfaceGui") or v:IsA("ParticleEmitter") or v:IsA("Fire") or v:IsA("Smoke") or v:IsA("Sparkles") then
+				v.Enabled = false
+			end
+		end
+	end
+end
+
+if newanimate then
+	local animate = gp(c, "Animate", "LocalScript")
+	if animate then
+		animate.Disabled = false
+	end
+end
+
+if addtools then
+	for i, v in pairs(c:GetChildren()) do
+		if v:IsA("Tool") then
+			v.Parent = addtools
+		end
+	end
+end
+
+local hum0 = model:FindFirstChildOfClass("Humanoid")
+if hum0 then
+    hum0.Destroying:Connect(function()
+        hum0 = nil
+    end)
+end
+
+local hum1 = c:FindFirstChildOfClass("Humanoid")
+if hum1 then
+    hum1.Destroying:Connect(function()
+        hum1 = nil
+    end)
+end
+
+if hum1 then
+	ws.CurrentCamera.CameraSubject = hum1
+	local camSubCon = nil
+	local function camSubFunc()
+		camSubCon:Disconnect()
+		if c and hum1 then
+			ws.CurrentCamera.CameraSubject = hum1
+		end
+	end
+	camSubCon = renderstepped:Connect(camSubFunc)
+	if hum0 then
+		hum0.Changed:Connect(function(prop)
+			if hum1 and (prop == "Jump") then
+				hum1.Jump = hum0.Jump
+			end
+		end)
+	else
+		respawnrequest()
+	end
+end
+
+local rb = Instance.new("BindableEvent", c)
+rb.Event:Connect(function()
+	rb:Destroy()
+	sg:SetCore("ResetButtonCallback", true)
+	if destroyhum then
+		c:BreakJoints()
+		return
+	end
+	if hum0 and (hum0.Health > 0) then
+		model:BreakJoints()
+		hum0.Health = 0
+	end
+	if antirespawn then
+	    respawnrequest()
+	end
+end)
+sg:SetCore("ResetButtonCallback", rb)
+
+spawn(function()
+	while c do
+		if hum0 and hum1 then
+			hum1.Jump = hum0.Jump
+		end
+		wait()
+	end
+	sg:SetCore("ResetButtonCallback", true)
+end)
+
+R15toR6 = R15toR6 and hum1 and (hum1.RigType == Enum.HumanoidRigType.R15)
+if R15toR6 then
+    local part = gp(c, "HumanoidRootPart", "BasePart") or gp(c, "UpperTorso", "BasePart") or gp(c, "LowerTorso", "BasePart") or gp(c, "Head", "BasePart") or c:FindFirstChildWhichIsA("BasePart")
+	if part then
+	    local cfr = part.CFrame
+		local R6parts = { 
+			head = {
+				Name = "Head",
+				Size = v3(2, 1, 1),
+				R15 = {
+					Head = 0
+				}
+			},
+			torso = {
+				Name = "Torso",
+				Size = v3(2, 2, 1),
+				R15 = {
+					UpperTorso = 0.2,
+					LowerTorso = -100
+				}
+			},
+			root = {
+				Name = "HumanoidRootPart",
+				Size = v3(2, 2, 1),
+				R15 = {
+					HumanoidRootPart = 0
+				}
+			},
+			leftArm = {
+				Name = "Left Arm",
+				Size = v3(1, 2, 1),
+				R15 = {
+					LeftHand = -0.73,
+					LeftLowerArm = -0.2,
+					LeftUpperArm = 0.4
+				}
+			},
+			rightArm = {
+				Name = "Right Arm",
+				Size = v3(1, 2, 1),
+				R15 = {
+					RightHand = -0.73,
+					RightLowerArm = -0.2,
+					RightUpperArm = 0.4
+				}
+			},
+			leftLeg = {
+				Name = "Left Leg",
+				Size = v3(1, 2, 1),
+				R15 = {
+					LeftFoot = -0.73,
+					LeftLowerLeg = -0.15,
+					LeftUpperLeg = 0.6
+				}
+			},
+			rightLeg = {
+				Name = "Right Leg",
+				Size = v3(1, 2, 1),
+				R15 = {
+					RightFoot = -0.73,
+					RightLowerLeg = -0.15,
+					RightUpperLeg = 0.6
+				}
+			}
+		}
+		for i, v in pairs(c:GetChildren()) do
+			if v:IsA("BasePart") then
+				for i1, v1 in pairs(v:GetChildren()) do
+					if v1:IsA("Motor6D") then
+						v1.Part0 = nil
+					end
+				end
+			end
+		end
+		part.Archivable = true
+		for i, v in pairs(R6parts) do
+			local part = part:Clone()
+			part:ClearAllChildren()
+			part.Name = v.Name
+			part.Size = v.Size
+			part.CFrame = cfr
+			part.Anchored = false
+			part.Transparency = 1
+			part.CanCollide = false
+			for i1, v1 in pairs(v.R15) do
+				local R15part = gp(c, i1, "BasePart")
+				local att = gp(R15part, "att1_" .. i1, "Attachment")
+				if R15part then
+					local weld = Instance.new("Weld", R15part)
+					weld.Name = "Weld_" .. i1
+					weld.Part0 = part
+					weld.Part1 = R15part
+					weld.C0 = cf(0, v1, 0)
+					weld.C1 = cf(0, 0, 0)
+					R15part.Massless = true
+					R15part.Name = "R15_" .. i1
+					R15part.Parent = part
+					if att then
+						att.Parent = part
+						att.Position = v3(0, v1, 0)
+					end
+				end
+			end
+			part.Parent = c
+			R6parts[i] = part
+		end
+		local R6joints = {
+			neck = {
+				Parent = Scarf,
+				Name = "Neck",
+				Part0 = Scarf, --R6parts.torso
+				Part1 = Scarf, --R6parts.head
+				C0 = cf(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0),
+				C1 = cf(0, -0.5, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0)
+			},
+			rootJoint = {
+				Parent = R6parts.root,
+				Name = "RootJoint" ,
+				Part0 = R6parts.root,
+				Part1 = R6parts.torso,
+				C0 = cf(0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0),
+				C1 = cf(0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0)
+			},
+			rightShoulder = {
+				Parent = R6parts.torso,
+				Name = "Right Shoulder",
+				Part0 = R6parts.torso,
+				Part1 = R6parts.rightArm,
+				C0 = cf(1, 0.5, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0),
+				C1 = cf(-0.5, 0.5, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0)
+			},
+			leftShoulder = {
+				Parent = R6parts.torso,
+				Name = "Left Shoulder",
+				Part0 = R6parts.torso,
+				Part1 = R6parts.leftArm,
+				C0 = cf(-1, 0.5, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0),
+				C1 = cf(0.5, 0.5, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0)
+			},
+			rightHip = {
+				Parent = R6parts.torso,
+				Name = "Right Hip",
+				Part0 = R6parts.torso,
+				Part1 = R6parts.rightLeg,
+				C0 = cf(1, -1, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0),
+				C1 = cf(0.5, 1, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0)
+			},
+			leftHip = {
+				Parent = R6parts.torso,
+				Name = "Left Hip" ,
+				Part0 = R6parts.torso,
+				Part1 = R6parts.leftLeg,
+				C0 = cf(-1, -1, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0),
+				C1 = cf(-0.5, 1, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0)
+			}
+		}
+		for i, v in pairs(R6joints) do
+			local joint = Instance.new("Motor6D")
+			for prop, val in pairs(v) do
+				joint[prop] = val
+			end
+			R6joints[i] = joint
+		end
+		hum1.RigType = Enum.HumanoidRigType.R6
+		hum1.HipHeight = 0
+	end
+end
+
+
+
+--find rig joints
+
+local function fakemotor()
+    return {C0=cf(), C1=cf()}
+end
+
+local torso = gp(c, "Torso", "BasePart")
+local root = gp(c, "HumanoidRootPart", "BasePart")
+
+local neck = gp(torso, "Neck", "Motor6D")
+neck = neck or fakemotor()
+
+local rootJoint = gp(root, "RootJoint", "Motor6D")
+rootJoint = rootJoint or fakemotor()
+
+local leftShoulder = gp(torso, "Left Shoulder", "Motor6D")
+leftShoulder = leftShoulder or fakemotor()
+
+local rightShoulder = gp(torso, "Right Shoulder", "Motor6D")
+rightShoulder = rightShoulder or fakemotor()
+
+local leftHip = gp(torso, "Left Hip", "Motor6D")
+leftHip = leftHip or fakemotor()
+
+local rightHip = gp(torso, "Right Hip", "Motor6D")
+rightHip = rightHip or fakemotor()
+
+--120 fps
+
+local fps = 0
+local event = Instance.new("BindableEvent", c)
+event.Name = "120 fps"
+local floor = math.floor
+fps = 1 / fps
+local tf = 0
+local con = nil
+con = game:GetService("RunService").RenderStepped:Connect(function(s)
+	if not c then
+		con:Disconnect()
+		return
+	end
+    --tf += s
+	if tf >= fps then
+		for i=1, floor(tf / fps) do
+			event:Fire(c)
+		end
+		tf = 0
+	end
+end)
+local event = event.Event
+
+local hedrot = v3(0, 5, 0)
+
+local uis = game:GetService("UserInputService")
+local function isPressed(key)
+    return (not uis:GetFocusedTextBox()) and uis:IsKeyDown(Enum.KeyCode[key])
+end
+
+local biggesthandle = nil
+for i, v in pairs(c:GetChildren()) do
+    if v:IsA("Accessory") and v.Name == "VANS_Umbrella" then
+        local handle = gp(v, "Handle", "BasePart")
+        if biggesthandle then
+            if biggesthandle.Size.Magnitude < handle.Size.Magnitude then
+                biggesthandle = Handle
+            end
+       else
+            biggesthandle = gp(v, "Handle", "BasePart")
+        end
+    end
+end
+
+if not biggesthandle then
+    return
+end
+
+local handle1 = gp(gp(model, biggesthandle.Parent.Name, "Accessory"), "Handle", "BasePart")
+if not handle1 then
+    return
+end
+
+handle1.Destroying:Connect(function()
+    handle1 = nil
+end)
+biggesthandle.Destroying:Connect(function()
+    biggesthandle = nil
+end)
+
+biggesthandle:BreakJoints()
+biggesthandle.Anchored = true
+
+for i, v in pairs(handle1:GetDescendants()) do
+    if v:IsA("AlignOrientation") then
+        v.Enabled = false
+   end
+end
+
+local mouse = lp:GetMouse()
+local fling = false
+mouse.Button1Down:Connect(function()
+    fling = true
+end)
+mouse.Button1Up:Connect(function()
+    fling = false
+end)
+local function doForSignal(signal, vel)
+    spawn(function()
+        while signal:Wait() and c and handle1 and biggesthandle do
+            if fling and mouse.Target then
+                biggesthandle.Position = mouse.Hit.Position
+            end
+            handle1.RotVelocity = vel
+        end
+    end)
+end
+doForSignal(stepped, v3(100, 100, 100))
+doForSignal(renderstepped, v3(100, 100, 100))
+doForSignal(heartbeat, v3(20000, 20000, 20000)) --https://web.roblox.com/catalog/63690008/Pal-Hair
+
+local lp = game:GetService("Players").LocalPlayer
+local rs = game:GetService("RunService")
+local stepped = rs.Stepped
+local heartbeat = rs.Heartbeat
+local renderstepped = rs.RenderStepped
+local sg = game:GetService("StarterGui")
+local ws = game:GetService("Workspace")
+local cf = CFrame.new
+local v3 = Vector3.new
+local v3_0 = Vector3.zero
+local inf = math.huge
+
+local cplayer = lp.Character
+
+local v3 = Vector3.new
+
+local function gp(parent, name, className)
+    if typeof(parent) == "Instance" then
+        for i, v in pairs(parent:GetChildren()) do
+            if (v.Name == name) and v:IsA(className) then
+                return v
+            end
+        end
+    end
+    return nil
+end
+
+local hat2 = gp(cplayer, "SeeMonkey", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Torso"]
+att2.Position = Vector3.new(0, -0, 0)
+att2.Rotation = Vector3.new(90, 0, 0)
+
+local hat2 = gp(cplayer, "Pink Hair", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Left Arm"]
+att2.Position = Vector3.new(0, -0, 0)
+att2.Rotation = Vector3.new(90, 0, 0)
+
+local hat2 = gp(cplayer, "Kate Hair", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Right Arm"]
+att2.Position = Vector3.new(-0, -0, 0)
+att2.Rotation = Vector3.new(90, 0, 0) --LavanderHair
+
+local hat2 = gp(cplayer, "LavanderHair", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Right Leg"]
+att2.Position = Vector3.new(0, 0, 0) --Robloxclassicred
+att2.Rotation = Vector3.new(90, 0, 0)
+
+local hat2 = gp(cplayer, "Robloxclassicred", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Left Leg"]
+att2.Position = Vector3.new(-0, 0, 0) 
+att2.Rotation = Vector3.new(90, 0, 0)
+
+local hat2 = gp(cplayer, "MeshPartAccessory", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Right Leg"]
+att2.Position = Vector3.new(0, 0.5, 0.5) --Robloxclassicred
+att2.Rotation = Vector3.new(90, 0, 0)
+
+local hat2 = gp(cplayer, "gaytek", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Left Leg"]
+att2.Position = Vector3.new(-0, 0.5, 0.5) 
+att2.Rotation = Vector3.new(90, 0, 0)
+
+game.Players.LocalPlayer.Character:FindFirstChild("MeshPartAccessory").Name = "gaytek"
+
+game:GetObjects("rbxassetid://10756030279")[1].Parent=game.ReplicatedStorage
+game:GetObjects("rbxassetid://10756132900")[1].Parent=game.ReplicatedStorage
+game:GetObjects("rbxassetid://10756140045")[1].Parent=game.ReplicatedStorage
+game:GetObjects("rbxassetid://10756479141")[1].Parent=game.ReplicatedStorage
+game:GetObjects("rbxassetid://10756483021")[1].Parent=game.ReplicatedStorage
+local Player = game:GetService("Players").LocalPlayer
+local Mouse,mouse,UserInputService,ContextActionService
+local mouse = Player:GetMouse()
+local localEffectsEvent
+do
+	local CAS = {Actions={}}
+	local Event = Instance.new("RemoteEvent")
+	Event.Name = "UserInputEvent"
+	Event.Parent = Player.Character
+	localEffectsEvent = Event
+	local fakeEvent = function()
+		local t = {_fakeEvent=true}
+		t.Connect = function(self,f)self.Function=f end
+		t.connect = t.Connect
+		return t
+	end
+    
+	function CAS:UnbindAction(name)
+		CAS.Actions[name] = nil
+	end
+	local function te(self,ev,...)
+		local t = m[ev]
+		if t and t._fakeEvent and t.Function then
+			t.Function(...)
+		end
+	end
+
+
+
+	    
+
+--this was made for vlad
+local ins = Instance.new
+
+local Player = game:GetService("Players").LocalPlayer
+
+local Char = Player.Character
+local Event = Char:WaitForChild("UserInputEvent")
+
+local UIS = game:GetService("UserInputService")
+
+local input = function(io,a)
+    if a then return end
+	local io = {KeyCode=io.KeyCode,UserInputType=io.UserInputType,UserInputState=io.UserInputState}
+	Event:FireServer(io)
+end
+UIS.InputBegan:Connect(input)
+UIS.InputEnded:Connect(input)
+local Changed = false
+local Mouse = Player:GetMouse()
+local h,t = Mouse.Hit,Mouse.Target
+
+coroutine.wrap(function()
+
+	if h~=Mouse.Hit or t~=Mouse.Target then
+		Event:FireServer({isMouse=true,Target=Mouse.Target,Hit=Mouse.Hit})
+        h,t=Mouse.Hit,Mouse.Target
+	end
+end)()
+
+local v3 = Vector3.new
+local cf = CFrame.new
+
+local char = Player.Character
+local hum = char:FindFirstChildOfClass("Humanoid")
+local rut = char.HumanoidRootPart
+local h = char.Head
+
+Event.OnClientEvent:Connect(function(type)
+	if type == "shak" then
+		local part = ins("Part",char)
+		part.Size = v3(0,0,0)
+		part.CanCollide = false
+		part.Anchored = true
+		part.CFrame = workspace.CurrentCamera.CFrame * cf(0,.5,0)
+		game:GetService("Debris"):AddItem(part,.35)
+		
+		local bool = ins("BoolValue",part)
+		bool.Name = "Shaking"
+		bool.Value = true
+		
+		local MaxDist = ins("NumberValue",bool)
+		MaxDist.Name = "MaxDist"
+		MaxDist.Value = 1000
+		
+		local Intensivity = ins("NumberValue",bool)
+		Intensivity.Name = "Intensivity"
+		Intensivity.Value = .65
+	end
+end)
+
+
+	if hum:FindFirstChild("Stunned") then
+		workspace.CurrentCamera.CFrame = h.CFrame
+		
+	end
+	for i,v in pairs(char:GetChildren()) do
+		if v:IsA("BasePart") then
+			v.LocalTransparencyModifier = 0
+		end
+	end
+	if (workspace.CurrentCamera.CFrame.Position - h.Position).Magnitude <1.5 then
+		h.LocalTransparencyModifier = 1
+		for i,v in pairs(char:GetChildren()) do
+			if v:IsA("Accessory") then
+				v.Handle.LocalTransparencyModifier = 1
+			end
+		end
+	else
+		h.LocalTransparencyModifier = 0
+		for i,v in pairs(char:GetChildren()) do
+			if v:IsA("Accessory") then
+				v.Handle.LocalTransparencyModifier = 0
+			end
+		end
+	end
+	hum.CameraOffset = hum.CameraOffset:Lerp((rut.CFrame*cf(0,1.5,0)):PointToObjectSpace(h.Position),.1)
+end
+--BasicFunctions
+local ins = Instance.new
+local v3 = Vector3.new
+local cf = CFrame.new
+local angles = CFrame.Angles
+local rad = math.rad
+local huge = math.huge
+local cos = math.cos
+local sin = math.sin
+local tan = math.tan
+local abs = math.abs
+local ray = Ray.new
+local random = math.random
+local ud = UDim.new
+local ud2 = UDim2.new
+local c3 = Color3.new
+local rgb = Color3.fromRGB
+local bc = BrickColor.new
+
+--Services
+local plrs = game:GetService("Players")
+local tweens = game:GetService("TweenService")
+local debrs = game:GetService("Debris")
+local runservice = game:GetService("RunService")
+ 
+--Variables
+local plr = Player
+local plrg = plr.PlayerGui
+local char = plr.Character
+local h = char.Head
+local t = char.Torso
+local ra = char["Right Arm"]
+local la = char["Left Arm"]
+local rl = char["Right Leg"]
+local ll = char["Left Leg"]
+local rut = char.HumanoidRootPart
+local hum = char:FindFirstChildOfClass("Humanoid")
+local nec = t.Neck
+local rutj = rut.RootJoint
+local rs = t["Right Shoulder"]
+local ls = t["Left Shoulder"]
+local rh = t["Right Hip"]
+local lh = t["Left Hip"]
+
+necc0,necc1=cf(0,t.Size.Y/2,0),cf(0,-h.Size.Y/2,0)
+rutjc0,rutjc1=cf(0,0,0),cf(0,0,0)
+rsc0,rsc1=cf(t.Size.X/2,t.Size.Y/4,0),cf(-ra.Size.X/2,ra.Size.Y/4,0)
+lsc0,lsc1=cf(-t.Size.X/2,t.Size.Y/4,0),cf(la.Size.X/2,la.Size.Y/4,0)
+rhc0,rhc1=cf(t.Size.X/4,-t.Size.Y/2,0),cf(0,rl.Size.Y/2,0)
+lhc0,lhc1=cf(-t.Size.X/4,-t.Size.Y/2,0),cf(0,ll.Size.Y/2,0)
+
+local using = false
+local canGrabLedge = false
+local holding = false
+local movingRight = false
+local movingLeft = false
+local moving = false
+local canGrab = true
+local dancin = false
+local canWallClimb = false
+local wallClimbDeb = false
+local moveDir = 0
+local ledgePos
+
+local fallTime = 0
+local stunned = false
+
+local canDash = true
+
+local lightEnabled = false
+
+local anim = "idle"
+local asset = "rbxassetid://"
+
+local change = 1
+local sine = 0
+local dSine = -5000
+
+local ws = 8
+local jp = 35
+
+local oldWS = ws
+local oldJP = jp
+
+--
+local ignoreList = {char}
+
+local stepsounds = {
+Grass = asset.."1201103066",
+Sand = asset.."1436385526",
+Plastic = asset.."1569994049",
+Stone = asset.."507863857", --379398649
+Wood = asset.."1201103959",
+Pebble = asset.."1201103211",
+Ice = asset.."265653271",
+Glass = asset.."145180170",
+Metal = asset.."379482691"
+}
+
+local directions = {In = Enum.EasingDirection.In,
+    Out = Enum.EasingDirection.Out,
+    InOut = Enum.EasingDirection.InOut
+}
+
+local styles = {Linear = Enum.EasingStyle.Linear,
+    Back = Enum.EasingStyle.Back,
+    Bounce = Enum.EasingStyle.Bounce,
+    Sine = Enum.EasingStyle.Sine,
+    Quad = Enum.EasingStyle.Quad,
+    Elastic = Enum.EasingStyle.Elastic,
+    Quart = Enum.EasingStyle.Quart,
+    Quint = Enum.EasingStyle.Quint
+}
+
+local ignoreList = {char}
+
+local stepped = runservice.Heartbeat
+
+--Removing joints/Animations
+if char:FindFirstChild("Animate") then
+	char.Animate:Destroy()
+end
+
+if hum:FindFirstChildOfClass("Animator") then
+	char.Humanoid.Animator:Destroy()
+end
+
+nec.Parent = nil
+rutj.Parent = nil
+rs.Parent = nil
+ls.Parent = nil
+rh.Parent = nil
+lh.Parent = nil
+
+--Joints
+local nec = ins("Motor6D",t) nec.Name = "Neck" nec.Part0 = t nec.Part1 = h
+local rutj = ins("Motor6D",rut) rutj.Name = "RootJoint" rutj.Part0 = t rutj.Part1 = rut
+local rs = ins("Motor6D",t) rs.Name = "Right Shoulder" rs.Part0 = t rs.Part1 = ra
+local ls = ins("Motor6D",t) ls.Name = "Left Shoulder" ls.Part0 = t ls.Part1 = la
+local rh = ins("Motor6D",t) rh.Name = "Right Hip" rh.Part0 = t rh.Part1 = rl
+local lh = ins("Motor6D",t) lh.Name = "Left Hip" lh.Part0 = t lh.Part1 = ll
+
+--Setting CFrames
+nec.C1 = necc1
+nec.C0 = necc0
+rs.C1 = rsc1
+rs.C0 = rsc0
+ls.C1 = lsc1
+ls.C0 = lsc0
+rh.C1 = rhc1
+rh.C0 = rhc0
+lh.C1 = lhc1
+lh.C0 = lhc0
+rutj.C1 = rutjc1
+rutj.C0 = rutjc0
+
+--Functions1
+function createWeld(p1,p2,c0,c1)
+	c0 = c0 or cf(0,0,0)
+	c1 = c1 or cf(0,0,0)
+	local weld = ins("Motor6D",p1)
+	weld.Part0 = p1
+	weld.Part1 = p2
+	weld.C0 = c0
+	weld.C1 = c1
+	return weld
+end
+
+--Adds
+local ff = ins("ForceField",char)
+ff.Visible = false
+
+local effects = ins("Model",char)
+effects.Name = "Effects"
+
+local cam = workspace.CurrentCamera
+
+local rad = math.rad
+local random = math.random
+
+
+	pcall(function()
+		for i,v in pairs(workspace:GetDescendants()) do
+			if string.find(v.ClassName:lower(),"part") and not v:IsA("ParticleEmitter") then
+				if v:FindFirstChild("Shaking") then
+					if v:FindFirstChild("Shaking").Value then
+						local maxDist = v:FindFirstChild("Shaking").MaxDist.Value
+						local intensivity = v:FindFirstChild("Shaking").Intensivity.Value
+						if (cam.CFrame.p-v.Position).Magnitude <= maxDist then
+							local val = ((maxDist/(cam.CFrame.p-v.Position).Magnitude)) * intensivity
+							if val <= maxDist then
+								cam.CFrame = cam.CFrame:Lerp(cam.CFrame * CFrame.Angles(rad(random(-val,val)),rad(random(-val,val)),rad(random(-val,val))),.15)
+							end
+						end
+					end
+				end
+			end
+		end
+	end)
+
+local lamp = game.ReplicatedStorage.Lamp
+lamp.Parent = char
+local lWeld = createWeld(t,lamp.Handle,cf(-.975,-.75,-.25) * angles(rad(85),rad(85),rad(5)))
+
+-- Gui to Lua
+-- Version: 3.2
+
+-- Instances:
+
+local ParkourUI = Instance.new("ScreenGui")
+local CollidingFrame = Instance.new("Frame")
+local Background = Instance.new("ImageLabel")
+local HealthFrame = Instance.new("ImageLabel")
+local Cover = Instance.new("ImageLabel")
+local BarCollider = Instance.new("Frame")
+local BarCollider_2 = Instance.new("ImageLabel")
+local HP = Instance.new("TextLabel")
+local HealthLabel = Instance.new("TextLabel")
+local StunCover = Instance.new("Frame")
+
+--Properties:
+
+ParkourUI.Name = "ParkourUI"
+ParkourUI.Parent = game.Players.LocalPlayer.PlayerGui
+ParkourUI.DisplayOrder = 1999999999
+
+CollidingFrame.Name = "CollidingFrame"
+CollidingFrame.Parent = ParkourUI
+CollidingFrame.AnchorPoint = Vector2.new(0.5, 0)
+CollidingFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+CollidingFrame.BackgroundTransparency = 1.000
+CollidingFrame.BorderSizePixel = 0
+CollidingFrame.ClipsDescendants = true
+CollidingFrame.Position = UDim2.new(0.5, 0, 0, 0)
+CollidingFrame.Size = UDim2.new(0, 300, 0, 50)
+CollidingFrame.ZIndex = 2
+
+Background.Name = "Background"
+Background.Parent = CollidingFrame
+Background.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Background.BackgroundTransparency = 1.000
+Background.Position = UDim2.new(0, 0, -1, -5)
+Background.Size = UDim2.new(0, 300, 0, 55)
+Background.Image = "rbxassetid://2851928141"
+Background.ImageColor3 = Color3.fromRGB(35, 35, 35)
+Background.ScaleType = Enum.ScaleType.Slice
+Background.SliceCenter = Rect.new(8, 8, 8, 8)
+
+HealthFrame.Name = "HealthFrame"
+HealthFrame.Parent = Background
+HealthFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+HealthFrame.BackgroundTransparency = 1.000
+HealthFrame.Size = UDim2.new(0, 250, 0, 55)
+HealthFrame.Image = "rbxassetid://2851928141"
+HealthFrame.ImageColor3 = Color3.fromRGB(54, 54, 54)
+HealthFrame.ScaleType = Enum.ScaleType.Slice
+HealthFrame.SliceCenter = Rect.new(8, 8, 8, 8)
+
+Cover.Name = "Cover"
+Cover.Parent = HealthFrame
+Cover.AnchorPoint = Vector2.new(0.5, 0)
+Cover.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Cover.BackgroundTransparency = 1.000
+Cover.Position = UDim2.new(0.5, 0, 0, 5)
+Cover.Size = UDim2.new(0, 240, 0, 50)
+Cover.Image = "rbxassetid://2851928141"
+Cover.ImageColor3 = Color3.fromRGB(35, 35, 35)
+Cover.ScaleType = Enum.ScaleType.Slice
+Cover.SliceCenter = Rect.new(8, 8, 8, 8)
+
+BarCollider.Name = "BarCollider"
+BarCollider.Parent = Cover
+BarCollider.BackgroundColor3 = Color3.fromRGB(75, 214, 0)
+BarCollider.BackgroundTransparency = 1.000
+BarCollider.BorderSizePixel = 0
+BarCollider.ClipsDescendants = true
+BarCollider.Size = UDim2.new(1, 0, 0, 50)
+
+BarCollider_2.Name = "BarCollider"
+BarCollider_2.Parent = BarCollider
+BarCollider_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+BarCollider_2.BackgroundTransparency = 1.000
+BarCollider_2.Size = UDim2.new(0, 240, 0, 50)
+BarCollider_2.Image = "rbxassetid://2851928141"
+BarCollider_2.ImageColor3 = Color3.fromRGB(75, 214, 0)
+BarCollider_2.ScaleType = Enum.ScaleType.Slice
+BarCollider_2.SliceCenter = Rect.new(8, 8, 8, 8)
+
+HP.Name = "HP"
+HP.Parent = Background
+HP.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+HP.BackgroundTransparency = 1.000
+HP.BorderSizePixel = 0
+HP.Position = UDim2.new(0, 250, 0, 30)
+HP.Size = UDim2.new(0, 50, 0, 25)
+HP.Font = Enum.Font.Arial
+HP.Text = "100"
+HP.TextColor3 = Color3.fromRGB(255, 255, 255)
+HP.TextScaled = true
+HP.TextSize = 14.000
+HP.TextStrokeColor3 = Color3.fromRGB(30, 30, 30)
+HP.TextStrokeTransparency = 0.500
+HP.TextWrapped = true
+HP.TextXAlignment = Enum.TextXAlignment.Left
+HP.TextYAlignment = Enum.TextYAlignment.Top
+
+HealthLabel.Name = "HealthLabel"
+HealthLabel.Parent = Background
+HealthLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+HealthLabel.BackgroundTransparency = 1.000
+HealthLabel.BorderSizePixel = 0
+HealthLabel.Position = UDim2.new(0, 250, 0, 5)
+HealthLabel.Size = UDim2.new(0, 50, 0, 25)
+HealthLabel.Font = Enum.Font.ArialBold
+HealthLabel.Text = "Health:"
+HealthLabel.TextColor3 = Color3.fromRGB(147, 147, 147)
+HealthLabel.TextScaled = true
+HealthLabel.TextSize = 14.000
+HealthLabel.TextStrokeColor3 = Color3.fromRGB(30, 30, 30)
+HealthLabel.TextStrokeTransparency = 0.500
+HealthLabel.TextWrapped = true
+HealthLabel.TextXAlignment = Enum.TextXAlignment.Left
+HealthLabel.TextYAlignment = Enum.TextYAlignment.Bottom
+
+StunCover.Name = "StunCover"
+StunCover.Parent = ParkourUI
+StunCover.BackgroundColor3 = Color3.fromRGB(136, 0, 0)
+StunCover.BackgroundTransparency = 1.000
+StunCover.BorderSizePixel = 0
+StunCover.Size = UDim2.new(1, 0, 1, 0)
+
+-- Scripts:
+
+
+
+
+h.Size = v3(1,1,1)
+
+--Functions2
+
+function remove(instance,time)
+	time = time or 0
+	game:GetService("Debris"):AddItem(instance,time)
+end
+
+function swait()
+	game:GetService("RunService").Stepped:Wait()
+end
+
+function rayc(spos,direc,ignore,dist)
+    local rai = ray(spos,direc.Unit * dist)
+    local rhit,rpos,rrot = workspace:FindPartOnRayWithIgnoreList(rai,ignore,false,false)
+    return rhit,rpos,rrot
+end
+
+function sound(id,vol,pitch,parent,maxdist)
+	local mdist = 30 or maxdist
+	local newsound = Instance.new("Sound",parent)
+	newsound.Volume = vol
+	newsound.SoundId = "rbxassetid://"..id
+	newsound.Pitch = pitch
+	newsound:Play()
+	coroutine.resume(coroutine.create(function()
+		wait(.1)
+		remove(newsound,newsound.TimeLength/newsound.Pitch)
+	end))
+	return newsound
+end
+
+function placesoundpart(rcf,id,vol,pitch,maxdist)
+	pcall(function()
+		local mdist = 30 or maxdist
+		local spart = ins("Part",effects)
+		spart.Anchored = true
+		spart.CanCollide = false
+		spart.Locked = true
+		spart.Transparency = 1
+		spart.CFrame = rcf
+		local ssound = sound(id,vol,pitch,spart,mdist)
+		remove(spart,ssound.TimeLength/ssound.Pitch)
+	end)
+end
+
+local tlerp = function(part,tablee,leinght,easingstyle,easingdirec)
+    local info = TweenInfo.new(
+    leinght,
+    easingstyle,
+    easingdirec,
+    0,
+    false,
+    0
+    )
+    local lerp = tweens:Create(part,info,tablee)
+    lerp:Play()
+end
+
+local Effects = {
+	Ring = function(pos,color,sSize,eSize,sTrans,eTrans,time)
+		local ring = game.ReplicatedStorage.Ring:Clone()
+		ring.Size = sSize
+		ring.Transparency = sTrans
+		ring.CFrame = pos
+		ring.Color = color
+		ring.Parent = effects
+		remove(ring,time)
+		tlerp(ring,{Size = eSize,Transparency = eTrans},time,styles.Linear,directions.Out)
+	end,
+	SpinningRing = function(pos,color,rotation,sSize,eSize,sTrans,eTrans,time)
+		local ring = game.ReplicatedStorage.Ring:Clone()
+		ring.Size = sSize
+		ring.Transparency = sTrans
+		ring.CFrame = pos
+		ring.Color = color
+		ring.Parent = effects
+		remove(ring,time)
+		tlerp(ring,{Size = eSize,Transparency = eTrans},time,styles.Linear,directions.Out)
+		coroutine.wrap(function()
+			repeat
+				ring.CFrame = ring.CFrame * rotation
+				wait(1/30)
+			until not ring.Parent
+		end)()
+	end,
+	Sphere = function(pos,color,sSize,eSize,sTrans,eTrans,time)
+		local sphere = ins("Part")
+		sphere.Shape = "Ball"
+		sphere.Size = v3(sSize,sSize,sSize)
+		sphere.Transparency = sTrans
+		sphere.CFrame = pos
+		sphere.Color = color
+		sphere.Parent = effects
+		sphere.Anchored = true
+		sphere.CanCollide = false
+		sphere.Locked = true
+		sphere.Material = "Neon"
+		remove(sphere,time)
+		tlerp(sphere,{Size = v3(eSize,eSize,eSize),Transparency = eTrans},time,styles.Linear,directions.Out)
+	end,
+	SpinningBlock = function(pos,color,sSize,eSize,sTrans,eTrans,cfRotation,time)
+		local part = ins("Part")
+		part.Size = v3(sSize,sSize,sSize)
+		part.Transparency = sTrans
+		part.CFrame = pos
+		part.Color = color
+		part.Parent = effects
+		part.Anchored = true
+		part.CanCollide = false
+		part.Locked = true
+		part.Material = "Neon"
+		remove(part,time)
+		tlerp(part,{Size = v3(eSize,eSize,eSize),Transparency = eTrans},time,styles.Linear,directions.Out)
+		coroutine.wrap(function()
+			repeat
+				part.CFrame = part.CFrame * cfRotation
+				wait(1/30)
+			until not part.Parent
+		end)()
+	end,
+	CustomSphere = function(pos,endPos,color,sSize,eSize,sTrans,eTrans,time)
+		local sphere = ins("Part")
+		sphere.Size = sSize
+		sphere.Transparency = sTrans
+		sphere.CFrame = pos
+		sphere.Color = color
+		sphere.Parent = effects
+		sphere.Anchored = true
+		sphere.CanCollide = false
+		sphere.Locked = true
+		sphere.Material = "Neon"
+		
+		local mesh = ins("SpecialMesh",sphere)
+		mesh.MeshType = "Sphere"
+		
+		remove(sphere,time)
+		tlerp(sphere,{Size = eSize,Transparency = eTrans,CFrame = endPos},time,styles.Linear,directions.Out)
+	end,
+	Wind = function(pos,color,rotation,sSize,eSize,sTrans,eTrans,time)
+		local ring = game.ReplicatedStorage.Wind:Clone()
+		ring.Size = sSize
+		ring.Transparency = sTrans
+		ring.CFrame = pos
+		ring.Color = color
+		ring.Parent = effects
+		remove(ring,time)
+		tlerp(ring,{Size = eSize,Transparency = eTrans},time,styles.Linear,directions.Out)
+		coroutine.wrap(function()
+			repeat
+				ring.CFrame = ring.CFrame * angles(rad(0),rad(rotation),rad(0))
+				wait(1/30)
+			until not ring.Parent
+		end)()
+	end,
+	CreateCamShake = function(part,maxDist,intensivity,time)
+		maxDist = maxDist or 20
+		intensivity = intensivity or 1
+		time = time or .1
+		
+		local bool = ins("BoolValue",part)
+		bool.Name = "Shaking"
+		bool.Value = true
+		
+		local MaxDist = ins("NumberValue",bool)
+		MaxDist.Name = "MaxDist"
+		MaxDist.Value = maxDist
+		
+		local Intensivity = ins("NumberValue",bool)
+		Intensivity.Name = "Intensivity"
+		Intensivity.Value = intensivity
+		
+		remove(bool,time)
+	end,
+	SoundEffect = function(sound,effect)
+		ins(effect.."SoundEffect",sound)
+	end,
+	Particles = function(part,type,dis)
+		local parts
+		if type:lower() == "blood" then
+			parts = game.ReplicatedStorage.BloodParticles:Clone()
+			parts.Parent = part
+			if dis then
+				parts.Enabled = false
+			else
+				parts.Enabled = true
+			end
+		elseif type:lower() == "bloodsplash" then
+			parts = game.ReplicatedStorage.BloodSplash:Clone()
+			parts.Parent = part
+			if dis then
+				parts.Enabled = false
+			else
+				parts.Enabled = true
+			end
+		end
+		return parts
+	end
+}
+
+function blood(pos,direc,forcev,scale,ignore)
+	ignore = ignore or ins("Model")
+	scale = scale or 1
+	forcev = forcev or 25
+	if not pos then
+		return warn("No position set")
+	end
+	local p = ins("Part")
+	p.Size = v3(.35,.35,.35) * scale
+	p.CanCollide = true
+	p.Transparency = 1
+	p.Material = "Neon"
+	p.Shape = "Ball"
+	p.CFrame = pos
+	p.Parent = effects
+	p:BreakJoints()
+	
+	table.insert(ignoreList,p)
+	
+	local bps = Effects.Particles(p,"blood",false)
+	bps.Size = NumberSequence.new(.2 * scale)
+	bps:Emit(7)
+	
+	local force = ins("BodyVelocity",p)
+	force.MaxForce = v3(huge,huge,huge)
+	force.Velocity = (direc + v3(random(-10,10)/75,random(-10,10)/75,random(-10,10)/75)) * forcev
+	
+	remove(force,.15)
+	
+	local raySides = {
+		v3(0,100,0),
+		v3(0,-100,0),
+		v3(0,0,100),
+		v3(0,0,-100),
+		v3(100,0,0),
+		v3(-100,0,0),
+		v3(100,100,0),
+		v3(-100,100,0),
+		v3(100,-100,0),
+		v3(-100,-100,0),
+		v3(0,100,100),
+		v3(0,100,-100),
+		v3(0,-100,100),
+		v3(0,-100,-100),
+		v3(100,100,100),
+		v3(100,-100,100),
+		v3(100,100,-100),
+		v3(100,-100,-100),
+		v3(-100,100,100),
+		v3(-100,-100,100),
+		v3(-100,100,-100),
+		v3(-100,-100,-100),
+		v3(100,100,-100),
+		v3(-100,-100,100),
+		v3(-100,100,-100),
+		v3(100,-100,100)
+	}
+	local deb = false
+	p.Touched:Connect(function(hit)
+		if hit:IsDescendantOf(char) or hit:IsDescendantOf(ignore) or deb then return end
+		deb = true
+		bps.Enabled = false
+		p.CanCollide = false
+		p.Anchored = true
+		local pPos = p.Position
+		remove(p,2.5)
+		
+		local decSize = 3 * scale
+		local reg = Region3.new(pPos - v3(decSize/2,decSize/2,decSize/2),pPos + v3(decSize/2,decSize/2,decSize/2))
+		local foundParts = workspace:FindPartsInRegion3WithWhiteList(reg,ignoreList,100)
+		
+		local breakAfter = false
+		
+		for i,v in pairs(foundParts) do
+			if v.Name == "BloodPuddle_v2" then
+				local add = random(10,25)/100
+				v.Size = v.Size + v3(add,0,add) * scale
+				local pars = Effects.Particles(v,"blood",true)
+				pars.LockedToPart = false
+				pars.Size = NumberSequence.new(.2 * scale)
+				pars.Speed = NumberRange.new(5)
+				pars.Acceleration = v3(0,-10,0) * scale
+				pars.SpreadAngle = Vector2.new(50,50) * scale
+				pars.Lifetime = NumberRange.new(.2,.5)
+				pars:Emit(3)
+				breakAfter = true
+			end
+		end
+		
+		if breakAfter then
+			return
+		end
+		
+		for i,v in pairs(raySides) do
+			local hitt,ppos,nId = rayc(pPos,(pPos + v) - pPos,ignoreList,5 * scale)
+			if hitt then
+				
+				local decSize = 3 * scale
+				local reg = Region3.new(pPos - v3(decSize/2,decSize/2,decSize/2),pPos + v3(decSize/2,decSize/2,decSize/2))
+				local foundParts = workspace:FindPartsInRegion3WithWhiteList(reg,ignoreList,100)
+				
+				local breakAfter = false
+				
+				for i,v in pairs(foundParts) do
+					if v.Name == "BloodPuddle_v2" then
+						local add = random(10,25)/100
+						v.Size = v.Size + v3(add,0,add) * scale
+						local pars = Effects.Particles(v,"blood",true)
+						pars.LockedToPart = false
+						pars.Size = NumberSequence.new(.2 * scale)
+						pars.Speed = NumberRange.new(5 * scale)
+						pars.Acceleration = v3(0,-10,0) * scale
+						pars.SpreadAngle = Vector2.new(50,50) * scale
+						pars.Lifetime = NumberRange.new(.2,.5)
+						pars:Emit(3)
+						breakAfter = true
+					end
+				end
+				
+				if breakAfter then
+					return
+				end
+				
+				local size = random(75,125)/100
+				local puddle = ins("Part")
+				puddle.CanCollide = false
+				puddle.Anchored = true
+				puddle.Material = "SmoothPlastic"
+				puddle.Color = bc("Maroon").Color
+				puddle.Size = v3(size,.05,size) * scale
+				puddle.CFrame = cf(ppos,ppos+nId) * angles(rad(-90),rad(0),rad(0))
+				puddle.Name = "BloodPuddle_v2"
+				puddle.Parent = effects
+				
+				if not hitt.Anchored then
+					puddle.Anchored = false
+					local we = ins("WeldConstraint",puddle)
+					we.Part0 = hitt
+					we.Part1 = puddle
+				end
+				
+				ins("CylinderMesh",puddle)
+				
+				sound(685857471,.025 * scale,random(90,110)/100,puddle,.01)
+				
+				local pars = Effects.Particles(puddle,"blood",true)
+				pars.LockedToPart = false
+				pars.Size = NumberSequence.new(.2 * scale)
+				pars.Speed = NumberRange.new(5 * scale)
+				pars.Acceleration = v3(0,-10,0) * scale
+				pars.SpreadAngle = Vector2.new(50,50) * scale
+				pars.Lifetime = NumberRange.new(.2,.5)
+				pars:Emit(20)
+				
+				coroutine.wrap(function()
+					wait(random(450,900)/100)
+					remove(puddle,2)
+					tlerp(puddle,{Transparency = 1},2,styles.Quad,directions.In)
+				end)()
+				
+				break
+			end
+		end
+	end)
+end
+
+function createweld(part1,part2,v3c0,v3c1)
+	local att1 = ins("Attachment",part1)
+	local att2 = ins("Attachment",part2)
+	att1.Position = v3c0
+	att2.Position = v3c1
+	local con = ins("BallSocketConstraint",part1)
+	con.Attachment0 = att1
+	con.Attachment1 = att2
+	con.LimitsEnabled = true
+	con.TwistLimitsEnabled = true
+	con.TwistLowerAngle = 0
+	con.TwistUpperAngle = 0
+	con.UpperAngle = 0
+	att1.Name = "dontremove"
+	att2.Name = "dontremove"
+	con.Name = "dontremove"
+	return {att0 = att1,att1 = att2,constraint = con}
+end
+
+function createglue(parent1,parent2,name,part0,part1,c0,c1)
+	local att1 = ins("Attachment")
+	local att2 = ins("Attachment")
+	local socket = ins("BallSocketConstraint")
+	att1.Parent = parent1
+	att2.Parent = parent2
+	socket.Attachment0 = att1
+	socket.Attachment1 = att2
+	att1.Position = c0
+	att2.Position = c1
+	socket.Name = "dontremove"
+	att1.Name = "dontremove"
+	att2.Name = "dontremove"
+	socket.Parent = parent2
+	return att1,att2,socket
+end
+
+function createhitbox(part,parent)
+	local hbpart = ins("Part")
+	hbpart.Name = "HitboxRagdoll"
+	hbpart.Locked = true
+	hbpart.Transparency = 1
+	hbpart.TopSurface = "Smooth"
+	hbpart.BottomSurface = "Smooth"
+	hbpart.Material = "Ice"
+	if part.Name ~= "Head" then
+		hbpart.Size = v3(part.Size.x/1.05,part.Size.y/1.2,part.Size.z/1.05)
+		hbpart.CFrame = part.CFrame
+		local att1 = ins("Attachment",part)
+		local att2 = ins("Attachment",hbpart)
+		att1.Position = v3(0,(-part.Size.y/2) + (hbpart.Size.y/2),0)
+		local con = ins("BallSocketConstraint",part)
+		con.Attachment0 = att1
+		con.Attachment1 = att2
+		con.LimitsEnabled = true
+		con.TwistLimitsEnabled = true
+		con.TwistLowerAngle = 0
+		con.TwistUpperAngle = 0
+		con.UpperAngle = 0
+	else
+		hbpart.Size = v3(part.Size.x,part.Size.y/2,part.Size.z)
+		hbpart.CFrame = part.CFrame
+		local att1 = ins("Attachment",part)
+		local att2 = ins("Attachment",hbpart)
+		local con = ins("BallSocketConstraint",part)
+		con.Attachment0 = att1
+		con.Attachment1 = att2
+		con.LimitsEnabled = true
+		con.TwistLimitsEnabled = true
+		con.TwistLowerAngle = 0
+		con.TwistUpperAngle = 0
+		con.UpperAngle = 0
+	end
+	hbpart:BreakJoints()
+	hbpart.Parent = parent
+	return hbpart
+end
+
+function paralizer6(type,who,huma,rip)
+pcall(function()
+	if type == "body" then
+		local torso = who:FindFirstChild("Torso")
+		local righta = who:FindFirstChild("Right Arm")
+		local lefta = who:FindFirstChild("Left Arm")
+		local rightl = who:FindFirstChild("Right Leg")
+		local leftl = who:FindFirstChild("Left Leg")
+		local head = who:FindFirstChild("Head")
+		local tag = ins("Glue",who) tag.Name = "deletmepls"
+		if torso then
+			local root = who:FindFirstChild("HumanoidRootPart")
+			if root then
+				root:Destroy()
+			end
+			huma.PlatformStand = true
+			if head then
+				if head:FindFirstChild("Ripped") then
+					return
+				end
+				head:BreakJoints()
+				head.Anchored = false
+				createhitbox(head,torso)
+				local att1,att2,sock = createglue(torso,head,"paralized",torso,leftl,v3(0,torso.Size.y/2,0),v3(0,-head.Size.y/2,0))
+				att1.Orientation = v3(0, -90, 90)
+				att2.Orientation = v3(0, -90, 90)
+				sock.LimitsEnabled = true
+				sock.TwistLimitsEnabled = true
+				sock.UpperAngle = 80
+				sock.TwistLowerAngle = -80
+				sock.TwistUpperAngle = 80
+				head.TopSurface = "Smooth"
+				head.BottomSurface = "Smooth"
+				head:MakeJoints()
+			end
+			if leftl then
+				if not leftl:FindFirstChild("Ripped") then
+					leftl:BreakJoints()
+					leftl.Anchored = false
+					local att1,att2,sock = createglue(torso,leftl,"paralized",torso,leftl,v3(-torso.Size.x/4,-torso.Size.y/2,0),v3(0,leftl.Size.y/2,0))
+					att1.Orientation = v3(-0, -90, 90)
+					att2.Orientation = v3(0, -90, 90)
+					sock.LimitsEnabled = true
+					sock.TwistLimitsEnabled = true
+					sock.UpperAngle = 100
+					sock.TwistLowerAngle = 35
+					sock.TwistUpperAngle = -45
+					createhitbox(leftl,torso)
+				end
+			end
+			if rightl then
+				if not rightl:FindFirstChild("Ripped") then
+					rightl:BreakJoints()
+					rightl.Anchored = false
+					local att1,att2,sock = createglue(torso,rightl,"paralized",torso,rightl,v3(torso.Size.x/4,-torso.Size.y/2,0),v3(0,rightl.Size.y/2,0))
+					att1.Orientation = v3(-0, -90, 90)
+					att2.Orientation = v3(0, -90, 90)
+					sock.LimitsEnabled = true
+					sock.TwistLimitsEnabled = true
+					sock.UpperAngle = 100
+					sock.TwistLowerAngle = 45
+					sock.TwistUpperAngle = -35
+					createhitbox(rightl,torso)
+				end
+			end
+			if righta then
+				righta:BreakJoints()
+				righta.Anchored = false
+				if not righta:FindFirstChild("Ripped") then
+					local att1,att2,sock = createglue(torso,righta,"paralized",torso,righta,v3((torso.Size.x/2) + (righta.Size.x/2),torso.Size.y/4,0),v3(0,righta.Size.y/4,0))
+					att1.Orientation = v3(-90, 0, 0)
+					att2.Orientation = v3(0, 180, -180)
+					sock.LimitsEnabled = true
+					sock.TwistLimitsEnabled = true
+					sock.UpperAngle = 100
+					sock.TwistLowerAngle = 105
+					sock.TwistUpperAngle = -110
+				end
+				createhitbox(righta,torso)
+			end
+			if lefta then
+				lefta:BreakJoints()
+				lefta.Anchored = false
+				if not lefta:FindFirstChild("Ripped") then
+					local att1,att2,sock = createglue(torso,lefta,"paralized",torso,lefta,v3((-torso.Size.x/2) - (lefta.Size.x/2),torso.Size.y/4,0),v3(0,lefta.Size.y/4,0))
+					att1.Orientation = v3(-90, 180, 0)
+					att2.Orientation = v3(0, -180, 0)
+					sock.LimitsEnabled = true
+					sock.TwistLimitsEnabled = true
+					sock.UpperAngle = 100
+					sock.TwistLowerAngle = 105
+					sock.TwistUpperAngle = -90
+				end
+				createhitbox(lefta,torso)
+			end
+		else
+			warn("Cant get the torso")
+		end
+	end
+end)
+end
+
+function killr6(who)
+pcall(function()
+	local khum = who:FindFirstChildOfClass("Humanoid")
+	if khum then
+		khum.Health = 100
+		khum.Name = "Dead hobo"
+		who:BreakJoints()
+		local khe = khum.Parent:FindFirstChild("Head")
+		if khe.Size.x ~= khe.Size.z then
+			khe.Size = v3(khe.Size.z,khe.Size.z,khe.Size.z)
+		end
+		for i,v in pairs(who:GetDescendants()) do
+			if v:IsA("Accessory") or v:IsA("Hat") then
+				local att1 = ins("Attachment",khe)
+				local att2 = ins("Attachment",v.Handle)
+				att1.Position = (v.Handle.Position-khe.Position)
+				local con = ins("BallSocketConstraint",khe)
+				con.Attachment0 = att1
+				con.Attachment1 = att2
+				con.LimitsEnabled = true
+				con.TwistLimitsEnabled = true
+				con.TwistLowerAngle = 0
+				con.TwistUpperAngle = 0
+				con.UpperAngle = 0
+			end
+			if v:IsA("Script") or v:IsA("LocalScript") or v.Name == "HitboxRagdoll" or v:IsA("Attachment") and v.Name ~= "dontremove" or v:IsA("BallSocketConstraint") and v.Name ~= "dontremove" then
+				remove(v,0)
+			end
+			if v:IsA("Decal") then
+			end
+			if v:IsA("Part") or v:IsA("MeshPart") then
+				v.Anchored = false
+				v:BreakJoints()
+			end
+		end
+		paralizer6("body",khum.Parent,khum)
+	end
+end)
+end
+
+function charDeath()
+	killr6(char)
+	for i,v in pairs(char:GetDescendants()) do
+		if v:IsA("BillboardGui") or v:IsA("ForceField") then
+			remove(v,0)
+		end
+	end
+	if random(1,20) == 20 then
+		sound(2847401060,1,1,t,1)
+	end
+	local fraem = ins("Frame",ui)
+	fraem.Size = ud2(2,0,2,0)
+	fraem.Position = ud2(0,0,-.5,0)
+	fraem.BackgroundColor3 = c3(1,1,1)
+	fraem.BackgroundTransparency = 0
+	fraem.ZIndex = 1000
+	remove(ui,6)
+	wait(.1)
+	tlerp(fraem,{BackgroundColor3 = c3(0,0,0)},.1,styles.Quart,directions.Out)
+end
+
+function stun(time,getUp,lockCamera)
+	local help = {}
+	
+	hum.PlatformStand = true
+	stunned = true
+	
+	local vel = ins("BodyVelocity",t)
+	vel.MaxForce = v3(huge,huge,huge)
+	vel.Velocity = v3(random(-25,25),random(35,70),random(-25,25))
+	remove(vel,.01)
+	
+	local stunnd = ins("BoolValue")
+	if lockCamera then
+		stunnd.Parent = hum
+		stunnd.Name = "Stunned"
+	end
+	
+	--Right Leg
+	local att1RL,att2RL,sockRL = createglue(t,rl,"paralized",t,rl,v3(t.Size.x/4,-t.Size.y/2,0),v3(0,rl.Size.y/2,0))
+	att1RL.Orientation = v3(-0, -90, 90)
+	att2RL.Orientation = v3(0, -90, 90)
+	sockRL.LimitsEnabled = true
+	sockRL.TwistLimitsEnabled = true
+	sockRL.UpperAngle = 100
+	sockRL.TwistLowerAngle = 45
+	sockRL.TwistUpperAngle = -35
+	local hbRL = createhitbox(rl,t)
+	
+	--Left Leg
+	local att1LL,att2LL,sockLL = createglue(t,ll,"paralized",t,ll,v3(-t.Size.x/4,-t.Size.y/2,0),v3(0,ll.Size.y/2,0))
+	att1LL.Orientation = v3(-0, -90, 90)
+	att2LL.Orientation = v3(0, -90, 90)
+	sockLL.LimitsEnabled = true
+	sockLL.TwistLimitsEnabled = true
+	sockLL.UpperAngle = 100
+	sockLL.TwistLowerAngle = 35
+	sockLL.TwistUpperAngle = -45
+	local hbLL = createhitbox(ll,t)
+	
+	--Right Arm
+	local att1RA,att2RA,sockRA = createglue(t,ra,"paralized",t,ra,v3((t.Size.x/2) + (ra.Size.x/2),t.Size.y/4,0),v3(0,ra.Size.y/4,0))
+	att1RA.Orientation = v3(-90, 0, 0)
+	att2RA.Orientation = v3(0, 180, -180)
+	sockRA.LimitsEnabled = true
+	sockRA.TwistLimitsEnabled = true
+	sockRA.UpperAngle = 100
+	sockRA.TwistLowerAngle = 105
+	sockRA.TwistUpperAngle = -110
+	local hbRA = createhitbox(ra,t)
+	
+	--Left Arm
+	local att1LA,att2LA,sockLA = createglue(t,la,"paralized",t,la,v3((-t.Size.x/2) - (la.Size.x/2),t.Size.y/4,0),v3(0,la.Size.y/4,0))
+	att1LA.Orientation = v3(-90, 180, 0)
+	att2LA.Orientation = v3(0, -180, 0)
+	sockLA.LimitsEnabled = true
+	sockLA.TwistLimitsEnabled = true
+	sockLA.UpperAngle = 100
+	sockLA.TwistLowerAngle = 105
+	sockLA.TwistUpperAngle = -90
+	local hbLA = createhitbox(la,t)
+	
+	--Neck
+	local att1NEC,att2NEC,sockNEC = createglue(t,h,"paralized",t,la,v3(0,t.Size.y/2,0),v3(0,-h.Size.y/2,0))
+	att1NEC.Orientation = v3(0, -90, 90)
+	att2NEC.Orientation = v3(0, -90, 90)
+	sockNEC.LimitsEnabled = true
+	sockNEC.TwistLimitsEnabled = true
+	sockNEC.UpperAngle = 80
+	sockNEC.TwistLowerAngle = -80
+	sockNEC.TwistUpperAngle = 80
+	local hbNEC = createhitbox(h,t)
+	
+	table.insert(help,att1RA)
+	table.insert(help,att2RA)
+	table.insert(help,sockRA)
+	table.insert(help,hbRA)
+	
+	table.insert(help,att1LA)
+	table.insert(help,att2LA)
+	table.insert(help,sockLA)
+	table.insert(help,hbLA)
+	
+	table.insert(help,att1RL)
+	table.insert(help,att2RL)
+	table.insert(help,sockRL)
+	table.insert(help,hbRL)
+	
+	table.insert(help,att1LL)
+	table.insert(help,att2LL)
+	table.insert(help,sockLL)
+	table.insert(help,hbLL)
+	
+	table.insert(help,att1NEC)
+	table.insert(help,att2NEC)
+	table.insert(help,sockNEC)
+	table.insert(help,hbNEC)
+	
+	nec.Parent = nil
+	rs.Parent = nil
+	ls.Parent = nil
+	rh.Parent = nil
+	lh.Parent = nil
+	
+	wait(time)
+	
+	remove(stunnd)
+	
+	if getUp then
+		hum.PlatformStand = false
+		stunned = false
+	end
+	
+	nec.Parent = t
+	rs.Parent = t
+	ls.Parent = t
+	rh.Parent = t
+	lh.Parent = t
+	
+	for i,v in pairs(help) do
+		remove(v)
+	end
+end
+
+function climb()
+	using = true
+	movingRight = false
+	movingLeft = false
+	holding = false
+	moving = false
+	local alpha = .25
+	local add = .015
+	local rutPos = rut.CFrame
+	for i = 0,1,.035 do
+		rut.CFrame = rut.CFrame :Lerp(rutPos * cf(0,2,-.15),alpha)
+		nec.C0 = nec.C0:Lerp(necc0 * cf(0,0,0) * angles(rad(-7.5),rad(0),rad(0)),alpha)
+		rutj.C0 = rutj.C0:Lerp(rutjc0 * cf(0,0,0) * angles(rad(10),rad(-15),rad(0)),alpha)
+		rs.C0 = rs.C0:Lerp(rsc0 * cf(.35,-.45,-.15) * angles(rad(95),rad(80),rad(0)) * angles(rad(-15),rad(0),rad(0)),alpha)
+		ls.C0 = ls.C0:Lerp(lsc0 * cf(-.35,-.45,-.45) * angles(rad(95),rad(-80),rad(0)) * angles(rad(5),rad(0),rad(0)),alpha)
+		rh.C0 = rh.C0:Lerp(rhc0 * cf(0,0,0) * angles(rad(0),rad(-5),rad(-5)),alpha)
+		lh.C0 = lh.C0:Lerp(lhc0 * cf(0,.25,-.25) * angles(rad(-15),rad(5),rad(7.5)),alpha)
+		alpha = alpha -add
+		swait()
+	end
+	alpha = .25
+	add = .015
+	for i = 0,1,.035 do
+		rut.CFrame = rut.CFrame :Lerp(rutPos * cf(0,4.25,-1.5),alpha)
+		nec.C0 = nec.C0:Lerp(necc0 * cf(0,0,0) * angles(rad(-15),rad(0),rad(0)),alpha)
+		rutj.C0 = rutj.C0:Lerp(rutjc0 * cf(0,0,0) * angles(rad(20),rad(0),rad(0)),alpha)
+		rs.C0 = rs.C0:Lerp(rsc0 * cf(0,-.5,.25) * angles(rad(5),rad(10),rad(-7.5)) * angles(rad(0),rad(0),rad(0)),alpha)
+		ls.C0 = ls.C0:Lerp(lsc0 * cf(0,-.5,.25) * angles(rad(5),rad(-10),rad(10)) * angles(rad(0),rad(0),rad(0)),alpha)
+		rh.C0 = rh.C0:Lerp(rhc0 * cf(0,2,-.5) * angles(rad(-2.5),rad(-5),rad(-5)),alpha)
+		lh.C0 = lh.C0:Lerp(lhc0 * cf(0,.25,-1.25) * angles(rad(-75),rad(5),rad(5)),alpha)
+		alpha = alpha -add
+		swait()
+	end
+	rut.Anchored = false
+	using = false
+	coroutine.wrap(function()
+		wait(.5)
+		canGrab = true
+	end)()
+end
+
+function dash()
+	local oldWS = ws
+	local oldJP = jp
+	ws = 2
+	jp = 45
+	using = true
+	hum.Jump = true
+	local vel = ins("BodyVelocity",rut)
+	vel.MaxForce = v3(huge,huge,huge)
+	vel.Velocity = rut.CFrame.LookVector * 50
+	remove(vel,.1)
+	local alpha = .25
+	local add = .015
+	for i = 0,1,.05 do
+		local hit = rayc(rut.Position,rut.CFrame.LookVector,{char},3)
+		if hit then break end
+		canDash = false
+		nec.C0 = nec.C0:Lerp(necc0 * cf(0,0,0) * angles(rad(75),rad(0),rad(0)),alpha)
+		rutj.C0 = rutj.C0:Lerp(rutjc0 * cf(0,-.25,.75) * angles(rad(80),rad(0),rad(0)),alpha)
+		rs.C0 = rs.C0:Lerp(rsc0 * cf(0,0,0) * angles(rad(170),rad(-15),rad(5)),alpha)
+		ls.C0 = ls.C0:Lerp(lsc0 * cf(0,0,0) * angles(rad(170),rad(15),rad(-5)),alpha)
+		rh.C0 = rh.C0:Lerp(rhc0 * cf(0,0,0) * angles(rad(-10),rad(-5),rad(2.5)),alpha)
+		lh.C0 = lh.C0:Lerp(lhc0 * cf(0,.25,-.15) * angles(rad(-25),rad(5),rad(-2.5)),alpha)
+		alpha = alpha -add
+		swait()
+	end
+	using = false
+	ws = oldWS
+	jp = oldJP
+end
+
+function roLl()
+	using = true
+	local oldWS = ws
+	local oldJP = jp
+	ws = 0
+	jp = 0
+	local alpha = .15
+	local add = 0
+	local rot = 0
+	hum.HipHeight = -1.5
+	rut.CFrame = rut.CFrame * cf(0,-1.5,0)
+	local vel = ins("BodyVelocity",rut)
+	vel.MaxForce = v3(huge,huge,huge)
+	vel.Velocity = rut.CFrame.LookVector * 35
+	for i = 0,1,.0475 do
+		local hit = rayc(rut.Position,rut.CFrame.LookVector,{char},3)
+		if hit then break end
+		canDash = false
+		nec.C0 = nec.C0:Lerp(necc0 * cf(0,0,0) * angles(rad(-65),rad(0),rad(0)),alpha)
+		rutj.C0 = rutj.C0:Lerp(rutjc0 * cf(0,0,0) * angles(rad(0),rad(-45),rad(25)) * angles(rad(rot),rad(0),rad(0)),alpha)
+		rs.C0 = rs.C0:Lerp(rsc0 * cf(0,.2,-.35) * angles(rad(80),rad(0),rad(0)) * angles(rad(0),rad(0),rad(-80)),alpha)
+		ls.C0 = ls.C0:Lerp(lsc0 * cf(0,0,0) * angles(rad(30),rad(20),rad(40)),alpha)
+		rh.C0 = rh.C0:Lerp(rhc0 * cf(0,1.5,-.65) * angles(rad(-20),rad(0),rad(0)),alpha)
+		lh.C0 = lh.C0:Lerp(lhc0 * cf(0,1.5,-.5) * angles(rad(-15),rad(0),rad(0)),alpha)
+		rot = rot + 25
+		alpha = alpha -add
+		swait()
+	end
+	hum.HipHeight = 0
+	remove(vel)
+	ws = oldWS
+	jp = oldJP
+	using = false
+end
+
+function wallClimb()
+	if not wallClimbDeb and not holding then
+		using = true
+		wallClimbDeb = true
+		oldWS = ws
+		oldJP = jp
+		ws = 0
+		jp = 0
+		local vel = ins("BodyVelocity",rut)
+		vel.MaxForce = v3(huge,huge,huge)
+		vel.Velocity = v3(0,30,0)
+		remove(vel,.1)
+		local alpha = .65
+		for i = 0,1,.1 do
+			nec.C0 = nec.C0:Lerp(necc0 * cf(0,0,0) * angles(rad(45),rad(0),rad(0)),alpha)
+			rutj.C0 = rutj.C0:Lerp(rutjc0 * cf(0,0,0) * angles(rad(-2.5),rad(0),rad(0)),alpha)
+			rs.C0 = rs.C0:Lerp(rsc0 * cf(0,-.15,-.2) * angles(rad(165),rad(-5),rad(-5)),alpha)
+			ls.C0 = ls.C0:Lerp(lsc0 * cf(0,-.1,-.15) * angles(rad(170),rad(5),rad(5)),alpha)
+			rh.C0 = rh.C0:Lerp(rhc0 * cf(0,.1,-.1) * angles(rad(-10),rad(0),rad(0)),alpha)
+			lh.C0 = lh.C0:Lerp(lhc0 * cf(0,0,0) * angles(rad(-5),rad(0),rad(0)),alpha)
+			alpha = alpha -.025
+			swait()
+		end
+		ws = oldWS
+		jp = oldJP
+		using = false
+		coroutine.wrap(function()
+			wait(1.5)
+			wallClimbDeb = false
+		end)()
+	end
+end
+
+mouse.KeyDown:Connect(function(key)
+	if not using and not stunned then
+		if key == "g" and canDash then
+			dash()
+		end
+	end
+	
+	if key == "n" and not using  and not dancin then
+		dancin = true
+		using = true
+	elseif key == "n" and using  and dancin then
+		dancin = false
+		using = false
+	end
+	
+	if key == "f" then
+		lightEnabled = not lightEnabled
+	end
+	
+	if key == "q" then
+		ws = 25
+		jp = 35
+	end
+	
+	if holding and not stunned then
+		if key == "a" then
+			movingLeft = true
+			movingRight = false
+			moveDir = -1
+		elseif key == "d" then
+			movingRight = true
+			movingLeft = false
+			moveDir = 1
+		elseif key == "s" then
+			movingRight = false
+			movingLeft = false
+			holding = false
+			rut.Anchored = false
+			using = false
+			canGrabLedge = false
+			wait(.5)
+			canGrabLedge = false
+			canGrab = true
+		elseif key == "w" then
+			local detec = rayc(rut.CFrame * cf(0,2.75,-.5).Position,rut.CFrame.LookVector,{char},1.5)
+			if not detec then
+				climb()
+			end
+		end
+	end
+end)
+
+mouse.KeyUp:Connect(function(key)
+	if not using then
+		
+	end
+	if key == "q" then
+		ws = 8
+		jp = 35
+	end
+	if holding then
+		if key == "a" then
+			moveDir = 0
+			movingLeft = false
+		elseif key == "d" then
+			moveDir = 0
+			movingRight = false
+		end
+	end
+end)
+
+hum.Died:Connect(function()
+	charDeath()
+end)
+
+stepped:Connect(function()
+	if stunned then
+		hum.PlatformStand = true
+	else
+		hum.PlatformStand = false
+	end
+	
+	sine = sine + change
+	dSine = dSine + change
+	
+	if dSine >-1500 and dSine <1500 then
+		dSine = 1500
+	end
+	
+	if dSine > 5000 then
+		dSine = -5000
+	end
+	
+	local verVel = rut.Velocity.y
+	local horVel = (rut.Velocity * v3(1,0,1)).Magnitude
+
+	local Ccf=rut.CFrame
+	
+	local dir = hum.MoveDirection
+	
+	if dir == v3(0,0,0) then
+		dir = rut.Velocity/10
+	end
+
+	local Walktest1 = dir * Ccf.LookVector
+	local Walktest2 = dir * Ccf.RightVector
+
+	local rotfb = Walktest1.X+Walktest1.Z
+	local rotrl = Walktest2.X+Walktest2.Z
+	
+	if rotfb >1 then
+		rotfb = 1
+	elseif rotfb <-1 then
+		rotfb = -1
+	end
+	
+	if rotrl >1 then
+		rotrl = 1
+	elseif rotrl <-1 then
+		rotrl = -1
+	end
+	
+	if lightEnabled then
+		for i,v in pairs(lamp:GetDescendants()) do
+			if v:IsA("SurfaceLight") then
+				v.Enabled = true
+			end
+			if string.find(v.Name:lower(),"light") and v:IsA("Part") then
+				v.Color = bc("White").Color
+			end
+		end
+	else
+		for i,v in pairs(lamp:GetDescendants()) do
+			if v:IsA("SurfaceLight") then
+				v.Enabled = false
+			end
+			if string.find(v.Name:lower(),"light") and v:IsA("Part") then
+				v.Color = bc("Really black").Color
+			end
+		end
+	end
+
+	
+	if not dancin then
+		hum.WalkSpeed = ws
+		hum.JumpPower = jp
+	else
+		hum.WalkSpeed = 2
+		hum.JumpPower = 0
+	end
+	
+	
+	
+	local hit,pos,nId
+	local ledgeDetector,ledgePos = rayc(rut.CFrame * cf(0,5,-random(125,150)/100).Position,-rut.CFrame.UpVector,ignoreList,5)
+	local wCHit,wCPos,wCNId = rayc(rut.CFrame * cf(0,5.75,-.5).Position,rut.CFrame.LookVector,ignoreList,1.25)
+	
+	if not holding then
+		hit,pos,nId = rayc(rut.Position + v3(0,-rut.Size.y/2,0),v3(rut.Position.x,-10000,rut.Position.z),ignoreList,3)
+	else
+		hit,pos,nId = rayc(rut.Position + v3(0,-rut.Size.y/2,0),v3(rut.Position.x,-10000,rut.Position.z),ignoreList,0)
+	end
+	
+	if canWallClimb and not using and not ledgeDetector then
+		canWallClimb = false
+		spawn(function()
+			wallClimb()
+		end)
+	end
+	
+	if using then
+		anim = "idle"
+	end
+	
+	if canGrabLedge and not using and canGrab and not stunned and not dancin then
+		canGrabLedge = false
+		local poss = v3(rut.Position.x,ledgePos.y -.025,rut.Position.z)
+		local grabHit,grabPos,grabNID = rayc(poss,((ledgePos - v3(0,.025,0)) - poss),ignoreList,5)
+		local blocked = rayc(cf(rut.CFrame.X,grabPos.Y + .25,rut.CFrame.Z).Position,(grabPos - cf(rut.CFrame.X,grabPos.Y,rut.CFrame.Z).Position),ignoreList,1.25)
+		if grabHit and not blocked then
+			using = true
+			canGrab = false
+			rut.Anchored = true
+			rut.CFrame = cf(grabPos,grabPos-grabNID) * cf(0,-2.5,.55)
+			holding = true
+		end
+	end
+	
+	if fallTime > 2 and not stunned then
+		coroutine.wrap(function()
+			stun(250,false)
+		end)()
+	end
+	
+	if verVel >-10 and fallTime >= 999999999 and hit and (horVel <5 and ws ~= 35 or ws == 8) or verVel >-10 and fallTime >= 99999999 and hit and not dancin then
+		hum.Health = hum.Health - fallTime * 9000000000
+		if fallTime > 9999999 then
+			ui.StunCover.BackgroundTransparency = 0
+			tlerp(ui.StunCover,{BackgroundTransparency = 1},7.5,styles.Quad,directions.Out)
+			sound(2801263,.75,random(90,110)/100,t,.25)
+			for i = 1,random(10,20) * fallTime do
+				blood(t.CFrame,v3(random(-10,10)/10,random(5,10)/10,random(-10,10)/10),random(random(10,20)),random(75,125)/100)
+			end
+			sound(2561290769,1.25,random(90,110)/100,t,.25)
+			localEffectsEvent:FireClient(plr,"shak")
+			coroutine.wrap(function()
+				stun(((random(75,100)/10) * fallTime) + (1/(hum.Health/hum.MaxHealth)),true,true)
+			end)()
+		else
+			sound(363808674,.75,random(150,175)/100,t,.25)
+		end
+		fallTime = 0
+	elseif verVel >-10 and fallTime >= .35 and fallTime <1.25 and hit and (horVel >= 5 and ws == 35 or ws ~= 8) then
+		fallTime = 0
+		roLl()
+	end
+	
+	if hit then
+		canDash = true
+	end
+	
+	if anim == "idle" and hit and not dancin then
+		nec.C1 = nec.C1:Lerp(necc1 * cf(0,0,0) * angles(sin(sine/30) * rad(.75),sin(sine/120) * rad(2.5),-sin(sine/240) * rad(2)) * angles(-mouse.Hit.LookVector.Y,0,0),.1)
+		rutj.C1 = rutj.C1:Lerp(rutjc1 * cf(-sin(sine/120)/17.5,sin(sine/30)/25,sin(sine/30)/17.5) * angles(sin(sine/60) * rad(1.25),-sin(sine/240) * rad(1.5),sin(sine/120) * rad(1)),.1)
+		rs.C1 = rs.C1:Lerp(rsc1 * cf(0,sin(sine/30)/25,-sin(sine/240)/25) * angles(sin(sine/60) * rad(2) + sin(sine/120) * rad(3),sin(sine/90) * rad(-1),sin(sine/120) * rad(-1)),.1)
+		ls.C1 = ls.C1:Lerp(lsc1 * cf(0,sin(sine/30)/25,sin(sine/240)/25) * angles(sin(sine/60) * rad(2) + sin(sine/120) * rad(-3),-sin(sine/90) * rad(-1),sin(sine/120) * rad(-1)),.1)
+		rh.C1 = rh.C1:Lerp(rhc1 * cf(0,(sin(sine/120)/60) + sin(sine/30)/25,sin(sine/60)/22.5) * angles(sin(sine/60) * rad(2.5),rad(0),sin(sine/120) * rad(1)) * angles(sin(sine/30) * rad(-2),-sin(sine/240) * rad(1.5),rad(0)),.1)
+		lh.C1 = lh.C1:Lerp(lhc1 * cf(0,(-sin(sine/120)/60) + sin(sine/30)/25,-sin(sine/60)/22.5) * angles(sin(sine/60) * rad(1.25),rad(0),sin(sine/120) * rad(1)) * angles(sin(sine/30) * rad(-2),-sin(sine/240) * rad(1.5),rad(0)),.1)
+	elseif anim == "fall" and not hit and not dancin then
+		nec.C1 = nec.C1:Lerp(necc1 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)) * angles(-mouse.Hit.LookVector.Y,0,0),.1)
+		rutj.C1 = rutj.C1:Lerp(rutjc1 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.1)
+		rs.C1 = rs.C1:Lerp(rsc1 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.1)
+		ls.C1 = ls.C1:Lerp(lsc1 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.1)
+		rh.C1 = rh.C1:Lerp(rhc1 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.1)
+		lh.C1 = lh.C1:Lerp(lhc1 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.1)
+	elseif anim == "jump" and not hit and not dancin then
+		nec.C1 = nec.C1:Lerp(necc1 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)) * angles(-mouse.Hit.LookVector.Y,0,0),.1)
+		rutj.C1 = rutj.C1:Lerp(rutjc1 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.1)
+		rs.C1 = rs.C1:Lerp(rsc1 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.1)
+		ls.C1 = ls.C1:Lerp(lsc1 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.1)
+		rh.C1 = rh.C1:Lerp(rhc1 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.1)
+		lh.C1 = lh.C1:Lerp(lhc1 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.1)
+	elseif anim == "walk" and hit and not dancin then
+		nec.C1 = nec.C1:Lerp(necc1 * cf(0,0,0) * angles(-sin(sine/2.5) * rad(2),sin(sine/5) * rad(1),-sin(sine/5) * rad(1)) * angles(0,rotrl/2,0) * angles(-mouse.Hit.LookVector.Y,0,0),.2)
+		rutj.C1 = rutj.C1:Lerp(rutjc1 * cf(0,cos(sine/2.5)/10,0) * angles(sin(sine/2.5) * rad(2),sin(sine/5) * rad(3.5),0) * angles(-rotfb/13.5,rut.RotVelocity.y/90,-rotrl/10),.2)
+		rs.C1 = rs.C1:Lerp(rsc1 * cf(0,-cos(sine/5)/25,cos(sine/5)/15) * angles(-sin(sine/5) * rad(30) * rotfb,sin(sine/5) * rad(5),-sin(sine/2.5) * rad(2.5) + (-sin(sine/5) * rad(5) * rotrl)),.2)
+		ls.C1 = ls.C1:Lerp(lsc1 * cf(0,cos(sine/5)/25,-cos(sine/5)/15) * angles(sin(sine/5) * rad(30) * rotfb,sin(sine/5) * rad(5),-sin(sine/2.5) * rad(2.5) + (sin(sine/5) * rad(5) * rotrl)),.2)
+		rh.C1 = rh.C1:Lerp(rhc1 * cf(0,cos(sine/5)/6.5,-cos(sine/5)/7.5) * angles(rad(4) + sin(sine/5) * rad(30) * rotfb,rad(0),sin(sine/5) * rad(30) * rotrl),.2)
+		lh.C1 = lh.C1:Lerp(lhc1 * cf(0,-cos(sine/5)/6.5,cos(sine/5)/7.5) * angles(rad(4) + sin(sine/5) * rad(-30) * rotfb,rad(0),-sin(sine/5) * rad(30) * rotrl),.2)
+	elseif anim == "run" and hit and not dancin then
+		nec.C1 = nec.C1:Lerp(necc1 * cf(0,0,0) * angles(sin(sine/1.25) * rad(5),rad(0),rad(0)) * angles(0,rotrl/1.5,0) * angles(-mouse.Hit.LookVector.Y,0,0),.2)
+		rutj.C1 = rutj.C1:Lerp(rutjc1 * cf(0,sin(sine/1.25)/5,0) * angles(sin(sine/1.25) * rad(5),sin(sine/2.5) * rad(5),rad(0)) * angles(-rotfb/5,0,-rotrl/5),.2)
+		rs.C1 = rs.C1:Lerp(rsc1 * cf(0,cos(sine/2.5)/10,-cos(sine/2.5)/10) * angles(sin(sine/2.5) * rad(80) * rotfb,sin(sine/1.25) * rad(10),sin(sine/2.5) * rad(10) * rotrl),.2)
+		ls.C1 = ls.C1:Lerp(lsc1 * cf(0,-cos(sine/2.5)/10,cos(sine/2.5)/10) * angles(-sin(sine/2.5) * rad(80) * rotfb,sin(sine/1.25) * rad(10),-sin(sine/2.5) * rad(10) * rotrl),.2)
+		rh.C1 = rh.C1:Lerp(rhc1 * cf(0,-cos(sine/2.5)/2.5,cos(sine/2.5)/3.5) * angles((-sin(sine/2.5) * rad(60) + rad(5)) * rotfb,rad(0),-sin(sine/2.5) * rad(50) * rotrl),.2)
+		lh.C1 = lh.C1:Lerp(lhc1 * cf(0,cos(sine/2.5)/2.5,-cos(sine/2.5)/3.5) * angles((sin(sine/2.5) * rad(60) + rad(5)) * rotfb,rad(0),sin(sine/2.5) * rad(50) * rotrl),.2)
+	elseif holding and moveDir ~= 0 and moving and not dancin then
+		nec.C1 = nec.C1:Lerp(necc1 * cf(0,0,0) * angles(sin(sine/15) * rad(2.5),moveDir/1.5,rad(0)) * angles(-mouse.Hit.LookVector.Y,0,0),.2)
+		rutj.C1 = rutj.C1:Lerp(rutjc1 * cf(0,sin(sine/7.5)/15,0) * angles(sin(sine/7.5) * rad(1),rad(0),sin(sine/15) * rad(1) + (-moveDir/15)),.2)
+		rs.C1 = rs.C1:Lerp(rsc1 * cf(0,(cos(sine/15)/7.5) + moveDir/10,0) * angles(sin(sine/15) * rad(25) * moveDir,rad(0),rad(0)),.2)
+		ls.C1 = ls.C1:Lerp(lsc1 * cf(0,(-cos(sine/15)/7.5) - moveDir/10,0) * angles(sin(sine/15) * rad(25) * moveDir,rad(0),rad(0)),.2)
+		rh.C1 = rh.C1:Lerp(rhc1 * cf(0,0,0) * angles(cos(sine/15) * rad(1.5),rad(0),rad(0)),.2)
+		lh.C1 = lh.C1:Lerp(lhc1 * cf(0,0,0) * angles(-cos(sine/15) * rad(2.5),rad(0),rad(0)),.2)
+	elseif holding and  moveDir == 0 or not moving and not dancin then
+		nec.C1 = nec.C1:Lerp(necc1 * cf(0,0,0) * angles(sin(sine/30) * rad(2.5),sin(sine/60) * rad(10),rad(0)) * angles(-mouse.Hit.LookVector.Y,0,0),.2)
+		rutj.C1 = rutj.C1:Lerp(rutjc1 * cf(cos(sine/60)/15,sin(sine/30)/20,0) * angles(rad(0),sin(sine/60) * rad(2.5),rad(0)),.2)
+		rs.C1 = rs.C1:Lerp(rsc1 * cf(cos(sine/60)/15,-sin(sine/30)/20,0) * angles(-cos(sine/60) * rad(1.5),rad(0),-sin(sine/60) * rad(2)),.2)
+		ls.C1 = ls.C1:Lerp(lsc1 * cf(cos(sine/60)/15,-sin(sine/30)/20,0) * angles(cos(sine/60) * rad(1.5),rad(0),-sin(sine/60) * rad(2)),.2)
+		rh.C1 = rh.C1:Lerp(rhc1 * cf(0,0,0) * angles(cos(sine/60) * rad(2.5),rad(0),rad(0)),.2)
+		lh.C1 = lh.C1:Lerp(lhc1 * cf(0,0,0) * angles(-cos(sine/60) * rad(2.5),rad(0),rad(0)),.2)
+	elseif dancin then
+		local sSin = sin(dSine/75)
+		local sCos = cos(dSine/25)
+		local lSine = dSine * (sCos * sSin)/75
+		nec.C1 = nec.C1:Lerp(necc1 * cf(0,0,0) * angles(cos(lSine/5) * rad(5),sin(lSine/10) * rad(25),-cos(lSine/10) * rad(10)),.1)
+		rutj.C1 = rutj.C1:Lerp(rutjc1 * cf(0,sin(lSine/5)/5,0) * angles(sin(lSine/5) * rad(5),-cos(lSine/10) * rad(35),cos(lSine/10) * rad(10)),.1)
+		rs.C1 = rs.C1:Lerp(rsc1 * cf(0,0,cos(lSine/5)/2.5) * angles(rad(-105),rad(0),rad(0)) * angles(sin(lSine/20) * rad(20),sin(lSine/10) * rad(65),cos(lSine/10) * rad(55)),.1)
+		ls.C1 = ls.C1:Lerp(lsc1 * cf(0,0,-cos(lSine/5)/2.5) * angles(rad(-105),rad(0),rad(0)) * angles(-sin(lSine/20) * rad(20),sin(lSine/10) * rad(65),cos(lSine/10) * rad(55)),.1)
+		rh.C1 = rh.C1:Lerp(rhc1 * cf(0,(sin(lSine/5)/5) + cos(lSine/10)/10,0) * angles((sin(lSine/5) * rad(10)) - cos(lSine/10) * rad(15),-cos(lSine/10) * rad(10),cos(lSine/10) * rad(15)),.1)
+		lh.C1 = lh.C1:Lerp(lhc1 * cf(0,(sin(lSine/5)/5) - cos(lSine/10)/10,0) * angles((sin(lSine/5) * rad(10)) + cos(lSine/10) * rad(15),-cos(lSine/10) * rad(10),cos(lSine/10) * rad(15)),.1)
+	end
+	
+	if movingLeft then
+		movingRight = false
+	elseif movingRight then
+		movingLeft = false
+	end
+	
+	if holding and not stunned and not dancin then
+		using = true
+		canDash = true
+		rut.Velocity = v3(0,0,0)
+		anim = "idle"
+		change = 1
+		nec.C0 = nec.C0:Lerp(necc0 * cf(0,0,0) * angles(rad(45),rad(0),rad(0)),.2)
+		rutj.C0 = rutj.C0:Lerp(rutjc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+		rs.C0 = rs.C0:Lerp(rsc0 * cf(.25,.65,-.65) * angles(rad(170),rad(0),rad(-5)) * angles(rad(0),rad(80),rad(0)),.2)
+		ls.C0 = ls.C0:Lerp(lsc0 * cf(-.25,.65,-.65) * angles(rad(170),rad(0),rad(5)) * angles(rad(0),rad(-80),rad(0)),.2)
+		rh.C0 = rh.C0:Lerp(rhc0 * cf(0,0,0) * angles(rad(-2.5),rad(-5),rad(2.5)),.2)
+		lh.C0 = lh.C0:Lerp(lhc0 * cf(0,.1,-.1) * angles(rad(-5),rad(5),rad(-1.5)),.2)
+		
+		ledgeDetector,ledgePos = rayc(rut.CFrame * cf(0,5,-.575).Position,-rut.CFrame.UpVector,ignoreList,5)
+		
+		local cff = rut.CFrame * cf(0,0,.75)
+		local poss = v3(cff.X,ledgePos.y -.025,cff.Z)
+		local lPos = cf(poss,ledgePos) * cf(0,0-.025,-1.275)
+		local grabHit,grabPos,grabNID = rayc(poss,(lPos.Position - poss),ignoreList,3.25)
+		local decL = rayc(rut.CFrame * cf(-1.75,2.5,.75).Position,rut.CFrame.LookVector,ignoreList,3)
+		local decR = rayc(rut.CFrame * cf(1.75,2.5,.75).Position,rut.CFrame.LookVector,ignoreList,3)
+		if grabHit then
+			if movingLeft and decL then
+				ledgePos = cf(grabPos,grabPos-grabNID) * cf(-.1,-2.5,.55)
+				moving = true
+			elseif not decL then
+				moving = false
+			end
+			if movingRight and decR then
+				ledgePos = cf(grabPos,grabPos-grabNID) * cf(.1,-2.5,.55)
+				moving = true
+			elseif not decR then
+				moving = false
+			end
+		end
+		if typeof(ledgePos) == "CFrame" then
+			rut.CFrame = rut.CFrame:Lerp(ledgePos,.35)
+		end
+	end
+	if not using and not dancin then
+		if horVel > 5 and verVel >-10 and verVel <10 and ws == 8 then
+			anim = "walk"
+			fallTime = 0
+			change = .6
+			nec.C0 = nec.C0:Lerp(necc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+			rutj.C0 = rutj.C0:Lerp(rutjc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+			rs.C0 = rs.C0:Lerp(rsc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+			ls.C0 = ls.C0:Lerp(lsc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+			rh.C0 = rh.C0:Lerp(rhc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+			lh.C0 = lh.C0:Lerp(lhc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+		elseif horVel > 5 and verVel >-10 and verVel <10 and ws == 25 then
+			anim = "run"
+			fallTime = 0
+			change = .5
+			nec.C0 = nec.C0:Lerp(necc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+			rutj.C0 = rutj.C0:Lerp(rutjc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+			rs.C0 = rs.C0:Lerp(rsc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+			ls.C0 = ls.C0:Lerp(lsc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+			rh.C0 = rh.C0:Lerp(rhc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+			lh.C0 = lh.C0:Lerp(lhc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+		elseif verVel >10 then
+			fallTime = 0
+			local obstacleRay = rayc(rut.CFrame * cf(0,2.6,0).Position,rut.CFrame.LookVector,ignoreList,.55)
+			if ledgeDetector and not hit and not obstacleRay then
+				canGrabLedge = true
+			end
+			if wCHit then
+				canWallClimb = true
+			end
+			anim = "jump"
+			change = 1
+			nec.C0 = nec.C0:Lerp(necc0 * cf(0,0,0) * angles(rad(15),rad(0),rad(0)),.2)
+			rutj.C0 = rutj.C0:Lerp(rutjc0 * cf(0,0,0) * angles(rad(-5),rad(0),rad(0)),.2)
+			rs.C0 = rs.C0:Lerp(rsc0 * cf(0,0,0) * angles(rad(142),rad(0),rad(7)),.2)
+			ls.C0 = ls.C0:Lerp(lsc0 * cf(0,0,0) * angles(rad(145),rad(0),rad(-8)),.2)
+			rh.C0 = rh.C0:Lerp(rhc0 * cf(0,.1,-.1) * angles(rad(-3.5),rad(0),rad(2)),.2)
+			lh.C0 = lh.C0:Lerp(lhc0 * cf(0,.3,-.25) * angles(rad(-9),rad(0),rad(-3.5)),.2)
+		elseif verVel <-10 then
+			local obstacleRay = rayc(rut.CFrame * cf(0,2.6,0).Position,rut.CFrame.LookVector,ignoreList,.55)
+			if ledgeDetector and not hit and not obstacleRay then
+				canGrabLedge = true
+			end
+			fallTime = fallTime +.025
+			anim = "fall"
+			change = 1
+			nec.C0 = nec.C0:Lerp(necc0 * cf(0,0,0) * angles(rad(-5),rad(0),rad(0)),.2)
+			rutj.C0 = rutj.C0:Lerp(rutjc0 * cf(0,0,0) * angles(rad(5),rad(0),rad(0)),.2)
+			rs.C0 = rs.C0:Lerp(rsc0 * cf(.45,-.46,0) * angles(rad(5),rad(0),rad(105)),.2)
+			ls.C0 = ls.C0:Lerp(lsc0 * cf(-.45,-.44,0) * angles(rad(6),rad(0),rad(-97.5)),.2)
+			rh.C0 = rh.C0:Lerp(rhc0 * cf(0,.3,-.25) * angles(rad(-9),rad(0),rad(2)),.2)
+			lh.C0 = lh.C0:Lerp(lhc0 * cf(0,.1,-.1) * angles(rad(-3.5),rad(0),rad(-3.5)),.2)
+		elseif horVel < 5 and verVel >-10 and verVel <10 then
+			anim = "idle"
+			fallTime = 0
+			change = 1
+			nec.C0 = nec.C0:Lerp(necc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.1)
+			rutj.C0 = rutj.C0:Lerp(rutjc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.1)
+			rs.C0 = rs.C0:Lerp(rsc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(1.5)),.1)
+			ls.C0 = ls.C0:Lerp(lsc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(-1.5)),.1)
+			rh.C0 = rh.C0:Lerp(rhc0 * cf(0,0,0) * angles(rad(0),rad(-4),rad(2)),.1)
+			lh.C0 = lh.C0:Lerp(lhc0 * cf(0,0,0) * angles(rad(0),rad(4),rad(-2)),.1)
+		end
+	elseif using and dancin then
+		change = 1
+		nec.C0 = nec.C0:Lerp(necc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+		rutj.C0 = rutj.C0:Lerp(rutjc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+		rs.C0 = rs.C0:Lerp(rsc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+		ls.C0 = ls.C0:Lerp(lsc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(0)),.2)
+		rh.C0 = rh.C0:Lerp(rhc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(2.5)),.2)
+		lh.C0 = lh.C0:Lerp(lhc0 * cf(0,0,0) * angles(rad(0),rad(0),rad(-2.5)),.2)
+	end
+end)
