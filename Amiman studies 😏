@@ -3,8 +3,8 @@ game.Players.LocalPlayer.Character["Pink Hair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy() --LavanderHair
 game.Players.LocalPlayer.Character["LavanderHair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Robloxclassicred"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["MeshPartAccessory"].Handle.Handle:Destroy()
-game.Players.LocalPlayer.Character["gaytek"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["TwitterBird"].Handle.Handle:Destroy()
+game.Players.LocalPlayer.Character["Yoga Mat"].Handle.Mesh:Destroy()
 
 
 local c = game.Players.LocalPlayer.Character
@@ -912,21 +912,19 @@ att2.Parent = cplayer["Left Leg"]
 att2.Position = Vector3.new(-0, 0, 0) 
 att2.Rotation = Vector3.new(90, 0, 0)
 
-local hat2 = gp(cplayer, "MeshPartAccessory", "Accessory")
+local hat2 = gp(cplayer, "TwitterBird", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Right Leg"]
 att2.Position = Vector3.new(0, 0.5, 0.5) --Robloxclassicred
 att2.Rotation = Vector3.new(90, 0, 0)
 
-local hat2 = gp(cplayer, "gaytek", "Accessory")
+local hat2 = gp(cplayer, "Yoga Mat", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Left Leg"]
 att2.Position = Vector3.new(-0, 0.5, 0.5) 
 att2.Rotation = Vector3.new(90, 0, 0)
-
-game.Players.LocalPlayer.Character:FindFirstChild("MeshPartAccessory").Name = "gaytek"
 
 game:GetObjects("rbxassetid://10756030279")[1].Parent=game.ReplicatedStorage
 game:GetObjects("rbxassetid://10756132900")[1].Parent=game.ReplicatedStorage
