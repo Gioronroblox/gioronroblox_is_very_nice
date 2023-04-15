@@ -2427,7 +2427,7 @@ function KeyDown(Key)
 
 	end
 	
-				if Key == "c" then
+				if Key == "y" then
 COMBO = 5
 		end
 	
@@ -2437,11 +2437,11 @@ COMBO = 5
 	
 
 	
-		if Key == "q" and ATTACK == false then
+		if Key == "t" and ATTACK == false then
 		starpoint()
 	end
 	
-	   if Key == "w" and ATTACK == false then 
+	   if Key == "e" and ATTACK == false then 
            if Tapped == false then
                    Tapped = true
                    wait(Time)
@@ -2463,7 +2463,7 @@ backdash()
 
 
 
-	if Key == "l" then
+	if Key == "u" then
 		if gloveuse == false then
 			gloveuse = true
 											local st = Instance.new("BoolValue",game:GetService("SoundService"))
@@ -2493,7 +2493,7 @@ if Key == "p" then
 	end
 		end)
 end
-	if Key == "m" then
+	if Key == "h" then
 		if what == false then
 			what = true
 			msuic:Play()
