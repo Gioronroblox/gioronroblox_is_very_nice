@@ -1,10 +1,5 @@
-----------------
---Dual Ultima--
-----------------------------------------------------------------
---This edit is by CKbackup (Sugarie Saffron)--------------------
---Credits to whoever the hell made the original Solaris---------
-----------------------------------------------------------------
 loadstring(game:HttpGet("https://pastebin.com/raw/ug4TNhzr"))()
+
 game.Players.LocalPlayer.Character:FindFirstChild("MeshPartAccessory").Name = "gaytek"
 _G.loop = true
 local player = game.Players.LocalPlayer
@@ -102,8 +97,16 @@ spawn(function()
     char.AncestryChanged:wait()--if you respawn, it will stop the  loop to avoid lag of using it over and over
     _G.loop2 = false 
 end)
+
+----------------
+--Dual Ultima--
+----------------------------------------------------------------
+--This edit is by CKbackup (Sugarie Saffron)--------------------
+--Credits to whoever the hell made the original Solaris---------
+----------------------------------------------------------------
+
 Player=game:GetService("Players").LocalPlayer
-Character=game.Workspace.non
+Character=Player.Character 
 PlayerGui=Player.PlayerGui
 Backpack=Player.Backpack 
 Torso=Character.Torso 
@@ -470,113 +473,7 @@ function rayCast(Pos, Dir, Max, Ignore)  -- Origin Position , Direction, MaxDist
 return game:service("Workspace"):FindPartOnRay(Ray.new(Pos, Dir.unit * (Max or 999.999)), Ignore) 
 end 
 
-Damagefunc=function(Part,hit,minim,maxim,knockback,Type,Property,Delay,KnockbackType,decreaseblock)
-print("ok")
-end
-coroutine.resume(coroutine.create(function()
-h.Parent:BreakJoints()
-coroutine.resume(coroutine.create(function()
-local naeeym2 = Instance.new("BillboardGui",h.Parent)
-naeeym2.Size = UDim2.new(0,100,0,40)
-naeeym2.StudsOffset = Vector3.new(0,3,0)
-naeeym2.Adornee = h.Parent.Head
-naeeym2.Name = "TalkingBillBoard"
-local tecks2 = Instance.new("TextLabel",naeeym2)
-tecks2.BackgroundTransparency = 1
-tecks2.BorderSizePixel = 0
-tecks2.Text = "GIT SKITTL'D!11!"
-tecks2.Font = "Fantasy"
-tecks2.FontSize = "Size36"
-tecks2.TextStrokeTransparency = 0
-tecks2.TextColor3 = Color3.new(0,0,0)
-tecks2.TextStrokeColor3 = Color3.new(.6,0,1)
-tecks2.Size = UDim2.new(1,0,0.5,0)
-coroutine.resume(coroutine.create(function()
-while true do
-for i = 0,256,16 do
-tecks2.TextStrokeColor3 = Color3.new(1,i/256,0)
-swait()
-end
-for i = 0,256,16 do
-tecks2.TextStrokeColor3 = Color3.new(1-i/256,1,0)
-swait()
-end
-for i = 0,256,16 do
-tecks2.TextStrokeColor3 = Color3.new(0,1,i/256)
-swait()
-end
-for i = 0,256,16 do
-tecks2.TextStrokeColor3 = Color3.new(0,1-i/256,1)
-swait()
-end
-for i = 0,256,16 do
-tecks2.TextStrokeColor3 = Color3.new(i/256,0,1)
-swait()
-end
-for i = 0,256,16 do
-tecks2.TextStrokeColor3 = Color3.new(1,0,1-i/256)
-swait()
-end
-end
-end))
-swait(50)
-for i = 0,1,.05 do
-swait()
-tecks2.Position = tecks2.Position - UDim2.new(0,0,.005,0)
-tecks2.TextStrokeTransparency = i
-tecks2.TextTransparency = i
-end
-naeeym2:Destroy()
-end))
-local st = (CFrame.new(h.Parent.Head.CFrame * Vector3.new(0,-1.5,0))).p
-for oa = 1, 5 do
-local effp = Instance.new("Part",workspace)
-effp.CanCollide = false
-effp.BottomSurface = 0
-effp.TopSurface = 0
-effp.Size = Vector3.new(1,1,1)
-effp.Anchored = true
-effp.CFrame = (h.Parent.Head.CFrame * CFrame.new(0,-1.5,0)) * CFrame.fromEulerAnglesXYZ(math.rad(math.random(0,359)),math.rad(math.random(0,359)),math.rad(math.random(0,359)))
-effp.Material = "Neon"
-effp.BrickColor = BrickColor.new("White")
-local efm = Instance.new("SpecialMesh",effp)
-efm.MeshType = "Sphere"
-coroutine.resume(coroutine.create(function()
-for a = 0,1,.05 do
-efm.Scale = Vector3.new(2-a*2,100*a,2-a*2)
-effp.Transparency = a
-swait()
-end
-effp:Destroy()
-end))
-end
-for i, v in pairs(h.Parent:GetChildren()) do
-if v:IsA("BasePart") then
-v.Anchored = false
-end
-end
-for a, v in pairs(h.Parent:GetChildren()) do
-if v:IsA("BasePart") then
-local bodpos = Instance.new("BodyPosition",v)
-bodpos.Position = v.Position + Vector3.new(math.random(-5,5),math.random(-5,5),math.random(-5,5))
-v.BrickColor = BrickColor.new("White")
-v.Material = "Neon"
-end
-end
-for d = 0,1,.05 do
-for i, v in pairs(h.Parent:GetChildren()) do
-if v:IsA("BasePart") then
-v.Transparency = d
-swait()
-end
-end
-end
-for i, v in pairs(h.Parent:GetChildren()) do
-if v:IsA("BasePart") then
-v:Destroy()
-end
-end
-end))
+
 
 
 function ShowDamage(Dude, Text, Time, Color)
@@ -603,7 +500,7 @@ tecks2.Position = tecks2.Position - UDim2.new(0,0,.005,0)
 tecks2.TextStrokeTransparency = i
 tecks2.TextTransparency = i
 end
-naeeym2:Destroy()
+
 end))
 end
 
@@ -1124,7 +1021,7 @@ Lite.Range = 8
 Lite.Brightness = 10
 Lite.Shadows = true
 
-musid = "rbxassetid://413641131"
+musid = "rbxassetid://5409360995"
 local mus = Instance.new("Sound",Character)
 mus.Name = "mus"
 mus.SoundId = musid
@@ -1751,7 +1648,7 @@ mouse.KeyDown:connect(function(k)
                 elseif k=='t' then
                 if attack==false and Sit == false and CurrentMode == "Sheathed" then
                 Sit = true
-                Humanoid.WalkSpeed = 0
+                Humanoid.WalkSpeed = 16
                 elseif k=='t' then
                 if attack==false and Sit == true and CurrentMode == "Sheathed" then
                 Sit = false
@@ -1894,27 +1791,9 @@ local Delay=Thing[3]
 local IncX=Thing[4]
 local IncY=Thing[5]
 local IncZ=Thing[6]
-if Thing[1].Transparency<=1 then
+if Thing[1].Transparency<=0 then
 if Thing[2]=="Block1" then
-Thing[1].CFrame=Thing[1].CFrame*euler(math.random(-50,50),math.random(-50,50),math.random(-50,50))
-Mesh=Thing[1].Mesh
-Mesh.Scale=Mesh.Scale+vt(Thing[4],Thing[5],Thing[6])
-Thing[1].Transparency=Thing[1].Transparency+Thing[3]
-elseif Thing[2]=="Cylinder" then
-Mesh=Thing[1].Mesh
-Mesh.Scale=Mesh.Scale+vt(Thing[4],Thing[5],Thing[6])
-Thing[1].Transparency=Thing[1].Transparency+Thing[3]
-elseif Thing[2]=="Blood" then
-Mesh=Thing[7]
-Thing[1].CFrame=Thing[1].CFrame*cf(0,.5,0)
-Mesh.Scale=Mesh.Scale+vt(Thing[4],Thing[5],Thing[6])
-Thing[1].Transparency=Thing[1].Transparency+Thing[3]
-elseif Thing[2]=="Elec" then
-Mesh=Thing[1].Mesh
-Mesh.Scale=Mesh.Scale+vt(Thing[7],Thing[8],Thing[9])
-Thing[1].Transparency=Thing[1].Transparency+Thing[3]
-elseif Thing[2]=="Disappear" then
-Thing[1].Transparency=Thing[1].Transparency+Thing[3]
+
 end
 else
 Part.Parent=nil
