@@ -880,21 +880,21 @@ local hat2 = gp(cplayer, "SeeMonkey", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Torso"]
-att2.Position = Vector3.new(0, -0.06, 0)
+att2.Position = Vector3.new(0, -0.09, 0)
 att2.Rotation = Vector3.new(90, 0, 0)
 
 local hat2 = gp(cplayer, "Pink Hair", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Left Arm"]
-att2.Position = Vector3.new(-0.06, -0.06, 0)
+att2.Position = Vector3.new(-0.09, -0.09, 0)
 att2.Rotation = Vector3.new(90, 0, 0)
 
 local hat2 = gp(cplayer, "Kate Hair", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Right Arm"]
-att2.Position = Vector3.new(0.06, -0.06, 0)
+att2.Position = Vector3.new(0.09, -0.09, 0)
 att2.Rotation = Vector3.new(90, 0, 0) --LavanderHair
 
 local hat2 = gp(cplayer, "LavanderHair", "Accessory")
