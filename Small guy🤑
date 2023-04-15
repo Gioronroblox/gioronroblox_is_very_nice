@@ -1,3 +1,4 @@
+game.Players.LocalPlayer.Character["Kiwi"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["SeeMonkey"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Pink Hair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy() --LavanderHair
@@ -875,6 +876,13 @@ local function gp(parent, name, className)
     end
     return nil
 end
+
+local hat2 = gp(cplayer, "Kiwi", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Torso"]
+att2.Position = Vector3.new(0, -0.09, 0)
+att2.Rotation = Vector3.new(90, 0, 0)
 
 local hat2 = gp(cplayer, "SeeMonkey", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
