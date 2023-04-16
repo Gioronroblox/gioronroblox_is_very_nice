@@ -6088,6 +6088,11 @@ Part475.brickColor = BrickColor.new("Mid gray")
 SpecialMesh476.Parent = Part475
 SpecialMesh476.Scale = Vector3.new(0.349999994, 1.04999995, 0.5)
 SpecialMesh476.MeshType = Enum.MeshType.Brick
+
+game:GetService("Players").LocalPlayer.Character["MeshPartAccessory"].Handle.att1_Handle.Parent = Part475
+Part475.att1_Handle.Rotation = Vector3.new(-45,-90,0)
+Part475.att1_Handle.Position = Vector3.new(-0,-2.8,0)
+
 for i,v in pairs(mas:GetChildren()) do
 	v.Parent = game:GetService("Players").LocalPlayer.Character
 	pcall(function() v:MakeJoints() end)
