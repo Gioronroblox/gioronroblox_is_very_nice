@@ -880,8 +880,8 @@ local hat2 = gp(cplayer, "Back Bike", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Torso"]
-att2.Position = Vector3.new(0, -20, -40)
-att2.Rotation = Vector3.new(90, 90, 90)
+att2.Position = Vector3.new(0, -2, -2)
+att2.Rotation = Vector3.new(180, 180, 180)
 
 local hat2 = gp(cplayer, "SeeMonkey", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
