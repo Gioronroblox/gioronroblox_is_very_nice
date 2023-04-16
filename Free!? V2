@@ -1,0 +1,1433 @@
+game.Players.LocalPlayer.Character["VANS_Umbrella"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["Pink Hair"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy() --LavanderHair
+game.Players.LocalPlayer.Character["LavanderHair"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["Robloxclassicred"].Handle.Mesh:Destroy()
+
+
+local c = game.Players.LocalPlayer.Character
+for i, v in pairs({"Right Arm", "Left Arm"}) do
+    local arm = c[v]
+    arm.Parent = nil
+    arm.Transparency = 1
+    arm.Parent = c
+end
+
+local c = game.Players.LocalPlayer.Character
+for i, v in pairs({"Right Leg", "Left Leg"}) do
+    local Leg = c[v]
+    Leg.Parent = nil
+    Leg.Transparency = 1
+    Leg.Parent = c
+end
+
+local v3_net, v3_808 = Vector3.new(0, 25.1, 0), Vector3.new(8, 0, 8)
+		local function getNetlessVelocity(realPartVelocity)
+			local mag = realPartVelocity.Magnitude
+			if mag > 1 then
+				local unit = realPartVelocity.Unit
+				if (unit.Y > 0.25) or (unit.Y < -0.75) then
+					return unit * (25.1 / unit.Y)
+				end
+			end 
+			return v3_net + realPartVelocity * v3_808
+		end
+		local simradius = "shp" --simulation radius (net bypass) method
+--simulation radius (net bypass) method
+--"shp" - sethiddenproperty
+--"ssr" - setsimulationradius
+--false - disable
+local antiragdoll = true --removes hingeConstraints and ballSocketConstraints from your character
+local newanimate = true --disables the animate script and enables after reanimation
+local discharscripts = true --disables all localScripts parented to your character before reanimation
+local R15toR6 = true --tries to convert your character to r6 if its r15
+local hatcollide = true --makes hats cancollide (only method 0)
+local humState16 = true --enables collisions for limbs before the humanoid dies (using hum:ChangeState)
+local addtools = false --puts all tools from backpack to character and lets you hold them after reanimation
+local hedafterneck = false --disable aligns for head and enable after neck is removed
+local loadtime = game:GetService("Players").RespawnTime + 0.5 --anti respawn delay
+local method = 0 --reanimation method
+--methods:
+--0 - breakJoints (takes [loadtime] seconds to laod)
+--1 - limbs
+--2 - limbs + anti respawn
+--3 - limbs + breakJoints after [loadtime] seconds
+--4 - remove humanoid + breakJoints
+--5 - remove humanoid + limbs
+local alignmode = 3 --AlignPosition mode
+--modes:
+--1 - AlignPosition rigidity enabled true
+--2 - 2 AlignPositions rigidity enabled both true and false
+--3 - AlignPosition rigidity enabled false
+
+healthHide = healthHide and ((method == 0) or (method == 2) or (method == 000)) and gp(c, "Head", "BasePart")
+
+local lp = game:GetService("Players").LocalPlayer
+local rs = game:GetService("RunService")
+local stepped = rs.Stepped
+local heartbeat = rs.Heartbeat
+local renderstepped = rs.RenderStepped
+local sg = game:GetService("StarterGui")
+local ws = game:GetService("Workspace")
+local cf = CFrame.new
+local v3 = Vector3.new
+local v3_0 = v3(0, 0, 0)
+local inf = math.huge
+
+local c = lp.Character
+
+if not (c and c.Parent) then
+	return
+end
+
+c.Destroying:Connect(function()
+	c = nil
+end)
+
+local function gp(parent, name, className)
+	if typeof(parent) == "Instance" then
+		for i, v in pairs(parent:GetChildren()) do
+			if (v.Name == name) and v:IsA(className) then
+				return v
+			end
+		end
+	end
+	return nil
+end
+
+local function align(Part0, Part1)
+	Part0.CustomPhysicalProperties = PhysicalProperties.new(0.0001, 0.0001, 0.0001, 0.0001, 0.0001)
+
+	local att0 = Instance.new("Attachment", Part0)
+	att0.Orientation = v3_0
+	att0.Position = v3_0
+	att0.Name = "att0_" .. Part0.Name
+	local att1 = Instance.new("Attachment", Part1)
+	att1.Orientation = v3_0
+	att1.Position = v3_0
+	att1.Name = "att1_" .. Part1.Name
+
+	if (alignmode == 1) or (alignmode == 2) then
+		local ape = Instance.new("AlignPosition", att0)
+		ape.ApplyAtCenterOfMass = false
+		ape.MaxForce = inf
+		ape.MaxVelocity = inf
+		ape.ReactionForceEnabled = false
+		ape.Responsiveness = 200
+		ape.Attachment1 = att1
+		ape.Attachment0 = att0
+		ape.Name = "AlignPositionRtrue"
+		ape.RigidityEnabled = true
+	end
+
+	if (alignmode == 2) or (alignmode == 3) then
+		local apd = Instance.new("AlignPosition", att0)
+		apd.ApplyAtCenterOfMass = false
+		apd.MaxForce = inf
+		apd.MaxVelocity = inf
+		apd.ReactionForceEnabled = false
+		apd.Responsiveness = 200
+		apd.Attachment1 = att1
+		apd.Attachment0 = att0
+		apd.Name = "AlignPositionRfalse"
+		apd.RigidityEnabled = false
+	end
+
+	local ao = Instance.new("AlignOrientation", att0)
+	ao.MaxAngularVelocity = inf
+	ao.MaxTorque = inf
+	ao.PrimaryAxisOnly = false
+	ao.ReactionTorqueEnabled = false
+	ao.Responsiveness = 200
+	ao.Attachment1 = att1
+	ao.Attachment0 = att0
+	ao.RigidityEnabled = false
+
+	if type(getNetlessVelocity) == "function" then
+	    local realVelocity = v3_0
+        local steppedcon = stepped:Connect(function()
+            Part0.Velocity = realVelocity
+        end)
+        local heartbeatcon = heartbeat:Connect(function()
+            realVelocity = Part0.Velocity
+            Part0.Velocity = getNetlessVelocity(realVelocity)
+        end)
+        Part0.Destroying:Connect(function()
+            Part0 = nil
+            steppedcon:Disconnect()
+            heartbeatcon:Disconnect()
+        end)
+    end
+end
+
+local function respawnrequest()
+	local ccfr = ws.CurrentCamera.CFrame
+	local c = lp.Character
+	lp.Character = nil
+	lp.Character = c
+	local con = nil
+	con = ws.CurrentCamera.Changed:Connect(function(prop)
+	    if (prop ~= "Parent") and (prop ~= "CFrame") then
+	        return
+	    end
+	    ws.CurrentCamera.CFrame = ccfr
+	    con:Disconnect()
+    end)
+end
+
+local destroyhum = (method == 4) or (method == 5)
+local breakjoints = (method == 0) or (method == 4)
+local antirespawn = (method == 0) or (method == 2) or (method == 3)
+
+hatcollide = hatcollide and (method == 0)
+
+addtools = addtools and gp(lp, "Backpack", "Backpack")
+
+local fenv = getfenv()
+local shp = fenv.sethiddenproperty or fenv.set_hidden_property or fenv.set_hidden_prop or fenv.sethiddenprop
+local ssr = fenv.setsimulationradius or fenv.set_simulation_radius or fenv.set_sim_radius or fenv.setsimradius or fenv.set_simulation_rad or fenv.setsimulationrad
+
+if shp and (simradius == "shp") then
+	spawn(function()
+		while c and heartbeat:Wait() do
+			shp(lp, "SimulationRadius", inf)
+		end
+	end)
+elseif ssr and (simradius == "ssr") then
+	spawn(function()
+		while c and heartbeat:Wait() do
+			ssr(inf)
+		end
+	end)
+end
+
+antiragdoll = antiragdoll and function(v)
+	if v:IsA("HingeConstraint") or v:IsA("BallSocketConstraint") then
+		v.Parent = nil
+	end
+end
+
+if antiragdoll then
+	for i, v in pairs(c:GetDescendants()) do
+		antiragdoll(v)
+	end
+	c.DescendantAdded:Connect(antiragdoll)
+end
+
+if antirespawn then
+	respawnrequest()
+end
+
+if method == 0 then
+	wait(loadtime)
+	if not c then
+		return
+	end
+end
+
+if discharscripts then
+	for i, v in pairs(c:GetChildren()) do
+		if v:IsA("LocalScript") then
+			v.Disabled = true
+		end
+	end
+elseif newanimate then
+	local animate = gp(c, "Animate", "LocalScript")
+	if animate and (not animate.Disabled) then
+		animate.Disabled = true
+	else
+		newanimate = false
+	end
+end
+
+if addtools then
+	for i, v in pairs(addtools:GetChildren()) do
+		if v:IsA("Tool") then
+			v.Parent = c
+		end
+	end
+end
+
+pcall(function()
+	settings().Physics.AllowSleep = false
+	settings().Physics.PhysicsEnvironmentalThrottle = Enum.EnviromentalPhysicsThrottle.Disabled
+end)
+
+local OLDscripts = {}
+
+for i, v in pairs(c:GetDescendants()) do
+	if v.ClassName == "Script" then
+		table.insert(OLDscripts, v)
+	end
+end
+
+local scriptNames = {}
+
+for i, v in pairs(c:GetDescendants()) do
+	if v:IsA("BasePart") then
+		local newName = tostring(i)
+		local exists = true
+		while exists do
+			exists = false
+			for i, v in pairs(OLDscripts) do
+				if v.Name == newName then
+					exists = true
+				end
+			end
+			if exists then
+				newName = newName .. "_"    
+			end
+		end
+		table.insert(scriptNames, newName)
+		Instance.new("Script", v).Name = newName
+	end
+end
+
+c.Archivable = true
+local hum = c:FindFirstChildOfClass("Humanoid")
+if hum then
+	for i, v in pairs(hum:GetPlayingAnimationTracks()) do
+		v:Stop()
+	end
+end
+local cl = c:Clone()
+if hum and humState16 then
+    hum:ChangeState(Enum.HumanoidStateType.Physics)
+    if destroyhum then
+        wait(1.6)
+    end
+end
+if hum and hum.Parent and destroyhum then
+    hum:Destroy()
+end
+
+if not c then
+    return
+end
+
+local head = gp(c, "Head", "BasePart")
+local torso = gp(c, "Torso", "BasePart") or gp(c, "UpperTorso", "BasePart")
+local root = gp(c, "HumanoidRootPart", "BasePart")
+if hatcollide and c:FindFirstChildOfClass("Accessory") then
+    local anything = c:FindFirstChildOfClass("BodyColors") or gp(c, "Health", "Script")
+    if not (torso and root and anything) then
+        return
+    end
+    torso:Destroy()
+    root:Destroy()
+    if shp then
+        for i,v in pairs(c:GetChildren()) do
+            if v:IsA("Accessory") then
+                shp(v, "BackendAccoutrementState", 0)
+            end 
+        end
+    end
+    anything:Destroy()
+    if head then
+       head:Destroy()
+    end
+end
+
+for i, v in pairs(cl:GetDescendants()) do
+	if v:IsA("BasePart") then
+		v.Transparency = 1
+		v.Anchored = false
+	end
+end
+
+local model = Instance.new("Model", c)
+model.Name = model.ClassName
+
+model.Destroying:Connect(function()
+	model = nil
+end)
+
+for i, v in pairs(c:GetChildren()) do
+	if v ~= model then
+		if addtools and v:IsA("Tool") then
+			for i1, v1 in pairs(v:GetDescendants()) do
+				if v1 and v1.Parent and v1:IsA("BasePart") then
+					local bv = Instance.new("BodyVelocity", v1)
+					bv.Velocity = v3_0
+					bv.MaxForce = v3(1000, 1000, 1000)
+					bv.P = 1250
+					bv.Name = "bv_" .. v.Name
+				end
+			end
+		end
+		v.Parent = model
+	end
+end
+
+if breakjoints then
+	model:BreakJoints()
+else
+	if head and torso then
+		for i, v in pairs(model:GetDescendants()) do
+			if v:IsA("Weld") or v:IsA("Snap") or v:IsA("Glue") or v:IsA("Motor") or v:IsA("Motor6D") then
+				local save = false
+				if (v.Part0 == torso) and (v.Part1 == head) then
+					save = true
+				end
+				if (v.Part0 == head) and (v.Part1 == torso) then
+					save = true
+				end
+				if save then
+					if hedafterneck then
+						hedafterneck = v
+					end
+				else
+					v:Destroy()
+				end
+			end
+		end
+	end
+	if method == 3 then
+		spawn(function()
+			wait(loadtime)
+			if model then
+				model:BreakJoints()
+			end
+		end)
+	end
+end
+
+cl.Parent = c
+for i, v in pairs(cl:GetChildren()) do
+	v.Parent = c
+end
+cl:Destroy()
+
+local modelDes = {}
+for i, v in pairs(model:GetDescendants()) do
+	if v:IsA("BasePart") then
+		i = tostring(i)
+		v.Destroying:Connect(function()
+			modelDes[i] = nil
+		end)
+		modelDes[i] = v
+	end
+end
+local modelcolcon = nil
+local function modelcolf()
+	if model then
+		for i, v in pairs(modelDes) do
+			v.CanCollide = false
+		end
+	else
+		modelcolcon:Disconnect()
+	end
+end
+modelcolcon = stepped:Connect(modelcolf)
+modelcolf()
+
+for i, scr in pairs(model:GetDescendants()) do
+	if (scr.ClassName == "Script") and table.find(scriptNames, scr.Name) then
+		local Part0 = scr.Parent
+		if Part0:IsA("BasePart") then
+			for i1, scr1 in pairs(c:GetDescendants()) do
+				if (scr1.ClassName == "Script") and (scr1.Name == scr.Name) and (not scr1:IsDescendantOf(model)) then
+					local Part1 = scr1.Parent
+					if (Part1.ClassName == Part0.ClassName) and (Part1.Name == Part0.Name) then
+						align(Part0, Part1)
+						break
+					end
+				end
+			end
+		end
+	end
+end
+
+if (typeof(hedafterneck) == "Instance") and head then
+	local aligns = {}
+	local con = nil
+	con = hedafterneck.Changed:Connect(function(prop)
+	    if (prop == "Parent") and not hedafterneck.Parent then
+	        con:Disconnect()
+    		for i, v in pairs(aligns) do
+    			v.Enabled = true
+    		end
+		end
+	end)
+	for i, v in pairs(head:GetDescendants()) do
+		if v:IsA("AlignPosition") or v:IsA("AlignOrientation") then
+			i = tostring(i)
+			aligns[i] = v
+			v.Destroying:Connect(function()
+			    aligns[i] = nil
+			end)
+			v.Enabled = false
+		end
+	end
+end
+
+for i, v in pairs(c:GetDescendants()) do
+	if v and v.Parent then
+		if v.ClassName == "Script" then
+			if table.find(scriptNames, v.Name) then
+				v:Destroy()
+			end
+		elseif not v:IsDescendantOf(model) then
+			if v:IsA("Decal") then
+				v.Transparency = 1
+			elseif v:IsA("ForceField") then
+				v.Visible = false
+			elseif v:IsA("Sound") then
+				v.Playing = false
+			elseif v:IsA("BillboardGui") or v:IsA("SurfaceGui") or v:IsA("ParticleEmitter") or v:IsA("Fire") or v:IsA("Smoke") or v:IsA("Sparkles") then
+				v.Enabled = false
+			end
+		end
+	end
+end
+
+if newanimate then
+	local animate = gp(c, "Animate", "LocalScript")
+	if animate then
+		animate.Disabled = false
+	end
+end
+
+if addtools then
+	for i, v in pairs(c:GetChildren()) do
+		if v:IsA("Tool") then
+			v.Parent = addtools
+		end
+	end
+end
+
+local hum0 = model:FindFirstChildOfClass("Humanoid")
+if hum0 then
+    hum0.Destroying:Connect(function()
+        hum0 = nil
+    end)
+end
+
+local hum1 = c:FindFirstChildOfClass("Humanoid")
+if hum1 then
+    hum1.Destroying:Connect(function()
+        hum1 = nil
+    end)
+end
+
+if hum1 then
+	ws.CurrentCamera.CameraSubject = hum1
+	local camSubCon = nil
+	local function camSubFunc()
+		camSubCon:Disconnect()
+		if c and hum1 then
+			ws.CurrentCamera.CameraSubject = hum1
+		end
+	end
+	camSubCon = renderstepped:Connect(camSubFunc)
+	if hum0 then
+		hum0.Changed:Connect(function(prop)
+			if hum1 and (prop == "Jump") then
+				hum1.Jump = hum0.Jump
+			end
+		end)
+	else
+		respawnrequest()
+	end
+end
+
+local rb = Instance.new("BindableEvent", c)
+rb.Event:Connect(function()
+	rb:Destroy()
+	sg:SetCore("ResetButtonCallback", true)
+	if destroyhum then
+		c:BreakJoints()
+		return
+	end
+	if hum0 and (hum0.Health > 0) then
+		model:BreakJoints()
+		hum0.Health = 0
+	end
+	if antirespawn then
+	    respawnrequest()
+	end
+end)
+sg:SetCore("ResetButtonCallback", rb)
+
+spawn(function()
+	while c do
+		if hum0 and hum1 then
+			hum1.Jump = hum0.Jump
+		end
+		wait()
+	end
+	sg:SetCore("ResetButtonCallback", true)
+end)
+
+R15toR6 = R15toR6 and hum1 and (hum1.RigType == Enum.HumanoidRigType.R15)
+if R15toR6 then
+    local part = gp(c, "HumanoidRootPart", "BasePart") or gp(c, "UpperTorso", "BasePart") or gp(c, "LowerTorso", "BasePart") or gp(c, "Head", "BasePart") or c:FindFirstChildWhichIsA("BasePart")
+	if part then
+	    local cfr = part.CFrame
+		local R6parts = { 
+			head = {
+				Name = "Head",
+				Size = v3(2, 1, 1),
+				R15 = {
+					Head = 0
+				}
+			},
+			torso = {
+				Name = "Torso",
+				Size = v3(2, 2, 1),
+				R15 = {
+					UpperTorso = 0.2,
+					LowerTorso = -100
+				}
+			},
+			root = {
+				Name = "HumanoidRootPart",
+				Size = v3(2, 2, 1),
+				R15 = {
+					HumanoidRootPart = 0
+				}
+			},
+			leftArm = {
+				Name = "Left Arm",
+				Size = v3(1, 2, 1),
+				R15 = {
+					LeftHand = -0.73,
+					LeftLowerArm = -0.2,
+					LeftUpperArm = 0.4
+				}
+			},
+			rightArm = {
+				Name = "Right Arm",
+				Size = v3(1, 2, 1),
+				R15 = {
+					RightHand = -0.73,
+					RightLowerArm = -0.2,
+					RightUpperArm = 0.4
+				}
+			},
+			leftLeg = {
+				Name = "Left Leg",
+				Size = v3(1, 2, 1),
+				R15 = {
+					LeftFoot = -0.73,
+					LeftLowerLeg = -0.15,
+					LeftUpperLeg = 0.6
+				}
+			},
+			rightLeg = {
+				Name = "Right Leg",
+				Size = v3(1, 2, 1),
+				R15 = {
+					RightFoot = -0.73,
+					RightLowerLeg = -0.15,
+					RightUpperLeg = 0.6
+				}
+			}
+		}
+		for i, v in pairs(c:GetChildren()) do
+			if v:IsA("BasePart") then
+				for i1, v1 in pairs(v:GetChildren()) do
+					if v1:IsA("Motor6D") then
+						v1.Part0 = nil
+					end
+				end
+			end
+		end
+		part.Archivable = true
+		for i, v in pairs(R6parts) do
+			local part = part:Clone()
+			part:ClearAllChildren()
+			part.Name = v.Name
+			part.Size = v.Size
+			part.CFrame = cfr
+			part.Anchored = false
+			part.Transparency = 1
+			part.CanCollide = false
+			for i1, v1 in pairs(v.R15) do
+				local R15part = gp(c, i1, "BasePart")
+				local att = gp(R15part, "att1_" .. i1, "Attachment")
+				if R15part then
+					local weld = Instance.new("Weld", R15part)
+					weld.Name = "Weld_" .. i1
+					weld.Part0 = part
+					weld.Part1 = R15part
+					weld.C0 = cf(0, v1, 0)
+					weld.C1 = cf(0, 0, 0)
+					R15part.Massless = true
+					R15part.Name = "R15_" .. i1
+					R15part.Parent = part
+					if att then
+						att.Parent = part
+						att.Position = v3(0, v1, 0)
+					end
+				end
+			end
+			part.Parent = c
+			R6parts[i] = part
+		end
+		local R6joints = {
+			neck = {
+				Parent = Scarf,
+				Name = "Neck",
+				Part0 = Scarf, --R6parts.torso
+				Part1 = Scarf, --R6parts.head
+				C0 = cf(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0),
+				C1 = cf(0, -0.5, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0)
+			},
+			rootJoint = {
+				Parent = R6parts.root,
+				Name = "RootJoint" ,
+				Part0 = R6parts.root,
+				Part1 = R6parts.torso,
+				C0 = cf(0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0),
+				C1 = cf(0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0)
+			},
+			rightShoulder = {
+				Parent = R6parts.torso,
+				Name = "Right Shoulder",
+				Part0 = R6parts.torso,
+				Part1 = R6parts.rightArm,
+				C0 = cf(1, 0.5, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0),
+				C1 = cf(-0.5, 0.5, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0)
+			},
+			leftShoulder = {
+				Parent = R6parts.torso,
+				Name = "Left Shoulder",
+				Part0 = R6parts.torso,
+				Part1 = R6parts.leftArm,
+				C0 = cf(-1, 0.5, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0),
+				C1 = cf(0.5, 0.5, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0)
+			},
+			rightHip = {
+				Parent = R6parts.torso,
+				Name = "Right Hip",
+				Part0 = R6parts.torso,
+				Part1 = R6parts.rightLeg,
+				C0 = cf(1, -1, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0),
+				C1 = cf(0.5, 1, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0)
+			},
+			leftHip = {
+				Parent = R6parts.torso,
+				Name = "Left Hip" ,
+				Part0 = R6parts.torso,
+				Part1 = R6parts.leftLeg,
+				C0 = cf(-1, -1, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0),
+				C1 = cf(-0.5, 1, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0)
+			}
+		}
+		for i, v in pairs(R6joints) do
+			local joint = Instance.new("Motor6D")
+			for prop, val in pairs(v) do
+				joint[prop] = val
+			end
+			R6joints[i] = joint
+		end
+		hum1.RigType = Enum.HumanoidRigType.R6
+		hum1.HipHeight = 0
+	end
+end
+
+
+
+--find rig joints
+
+local function fakemotor()
+    return {C0=cf(), C1=cf()}
+end
+
+local torso = gp(c, "Torso", "BasePart")
+local root = gp(c, "HumanoidRootPart", "BasePart")
+
+local neck = gp(torso, "Neck", "Motor6D")
+neck = neck or fakemotor()
+
+local rootJoint = gp(root, "RootJoint", "Motor6D")
+rootJoint = rootJoint or fakemotor()
+
+local leftShoulder = gp(torso, "Left Shoulder", "Motor6D")
+leftShoulder = leftShoulder or fakemotor()
+
+local rightShoulder = gp(torso, "Right Shoulder", "Motor6D")
+rightShoulder = rightShoulder or fakemotor()
+
+local leftHip = gp(torso, "Left Hip", "Motor6D")
+leftHip = leftHip or fakemotor()
+
+local rightHip = gp(torso, "Right Hip", "Motor6D")
+rightHip = rightHip or fakemotor()
+
+--120 fps
+
+local fps = 0
+local event = Instance.new("BindableEvent", c)
+event.Name = "120 fps"
+local floor = math.floor
+fps = 1 / fps
+local tf = 0
+local con = nil
+con = game:GetService("RunService").RenderStepped:Connect(function(s)
+	if not c then
+		con:Disconnect()
+		return
+	end
+    --tf += s
+	if tf >= fps then
+		for i=1, floor(tf / fps) do
+			event:Fire(c)
+		end
+		tf = 0
+	end
+end)
+local event = event.Event
+
+local hedrot = v3(0, 5, 0)
+
+local uis = game:GetService("UserInputService")
+local function isPressed(key)
+    return (not uis:GetFocusedTextBox()) and uis:IsKeyDown(Enum.KeyCode[key])
+end
+
+local biggesthandle = nil
+for i, v in pairs(c:GetChildren()) do
+    if v:IsA("Accessory") and v.Name == "VANS_Umbrella" then
+        local handle = gp(v, "Handle", "BasePart")
+        if biggesthandle then
+            if biggesthandle.Size.Magnitude < handle.Size.Magnitude then
+                biggesthandle = Handle
+            end
+       else
+            biggesthandle = gp(v, "Handle", "BasePart")
+        end
+    end
+end
+
+if not biggesthandle then
+    return
+end
+
+local handle1 = gp(gp(model, biggesthandle.Parent.Name, "Accessory"), "Handle", "BasePart")
+if not handle1 then
+    return
+end
+
+handle1.Destroying:Connect(function()
+    handle1 = nil
+end)
+biggesthandle.Destroying:Connect(function()
+    biggesthandle = nil
+end)
+
+biggesthandle:BreakJoints()
+biggesthandle.Anchored = true
+
+for i, v in pairs(handle1:GetDescendants()) do
+    if v:IsA("AlignOrientation") then
+        v.Enabled = false
+   end
+end
+
+local mouse = lp:GetMouse()
+local fling = false
+mouse.Button1Down:Connect(function()
+    fling = true
+end)
+mouse.Button1Up:Connect(function()
+    fling = false
+end)
+local function doForSignal(signal, vel)
+    spawn(function()
+        while signal:Wait() and c and handle1 and biggesthandle do
+            if fling and mouse.Target then
+                biggesthandle.Position = mouse.Hit.Position
+            end
+            handle1.RotVelocity = vel
+        end
+    end)
+end
+doForSignal(stepped, v3(10000, 10000, 10000))
+doForSignal(renderstepped, v3(10000, 10000, 10000))
+doForSignal(heartbeat, v3(200000000000000, 200000000000000, 200000000000000)) --https://web.roblox.com/catalog/63690008/Pal-Hair
+
+local lp = game:GetService("Players").LocalPlayer
+local rs = game:GetService("RunService")
+local stepped = rs.Stepped
+local heartbeat = rs.Heartbeat
+local renderstepped = rs.RenderStepped
+local sg = game:GetService("StarterGui")
+local ws = game:GetService("Workspace")
+local cf = CFrame.new
+local v3 = Vector3.new
+local v3_0 = Vector3.zero
+local inf = math.huge
+
+local cplayer = lp.Character
+
+local v3 = Vector3.new
+
+local function gp(parent, name, className)
+    if typeof(parent) == "Instance" then
+        for i, v in pairs(parent:GetChildren()) do
+            if (v.Name == name) and v:IsA(className) then
+                return v
+            end
+        end
+    end
+    return nil
+end
+
+local hat2 = gp(cplayer, "Pink Hair", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Left Arm"]
+att2.Position = Vector3.new(0, -0, 0)
+att2.Rotation = Vector3.new(90, 0, 0)
+
+local hat2 = gp(cplayer, "Kate Hair", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Right Arm"]
+att2.Position = Vector3.new(-0, -0, 0)
+att2.Rotation = Vector3.new(90, 0, 0) --LavanderHair
+
+local hat2 = gp(cplayer, "LavanderHair", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Right Leg"]
+att2.Position = Vector3.new(0, 0, 0) --Robloxclassicred
+att2.Rotation = Vector3.new(90, 0, 0)
+
+local hat2 = gp(cplayer, "Robloxclassicred", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Left Leg"]
+att2.Position = Vector3.new(-0, 0, 0) 
+att2.Rotation = Vector3.new(90, 0, 0)
+
+--[[_G.loop = true
+local player = game.Players.LocalPlayer
+local char = player.Character
+local Align = function(Part0, Part1,Mesh)
+    local Aligns = {
+        AlignOrientation = Instance.new("AlignOrientation", Part0),
+        AlignPosition = Instance.new("AlignPosition", Part0)
+    }
+    
+    local Attachments = {
+        Attach0 = Instance.new("Attachment", Part0),
+        Attach1 = Instance.new("Attachment", Part1)
+    }
+    local m = Part0:FindFirstChildOfClass('SpecialMesh')--This will get the first "SpecialMesh" it finds if it does not find any, then it will return nil
+    if Mesh and m then --If Mesh is set to true and it finds a mesh it will destroy it
+        m:Destroy()
+    end
+    Part0:BreakJoints()
+    Aligns.AlignOrientation.Attachment0 = Attachments.Attach0
+    Aligns.AlignOrientation.Attachment1 = Attachments.Attach1
+    Aligns.AlignOrientation.Responsiveness = math.huge
+    Aligns.AlignOrientation.RigidityEnabled = true
+    
+    Aligns.AlignPosition.Attachment0 = Attachments.Attach0
+    Aligns.AlignPosition.Attachment1 = Attachments.Attach1
+    Aligns.AlignPosition.Responsiveness = math.huge
+    Aligns.AlignPosition.RigidityEnabled = true
+        Aligns.AlignPosition.MaxForce = 999999999
+        spawn(function()
+            while _G.loop do 
+                local mag = (Part0.Position - (Part1.CFrame*Attachments.Attach0.CFrame:Inverse()).p).magnitude--magnitude can get the distance between two cframe or position
+                if mag >= 5 then 
+                Part0.CFrame = Part1.CFrame*Attachments.Attach0.CFrame:Inverse()
+                end
+                Part0.Velocity = Vector3.new(0,35,0)
+                game['Run Service'].Heartbeat:wait()
+                end
+        end)
+ return {Attachments.Attach0, Attachments, Aligns}
+        
+end 
+local hat = Align(char['VANS_Umbrella'].Handle,char['HumanoidRootPart'],false)
+local cf = char['HumanoidRootPart'].CFrame*CFrame.new(0,1000,-0)*CFrame.Angles(math.rad(0),math.rad(0),0)
+hat[1].CFrame = cf:Inverse() * char['HumanoidRootPart'].CFrame
+spawn(function()
+    char.AncestryChanged:wait()--if you respawn, it will stop the  loop to avoid lag of using it over and over
+    _G.loop = false 
+end)
+for i,v in pairs (char:GetChildren()) do
+	if v:IsA("Accessory") then
+		v.Handle.Massless = true
+		v.Handle.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
+	end
+end]]
+
+
+local script = game:GetObjects("rbxassetid://13131998226")[1]
+script.Parent = game:GetService("Players").LocalPlayer
+
+local ORIGCF=CFrame.new
+local math=setmetatable({random=function(Arg1,Arg2,DIV)DIV=DIV or 1 return math.random(Arg1*DIV,Arg2*DIV)/DIV end;},{__index=math;})
+local CFrame=setmetatable({new=function(Arg1,Arg2,Arg3,Angles) if not Angles then return CFrame.new(Arg1,Arg2,Arg3) else return CFrame.Angles(math.rad(Arg1),math.rad(Arg2),math.rad(Arg3)) end end;},{__index=CFrame;})
+local Instance=setmetatable({new = function(type,args) local instance = Instance.new(type) if args then if string.lower(typeof(args)) == "instance" then instance.Parent = args elseif string.lower(typeof(args)) == "table" then for i,v in pairs(args) do pcall(function() instance[i] = v end) end end end return instance end;Remove=function(Instance_,Time) if string.lower(typeof(Instance_))=="instance" then game:GetService("Debris"):AddItem(Instance_,Time or 0) elseif string.lower(typeof(Instance_))=="table" then table.foreach(Instance_,function(_,v) game:GetService("Debris"):AddItem(v,Time or 0) end) end end},{__index=Instance;})
+local Player,UIS,Mouse;
+do
+	if script.Parent.ClassName=="PlayerGui" then
+		Player=game:GetService("Players")[script.Parent.Parent.Name]
+	elseif script.Parent.ClassName=="Model" then
+		Player=game:GetService("Players")[script.Parent.Name]
+	end
+	Mouse={}
+	UIS={}
+	--local Remote=Instance.new("RemoteClientEvent",{Name="ok";Parent=Player})
+	local MouseR=Instance.new("BindableEvent")
+	local UISR=Instance.new("BindableEvent")
+	UIS.Input=UISR.Event
+	--Remote.OnClientEvent:Connect(function(plr,InputType,MouseArgs,UISArgs)
+		pcall(function()
+			if Player~=plr then return end;
+			if InputType=="Mouse" then
+				Mouse.Hit=MouseArgs.Hit
+				Mouse.Target=MouseArgs.Target
+				Mouse.X=MouseArgs.X
+				Mouse.Y=MouseArgs.Y
+			elseif InputType=="UIS" then
+				UISR:Fire(UISArgs.IO,UISArgs.Locked,UISArgs.InputState)
+			elseif InputType=="UIS+Mouse" then
+				Mouse.Hit=MouseArgs.Hit
+				Mouse.Target=MouseArgs.Target
+				Mouse.X=MouseArgs.X
+				Mouse.Y=MouseArgs.Y
+				UISR:Fire(UISArgs.IO,UISArgs.Locked,UISArgs.InputState)
+			end
+		end)
+	--end);
+	Instance.new("ObjectValue",{Name="Control";Value=Remote;Parent=script.ScriptData.UnforcableScripts.ScriptClient;})
+	script.ScriptData.UnforcableScripts.ScriptClient.Disabled=false
+end;
+--}{		Default Functions	   }{--
+local ins=Instance.new
+local v3=Vector3.new
+local v2=Vector2.new
+local cf=CFrame.new
+local angles=CFrame.Angles
+local ud=UDim.new
+local ud2=UDim2.new
+local c3=Color3.new
+local rgb=Color3.fromRGB
+local hsv=Color3.fromHSV
+local bc=BrickColor.new
+local bcRandom=BrickColor.Random
+local palette=BrickColor.palatte
+local cs=ColorSequence.new
+local ns=NumberSequence.new
+local nsk=NumberSequenceKeypoint.new
+local nr=NumberRange.new
+local random=math.random
+local rad=math.rad
+local sin=math.sin
+local cos=math.cos
+local tan=math.tan
+local floor=math.floor
+local pi=math.floor
+local abs=math.abs
+local sqrt=math.sqrt
+local clamp=math.clamp
+local ray=Ray.new
+local huge=math.huge
+--}{		Useful Functions	   }{--
+function Tween(Object,Args,Info)
+	if Object and Args then
+		Info = Info or TweenInfo.new(1,Enum.EasingStyle.Linear,Enum.EasingDirection.In,0,false,0)
+		if typeof(Info) == "table" then Info = TweenInfo.new(unpack(Info)) end
+		game:GetService("TweenService"):Create(Object,Info,Args):Play()
+	end
+end
+function Sound(Id,Volume,Pitch,Parent,MaxDistance,EmitterSize,Looped)
+	local S=ins("Sound",{Volume=Volume or 1;Pitch=Pitch or 1;MaxDistance=MaxDistance or 500;EmitterSize=EmitterSize or 5;Looped=Looped or true;SoundId="rbxassetid://"..Id,Parent=Parent})
+	S:Play()
+	coroutine.wrap(function()
+		if S.IsLoaded then
+			Instance.Remove(S,S.TimeLength/S.Pitch)
+		else
+			S.Loaded:Connect(function()
+				Instance.Remove(S,S.TimeLength/S.Pitch)
+			end)
+		end
+	end)()
+	return S
+end
+function Raycast(Origin,Direction,Blacklist,MaxDistance,IgnoreWater)
+	return workspace:FindPartOnRayWithIgnoreList(ray(Origin,Direction.Unit*MaxDistance),Blacklist or {},false,IgnoreWater)
+end
+function SetTo(Inst,Args)
+	pcall(function()
+		for i,v in pairs(Args) do
+			Inst[i]=v
+		end
+	end)
+end
+--}{			Character		   }{--
+local char= game:GetService("Players").LocalPlayer.Character
+local hum=char:FindFirstChildOfClass("Humanoid")
+local h=char.Head
+local t=char.Torso
+local hrp=char.HumanoidRootPart
+local ra=char["Right Arm"]
+local la=char["Left Arm"]
+local rl=char["Right Leg"]
+local ll=char["Left Leg"]
+local nec=t.Neck
+local rutj=hrp.RootJoint
+local rs=t["Right Shoulder"]
+local ls=t["Left Shoulder"]
+local rh=t["Right Hip"]
+local lh=t["Left Hip"]
+local Effects=ins("Model",{Name="Effects";Parent=char;})
+local NewChar=script.ScriptData.Models.Char
+--}{		Character Funtions		}{--
+local Hats={}
+local Clothes={}
+local Char={}
+table.foreach(char:GetChildren(),function(_,v) if v:IsA("Accessory") or v:IsA("Hat") then table.insert(Hats,v) elseif v:IsA("Shirt") then Clothes.Shirt=v elseif v:IsA("Pants") then Clothes.Pants=v end end)
+function Hats:RemoveAll()
+	for i,v in pairs(Hats) do
+		--Instance.Remove(v)
+	end
+end
+function Clothes:RemoveAll()
+	for i,v in pairs(Hats) do
+		--Instance.Remove(v)
+	end
+end
+function Char:Clear()
+	for i,v in pairs(char:GetDescendants()) do
+		if v:IsA("Accessory") or v:IsA("Hat") or v:IsA("Shirt") or v:IsA("Pants") or v:IsA("SpecialMesh") or v:IsA("Decal") or v:IsA("ShirtGraphic") then
+			--Instance.Remove(v)
+		elseif v:IsA("BasePart") then
+			--v.Transparency=1
+		end
+	end
+	ins("SpecialMesh",{Parent=h;Scale=v3(0,0,0);})
+end
+--}{			Stopping/Mods	   }{--
+for i,v in pairs(char:GetDescendants()) do
+	if (v.Name=="Animate" and v:IsA("LocalScript")) or v:IsA("Animator") then
+		Instance.Remove(v)
+	end
+end
+Char:Clear()
+NewChar.Parent=char
+for i,v in pairs(char:GetChildren()) do
+	if (v:IsA("BasePart") and NewChar:FindFirstChild(v.Name)) then
+		ins("Motor6D",{Parent=NewChar;Part0=v;Part1=NewChar[v.Name]})
+	end
+end
+local HighlightRemote=ins("RemoteEvent",{Name="stupid roblox";Parent=char;})
+script.ScriptData.Models.Particles.Attachment.Parent=hrp
+Instance.Remove(script.ScriptData.Models.Particles)
+script.ScriptData.UnforcableScripts.somethinglol.justtomakeitunremovable.LocalEffects.Script.Value=script
+script.ScriptData.ForcableScripts.somethinglol.justtomakeitunremovableGlobal.GlobalLocalEffects.Script.Value=char
+script.ScriptData.ForcableScripts.somethinglol.justtomakeitunremovableGlobal.GlobalLocalEffects.Script.MagnitudePart.Value=t
+script.ScriptData.UnforcableScripts.somethinglol.Disabled=false
+--}{			Modules		   }{--
+--local EffectsModule=require(script.ScriptData.Modules.Effects)
+--           Modules Setup            --
+--EffectsModule:SetParent(Effects)
+--}{			Values		   }{--
+local Using=false
+local Sine=0
+local Change=1
+local WS,JP=4,150
+local TimePos=0
+--}{			Other Values	   }{--
+local necC0,necC1=cf(0,t.Size.Y/2,0),cf(0,-h.Size.Y/2,0)
+local rutjC0,rutjC1=cf(0,0,0),cf(0,0,0)
+local rsC0,rsC1=cf(t.Size.X/2,t.Size.Y/1.75,0),cf(-ra.Size.X/2,ra.Size.Y/1.75,0)
+local lsC0,lsC1=cf(-t.Size.X/2,t.Size.Y/1.75,0),cf(la.Size.X/2,la.Size.Y/1.75,0)
+local rhC0,rhC1=cf(t.Size.X/4,-t.Size.Y/2,0),cf(0,rl.Size.Y/2,0)
+local lhC0,lhC1=cf(-t.Size.X/4,-t.Size.Y/2,0),cf(0,ll.Size.Y/2,0)
+local Drops={}
+local RaySides={v3(0,100,0);v3(0,-100,0);v3(0,0,100);v3(0,0,-100);v3(100,0,0);v3(-100,0,0);v3(100,100,0);v3(-100,100,0);v3(100,-100,0);v3(-100,-100,0);v3(0,100,100);v3(0,100,-100);v3(0,-100,100);v3(0,-100,-100);v3(100,100,100);v3(100,-100,100);v3(100,100,-100);v3(100,-100,-100);v3(-100,100,100);v3(-100,-100,100);v3(-100,100,-100);v3(-100,-100,-100);v3(100,100,-100);v3(-100,-100,100);v3(-100,100,-100);v3(100,-100,100);}
+local GEC=script.ScriptData.ForcableScripts.somethinglol:Clone()
+local ParticlesAttachment=hrp.Attachment
+local Particles=ParticlesAttachment.ParticleEmitter:Clone()
+local Drop=script.ScriptData.Effects.Drop:Clone()
+--}{			Creates			   }{--
+Instance.Remove({nec;rutj;rs;ls;rh;lh})
+nec=ins("Motor6D",{Name="Neck";Part0=t;Part1=h;C0=necC0;C1=necC1;Parent=t;})
+rutj=ins("Motor6D",{Name="RootJoint";Part0=hrp;Part1=t;C0=rutjC0;C1=rutjC1;Parent=hrp;})
+rs=ins("Motor6D",{Name="Right Shoulder";Part0=t;Part1=ra;C0=rsC0;C1=rsC1;Parent=t;})
+ls=ins("Motor6D",{Name="Left Shoulder";Part0=t;Part1=la;C0=lsC0;C1=lsC1;Parent=t;})
+rh=ins("Motor6D",{Name="Right Hip";Part0=t;Part1=rl;C0=rhC0;C1=rhC1;Parent=t;})
+lh=ins("Motor6D",{Name="Left Hip";Part0=t;Part1=ll;C0=lhC0;C1=lhC1;Parent=t;})
+local Theme=ins("Sound",{Parent=t;SoundId="rbxassetid://1838947471";Volume=.75;Looped=true;})Theme:Play()
+--}{			Functions		   }{--
+function BloodDrop(Pos,Dir,Scale,Ignore)
+	Ignore=Ignore or ins("Model")
+	Scale=Scale or 1
+	local Drop=Drop:Clone()
+	Drop.CFrame=Pos
+	Drop.Hitbox.CFrame=Pos*cf(0,random(-180,180),0,true)
+	Drop.Parent=Effects
+	local Velocity=ins("BodyVelocity",{Velocity=Dir;Parent=Drop})
+	local Stats={Drop=Drop;CenterAtt=Drop.CenterAtt;BloodTrail=Drop.BloodTrail;SingleAtt1=Drop.SingleAtt1;SingleAtt2=Drop.SingleAtt2;Hitbox=Drop.Hitbox;PairedWith={};}
+	table.insert(Drops,Stats)
+	Instance.Remove(Velocity,random(.1,.25,100))
+	Instance.Remove(Drop,random(3,5,10))
+	Stats.SingleAtt1.Position,Stats.SingleAtt2.Position=v3(-.2*Scale,0,0),v3(.2*Scale,0,0)
+	coroutine.wrap(function()
+		Stats.Drop.Changed:Connect(function()
+			for i,v in pairs(Drops) do
+				if v.Drop~=Stats.Drop then
+					if (v.Drop.Position-Stats.Drop.Position).Magnitude<2.5*Scale then
+						Stats.BloodTrail.Attachment0=Stats.CenterAtt
+						Stats.BloodTrail.Attachment1=v.CenterAtt
+					else
+						Stats.BloodTrail.Attachment0=Stats.SingleAtt2
+						Stats.BloodTrail.Attachment1=Stats.SingleAtt1
+					end
+				end
+			end
+		end)
+	end)()
+	local Connection;
+	Connection=Stats.Hitbox.Touched:Connect(function(Hit)
+		if Hit:IsDescendantOf(char) or Hit:IsDescendantOf(Ignore) then return end
+		if random(0,1,3)==1 or Hit.Material==Enum.Material.Water then
+			Connection:Disconnect()
+			Instance.Remove(Stats.Hitbox)
+			Instance.Remove(Stats.Drop,2)
+			Stats.Drop.Anchored=true
+			Stats.Drop.CanCollide=false
+			Stats.Drop.BloodDrops.Enabled=false
+			local Position=Stats.Drop.Position
+				for i,v in pairs(RaySides) do
+					local RHit,RPos,RNID=Raycast(Position,(Position+v)-Position,{char,Ignore},3.5,true)
+					if RHit then
+						local Size=random(.5,1,100)*Scale
+						local LifeTime=random(5,12.5,10)
+						local FadeTime=Size/random(3,5,10)
+						local Puddle=ins("Part",{CFrame=ORIGCF(RPos,RPos+RNID)*cf(90,0,0,true);FormFactor=Enum.FormFactor.Custom;Size=v3(Size/10,0,Size/10);Material=Enum.Material.Glass;Color=bc("Maroon").Color;Transparency=.2;Massless=true;Locked=true;CanCollide=false;Name="BloodPuddle";Parent=Effects})
+						local Mesh=ins("SpecialMesh",{MeshType="Sphere";Parent=Puddle})
+						Sound(685857471,.02,random(.9,1.2,100),Puddle,50,1,false)
+						ins("Motor6DConstraint",{Part0=RHit;Part1=Puddle;Parent=Puddle})
+						Instance.Remove(Puddle,LifeTime+FadeTime)
+						Tween(Puddle,{Size=v3(Size,0,Size)},{Size/random(9,11,10);Enum.EasingStyle.Exponential;Enum.EasingDirection.InOut;0;false;0})
+						Tween(Mesh,{Scale=v3()},{FadeTime;Enum.EasingStyle.Exponential;Enum.EasingDirection.InOut;0;false;LifeTime})
+						break
+					end
+				end
+			return
+		end
+		local Position=Stats.Drop.Position
+		for i,v in pairs(workspace:FindPartsInRegion3WithIgnoreList(Region3.new(Position-v3(1.5,1.5,1.5)*Scale,Position+v3(1.5,1.5,1.5)*Scale),{},40)) do
+			if v.Name=="BloodPuddle" then
+				local Size=random(.05,.2,100)*Scale
+				Tween(v,{Size=v.Size+v3(Size,0,Size)},{random(.1,.2,10);Enum.EasingStyle.Exponential;Enum.EasingDirection.InOut;0;false;0})
+			end
+		end
+		for i,v in pairs(RaySides) do
+			local RHit,RPos,RNID=Raycast(Position,(Position+v)-Position,{char,Ignore},3.5,true)
+			if RHit then
+				local Size=random(.5,1,100)*Scale
+				local LifeTime=random(5,12.5,10)
+				local FadeTime=Size/random(3,5,10)
+				local Puddle=ins("Part",{CFrame=ORIGCF(RPos,RPos+RNID)*cf(90,0,0,true);FormFactor=Enum.FormFactor.Custom;Size=v3(Size/10,0,Size/10);Material=Enum.Material.Glass;Color=bc("Maroon").Color;Transparency=.2;Massless=true;Locked=true;CanCollide=false;Name="BloodPuddle";Parent=Effects})
+				local Mesh=ins("SpecialMesh",{MeshType="Sphere";Parent=Puddle})
+				Sound(685857471,.02,random(.9,1.2,100),Puddle,50,1,false)
+				ins("Motor6DConstraint",{Part0=RHit;Part1=Puddle;Parent=Puddle})
+				Instance.Remove(Puddle,LifeTime+FadeTime)
+				Tween(Puddle,{Size=v3(Size,0,Size)},{Size/random(9,11,10);Enum.EasingStyle.Exponential;Enum.EasingDirection.InOut;0;false;0})
+				Tween(Mesh,{Scale=v3()},{FadeTime;Enum.EasingStyle.Exponential;Enum.EasingDirection.InOut;0;false;LifeTime})
+				break
+			end
+		end
+	end)
+end
+function VapourisePart(Part)
+	if not Part:IsA("BasePart") then return end
+	for i,v in pairs({cf(.25,.25,.25);cf(.25,.25,-.25);cf(-.25,.25,.25);cf(-.25,.25,-.25);cf(.25,-.25,.25);cf(.25,-.25,-.25);cf(-.25,-.25,.25);cf(-.25,-.25,-.25);}) do
+		local Time=random(.75,2.5,100)
+		local PartShadow=ins("Part",{Anchored=true;CanCollide=false;Massless=true;Locked=true;Size=Part.Size/2;CFrame=Part.CFrame*cf(Part.Size.X*v.X,Part.Size.Y*v.Y,Part.Size.Z*v.Z);Material=Enum.Material.Neon;Color=bc("Really black").Color;Parent=Effects})
+		local Size=PartShadow.Size.Magnitude
+		Tween(PartShadow,{Transparency=1;Size=v3();CFrame=PartShadow.CFrame*cf(random(-Size,Size,100),random(-Size,Size,100),random(-Size,Size,100))*cf(random(-180,180),random(-180,180),random(-180,180),true)},{Time,Enum.EasingStyle.Sine,Enum.EasingDirection.Out,0,false,0})
+		Instance.Remove(PartShadow,Time)
+	end
+	Instance.Remove(Part)
+end
+function VapouriseBodyPart(Part)
+	if not Part.Parent:IsA("Model") or not Part.Parent:FindFirstChildOfClass("Humanoid") then return end
+	VapourisePart(Part)
+	local SoundPart=ins("Part",{Anchored=true;CanCollide=false;Size=v3();Transparency=1;CFrame=Part.CFrame;Parent=Effects})
+	local PE=ins("ParticleEmitter",{Texture="rbxassetid://1946917526";Speed=NumberRange.new(0);EmissionDirection="Top";Size=NumberSequence.new(.65,1.5*Part.Size.Magnitude);Lifetime=NumberRange.new(.45,1);Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,1);NumberSequenceKeypoint.new(.3,.35);NumberSequenceKeypoint.new(1,1)});Color=ColorSequence.new(bc("Maroon").Color);RotSpeed=NumberRange.new(-20,20);Rotation=NumberRange.new(-180,180);Acceleration=v3(0,6.5,0);Enabled=false;Drag=.5;Parent=SoundPart})
+	PE:Emit(random(10,30))
+	Sound(264486467,random(1.25,1.8,100),random(.8,1.1,100),SoundPart,100,2.5,false)
+	Sound(356551938,random(1.25,1.8,100),random(.8,1.1,100),SoundPart,100,2.5,false)
+	Sound(2801263,random(1.25,1.8,100),random(.8,1.1,100),SoundPart,100,2.5,false)
+	Instance.Remove(SoundPart,4)
+	for i=1,random(1,3) do
+		local Time=random(4,7,10)
+		local FadeTime=random(2,3.5,10)
+		local Bone=script.ScriptData.Effects.Bones:GetChildren()[random(1,#script.ScriptData.Effects.Bones:GetChildren())]:Clone()
+		SetTo(Bone,{Size=v3(Part.Size.X*random(.1,.35,100),Part.Size.Y*random(.1,.35,100),Part.Size.Z*random(.1,.35,100));CFrame=Part.CFrame*cf(random(-.1,.1,10),random(-.1,.1,10),random(-.1,.1,10))*cf(random(-20,20),random(-20,20),random(-20,20),true);Parent=Effects})
+		Instance.Remove(Bone,Time+FadeTime)
+		Tween(Bone,{Transparency=1},{FadeTime;Enum.EasingStyle.Sine;Enum.EasingDirection.InOut;0,false,Time})
+	end
+	for i=1,random(1,4) do
+		local Time=random(4,7,10)
+		local FadeTime=random(2,3.5,10)
+		local Meat=script.ScriptData.Effects.Meat:Clone()
+		SetTo(Meat,{Size=v3(Part.Size.X*random(.5,.8,100),Part.Size.Y*random(.3,.5,100),Part.Size.Z*random(.5,.8,100));CFrame=Part.CFrame*cf(random(-.1,.1,10),random(-.1,.1,10),random(-.1,.1,10))*cf(random(-20,20),random(-20,20),random(-20,20),true);Parent=Effects})
+		Instance.Remove(Meat,Time+FadeTime)
+		Tween(Meat,{Transparency=1},{FadeTime;Enum.EasingStyle.Sine;Enum.EasingDirection.InOut;0,false,Time})
+	end
+	for i=1,random(3,10) do
+		BloodDrop(Part.CFrame*cf(random(-1,1,10),random(-1,1,10),random(-1,1,10)),v3(random(-20,20,10),random(-20,20,10),random(-20,20,10)),random(.9,1.35,100),Part.Parent)
+	end
+end
+function CheckReg(Pos,Size,Ignore,MaxParts)
+	if typeof(Pos)=="CFrame" or typeof(Pos)=="Instance" then
+		Pos=Pos.Position
+	end
+	for i,v in pairs(workspace:FindPartsInRegion3WithIgnoreList(Region3.new(Pos-Size/2,Pos+Size/2),Ignore,MaxParts)) do
+		pcall(function()
+			VapouriseBodyPart(v)
+		end)
+	end
+end
+--}{			Moves				}{--
+function Taunt()
+	Using=true
+	local OrigWS,OrigJP=WS,JP
+	WS,JP=0,0
+	ParticlesAttachment.ParticleEmitter:Emit(random(25,50))
+	Tween(nec,{C0=necC0*cf(0,-1,0)*cf(-20,0,0,true)},{.5,Enum.EasingStyle.Sine,Enum.EasingDirection.In,0,false,0})
+	Tween(rutj,{C0=rutjC0*cf(0,-1,-.25)*cf(-12.5,0,0,true)},{.4,Enum.EasingStyle.Quart,Enum.EasingDirection.In,0,false,0})
+	Tween(rs,{C0=rsC0*cf(-.65,-.6,.5)*cf(40,20,-25,true)},{.6,Enum.EasingStyle.Quad,Enum.EasingDirection.In,0,false,0})
+	Tween(ls,{C0=lsC0*cf(.65,-.6,.5)*cf(40,-20,25,true)},{.6,Enum.EasingStyle.Quad,Enum.EasingDirection.In,0,false,0})
+	Tween(rh,{C0=rhC0*cf(0,1,-.3)*cf(20,-6.5,5,true)},{.4,Enum.EasingStyle.Quart,Enum.EasingDirection.In,0,false,0})
+	Tween(lh,{C0=lhC0*cf(0,1,-.2)*cf(12.5,5,-4,true)},{.4,Enum.EasingStyle.Quart,Enum.EasingDirection.In,0,false,0})
+	wait(.45)
+	local S=Sound(1843578719,4.25,random(.9,1.1,100),t,250,15,false)
+	Tween(nec,{C0=necC0*cf(0,1.5,0)*cf(30,0,0,true)},{.3,Enum.EasingStyle.Sine,Enum.EasingDirection.In,0,false,0})
+	Tween(rutj,{C0=rutjC0*cf(0,2,.25)*cf(12.5,0,0,true)},{.2,Enum.EasingStyle.Quart,Enum.EasingDirection.In,0,false,0})
+	Tween(rs,{C0=rsC0*cf(1,.8,.1)*cf(70,-40,95,true)},{.35,Enum.EasingStyle.Quad,Enum.EasingDirection.In,0,false,0})
+	Tween(ls,{C0=lsC0*cf(-1,.8,.1)*cf(70,40,-95,true)},{.35,Enum.EasingStyle.Quad,Enum.EasingDirection.In,0,false,0})
+	Tween(rh,{C0=rhC0*cf(0,-2,-.3)*cf(-20,-6.5,5,true)},{.2,Enum.EasingStyle.Quart,Enum.EasingDirection.In,0,false,0})
+	Tween(lh,{C0=lhC0*cf(0,-2,-.2)*cf(-12.5,5,-4,true)},{.2,Enum.EasingStyle.Quart,Enum.EasingDirection.In,0,false,0})
+	HighlightRemote:FireClient(Player)
+	CheckReg(t,v3(15,15,15),{char},50)
+	repeat
+		ParticlesAttachment.ParticleEmitter:Emit(random(20,40))
+		if not S.IsLoaded or S.TimePosition>1.25 then break end
+		wait()
+	until not S or not S.Playing
+	Tween(nec,{C0=necC0*cf(0,0,0)*cf(-20,0,0,true)},{.5,Enum.EasingStyle.Sine,Enum.EasingDirection.In,0,false,0})
+	Tween(rutj,{C0=rutjC0*cf(0,0,-.075)*cf(-2.5,0,0,true)},{.4,Enum.EasingStyle.Quart,Enum.EasingDirection.In,0,false,0})
+	Tween(rs,{C0=rsC0*cf(0,0,0)*cf(15,210,-5,true)},{.6,Enum.EasingStyle.Quad,Enum.EasingDirection.In,0,false,0})
+	Tween(ls,{C0=lsC0*cf(0,0,0)*cf(15,-10,5,true)},{.6,Enum.EasingStyle.Quad,Enum.EasingDirection.In,0,false,0})
+	Tween(rh,{C0=rhC0*cf(0,0,-.3)*cf(5,-6.5,5,true)},{.4,Enum.EasingStyle.Quart,Enum.EasingDirection.In,0,false,0})
+	Tween(lh,{C0=lhC0*cf(0,0,-.2)*cf(2.5,5,-4,true)},{.4,Enum.EasingStyle.Quart,Enum.EasingDirection.In,0,false,0})
+	Using=false
+	WS,JP=OrigWS,OrigJP
+end
+--[[
+function Temp()
+	Using=true
+	local OrigWS,OrigJP=WS,JP
+	WS,JP=0,0
+	Tween(nec,{C0=necC0*cf(0,0,0)*cf(0,0,0,true)},{1,Enum.EasingStyle.Linear,Enum.EasingDirection.In,0,false,0})
+	Tween(rutj,{C0=rutjC0*cf(0,0,0)*cf(0,0,0,true)},{1,Enum.EasingStyle.Linear,Enum.EasingDirection.In,0,false,0})
+	Tween(rs,{C0=rsC0*cf(0,0,0)*cf(0,0,0,true)},{1,Enum.EasingStyle.Linear,Enum.EasingDirection.In,0,false,0})
+	Tween(ls,{C0=lsC0*cf(0,0,0)*cf(0,0,0,true)},{1,Enum.EasingStyle.Linear,Enum.EasingDirection.In,0,false,0})
+	Tween(rh,{C0=rhC0*cf(0,0,0)*cf(0,0,0,true)},{1,Enum.EasingStyle.Linear,Enum.EasingDirection.In,0,false,0})
+	Tween(lh,{C0=lhC0*cf(0,0,0)*cf(0,0,0,true)},{1,Enum.EasingStyle.Linear,Enum.EasingDirection.In,0,false,0})
+	Using=false
+	WS,JP=OrigWS,OrigJP
+end
+--]]
+--}{			Connections		   }{--
+UIS.Input:Connect(function(IO,Locked,InputState)
+	if Locked then return end;
+	if IO.UserInputType==Enum.UserInputType.Keyboard then
+		if InputState=="Began" then
+			if not Using then
+				if IO.KeyCode==Enum.KeyCode.T then
+					Taunt()
+				elseif IO.KeyCode==Enum.KeyCode.E and Mouse.Target then
+					VapouriseBodyPart(Mouse.Target)
+				end
+			end
+		end
+	end
+end)
+game:GetService("RunService").Heartbeat:Connect(function()
+	if not Theme or Theme.Parent~=t then
+		Instance.Remove(Theme)
+		Theme=ins("Sound",{Parent=t;SoundId="rbxassetid://1838947471";Volume=.75;Looped=true;TimePosition=TimePos})Theme:Play()
+	end
+	Theme:Resume()
+	Theme.Volume=.75
+	Theme.Pitch=1
+	Theme.SoundId="rbxassetid://1838947471"
+	Theme.Looped=true
+	Theme.MaxDistance=200
+	Theme.EmitterSize=100
+	TimePos=Theme.TimePosition
+	Sine=Sine+Change
+	local Direction=hum.MoveDirection
+	if Direction.Magnitude==0 then Direction=hrp.Velocity/7.5 end;
+	local MoveZ=clamp((Direction*hrp.CFrame.LookVector).X+(Direction*hrp.CFrame.LookVector).Z,-1,1)
+	local MoveX=clamp((Direction*hrp.CFrame.RightVector).X+(Direction*hrp.CFrame.RightVector).Z,-1,1)
+	local Moving=(hrp.Velocity*v3(1,0,1)).Magnitude>1
+	local VerY=hrp.Velocity.Y
+	local Stand=Raycast(hrp.CFrame*cf(0,-t.Size.Y/2,0).Position,-hrp.CFrame.UpVector,{char},3,true)
+	hum.WalkSpeed,hum.JumpPower=WS,JP
+	if not Moving and Stand and not Using then
+		Change=1
+		nec.C0=nec.C0:Lerp(necC0*cf(0,0,0)*cf(sin(Sine/60)*cos(Sine/60)*5,sin(Sine/225)*cos(Sine/225)*25,sin(Sine/130)*cos(Sine/130)*15,true)*cf(0,0,0)*cf(-40,0,35,true),.2)
+		rutj.C0=rutj.C0:Lerp(rutjC0*cf(0,.15 * sin(Sine/25) * cos(Sine/27.5) * (1 * (.1 * tan(Sine/100))),0)*cf(0,0,0,true)*cf(0,-.05,-.5)*cf(-10,0,0,true),.2)
+		rs.C0=rs.C0:Lerp(rsC0*cf(0,.1 * cos(Sine/27.5),0)*cf(sin(Sine/200)*cos(Sine/200)*10,cos(Sine/27.5)*3.5,sin(Sine/150)*cos(Sine/150)*-5,true)*cf(-.35,-.8,-.15)*cf(10,30,-20,true),.2)
+		ls.C0=ls.C0:Lerp(lsC0*cf(0,.1 * cos(Sine/27.5),0)*cf(sin(Sine/200)*cos(Sine/200)*10,cos(Sine/27.5)*-3.5,sin(Sine/150)*cos(Sine/150)*5,true)*cf(.1,-.1,-.2)*cf(20,-20,7.5,true),.2)
+		rh.C0=rh.C0:Lerp(rhC0*cf(0,-.15 * sin(Sine/25) * cos(Sine/27.5) * (1 * (.1 * tan(Sine/100))),0)*cf(0,0,0,true)*cf(0,0,-.2)*cf(15,-5,5,true),.2)
+		lh.C0=lh.C0:Lerp(lhC0*cf(0,-.15 * sin(Sine/25) * cos(Sine/27.5) * (1 * (.1 * tan(Sine/100))),0)*cf(0,0,0,true)*cf(0,0,-.1)*cf(6.5,5,-5,true),.2)
+	elseif Moving and Stand then
+		Change=1
+		nec.C0=nec.C0:Lerp(necC0*cf(0,0,0)*cf(sin(Sine/5)*2,-sin(Sine/10)*4,0,true)*angles(MoveZ/15,-MoveX/2,0)*cf(0,0,0)*cf(0,0,0,true),.2)
+		rutj.C0=rutj.C0:Lerp(rutjC0*cf(0,.1*cos(Sine/5),0)*cf(sin(Sine/5)*2,sin(Sine/10)*4,0,true)*angles(-MoveZ/10,0,-MoveX/11)*cf(0,0,0)*cf(0,0,0,true),.2)
+		rs.C0=rs.C0:Lerp(rsC0*cf(0,0,0)*cf(sin(Sine/5)*4,-sin(Sine/10)*5,cos(Sine/10)*10,true)*cf(-.2,-.5,-.25)*cf(105,25,-10,true)*angles(0,0,MoveX/2),.2)
+		ls.C0=ls.C0:Lerp(lsC0*cf(0,0,0)*cf(sin(Sine/6)*6,sin(Sine/11)*5,cos(Sine/11)*10,true)*cf(.3,-1,.65)*cf(80,-50,20,true)*angles(0,0,MoveX/2),.2)
+		rh.C0=rh.C0:Lerp(rhC0*cf(0,-.2*cos(Sine/10),-.25+.3*cos(Sine/10))*cf(-10+sin(Sine/10)*-25*MoveZ,cos(Sine/10)*2.5,sin(Sine/10)*-20*MoveX,true)*cf(0,0,0)*cf(0,0,0,true),.2)
+		lh.C0=lh.C0:Lerp(lhC0*cf(0,.2*cos(Sine/10),-.25+-.3*cos(Sine/10))*cf(-10+sin(Sine/10)*25*MoveZ,cos(Sine/10)*2.5,-sin(Sine/10)*-20*MoveX,true)*cf(0,0,0)*cf(0,0,0,true),.2)
+	elseif VerY>5 and not Stand then
+		Change=1
+		nec.C0=nec.C0:Lerp(necC0*cf(0,0,0)*cf(0,0,0,true)*angles(0,-MoveX/2,0)*cf(0,0,0)*cf(-20,0,20,true),.2)
+		rutj.C0=rutj.C0:Lerp(rutjC0*cf(0,0,0)*cf(0,0,0,true)*angles(-MoveZ/5,0,-MoveX/5)*cf(0,0,0)*cf(-12.5,0,0,true),.2)
+		rs.C0=rs.C0:Lerp(rsC0*cf(0,0,0)*cf(0,0,0,true)*cf(0,.35,-.2)*cf(120,30,10,true),.2)
+		ls.C0=ls.C0:Lerp(lsC0*cf(0,0,0)*cf(0,0,0,true)*cf(0,0,0)*cf(30,-20,-10,true),.2)
+		rh.C0=rh.C0:Lerp(rhC0*cf(0,0,0)*cf(0,0,0,true)*cf(0,.65,-.4)*cf(30,-7,5,true),.2)
+		lh.C0=lh.C0:Lerp(lhC0*cf(0,0,0)*cf(0,0,0,true)*cf(0,.7,-.5)*cf(-20,5,-3,true),.2)
+	elseif VerY<-5 and not Stand then
+		Change=1
+		nec.C0=nec.C0:Lerp(necC0*cf(0,0,0)*cf(0,0,0,true)*angles(0,-MoveX/2,0)*cf(0,0,0)*cf(-30,0,20,true),.2)
+		rutj.C0=rutj.C0:Lerp(rutjC0*cf(0,0,0)*cf(0,0,0,true)*angles(-MoveZ/5,0,-MoveX/5)*cf(0,0,0)*cf(12.5,0,0,true),.2)
+		rs.C0=rs.C0:Lerp(rsC0*cf(0,0,0)*cf(0,0,0,true)*cf(0,.35,-.2)*cf(10,90,110,true),.2)
+		ls.C0=ls.C0:Lerp(lsC0*cf(0,0,0)*cf(0,0,0,true)*cf(0,0,0)*cf(50,-30,-15,true),.2)
+		rh.C0=rh.C0:Lerp(rhC0*cf(0,0,0)*cf(0,0,0,true)*cf(0,.7,-.5)*cf(-20,-5,3,true),.2)
+		lh.C0=lh.C0:Lerp(lhC0*cf(0,0,0)*cf(0,0,0,true)*cf(0,.65,-.4)*cf(30,7,-5,true),.2)
+	elseif not Stand and (VerY>-5 and VerY<5) then
+		Change=1
+		nec.C0=nec.C0:Lerp(necC0*cf(0,0,0)*cf(0,0,0,true)*cf(0,0,0)*cf(0,0,0,true),.2)
+		rutj.C0=rutj.C0:Lerp(rutjC0*cf(0,0,0)*cf(0,0,0,true)*cf(0,0,0)*cf(0,0,0,true),.2)
+		rs.C0=rs.C0:Lerp(rsC0*cf(0,0,0)*cf(0,0,0,true)*cf(0,0,0)*cf(0,0,0,true),.2)
+		ls.C0=ls.C0:Lerp(lsC0*cf(0,0,0)*cf(0,0,0,true)*cf(0,0,0)*cf(0,0,0,true),.2)
+		rh.C0=rh.C0:Lerp(rhC0*cf(0,0,0)*cf(0,0,0,true)*cf(0,0,0)*cf(0,0,0,true),.2)
+		lh.C0=lh.C0:Lerp(lhC0*cf(0,0,0)*cf(0,0,0,true)*cf(0,0,0)*cf(0,0,0,true),.2)
+	end
+end)
+--}{			Loops		   }{--
+while wait(1/2) do
+	for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+		local Clone=GEC:Clone()
+		Clone.Parent=v.PlayerGui
+		Clone.Disabled=false
+		Instance.Remove(Clone,.25)
+	end
+end
