@@ -1200,8 +1200,8 @@ blade.Transparency = 1
 --Handle.Transparency = 1
 
 game:GetService("Players").LocalPlayer.Character["MeshPartAccessory"].Handle.att1_Handle.Parent = handle
-handle.att1_Handle.Rotation = Vector3.new(90,0,90)
-handle.att1_Handle.Position = Vector3.new(0,2,0)
+handle.att1_Handle.Rotation = Vector3.new(0,-0.75,-2.8)
+handle.att1_Handle.Position = Vector3.new(45,-90,0)
 
 local handleWeld = createWeld(ra,handle,cf(0,-1,0) * angles(rad(-90),rad(0),rad(0)))
 
