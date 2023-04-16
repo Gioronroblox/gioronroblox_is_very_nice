@@ -998,7 +998,7 @@ local SMG = MODULE.Uzi
 local att = gp(gp(gp(c, "RectangleHead", "Accessory"), "Handle", "BasePart"), "att1_Handle", "Attachment")
 att.Parent = SMG
 att.Position = Vector3.new(0, 0.2, 0)
-att.Orientation = Vector3.new(0, 180, -35)
+att.Orientation = Vector3.new(0, 90, -35)
 
 SMG.Parent = CHARACTER
 local RIGHTSHOULDER = TORSO["Right Shoulder"]
@@ -1008,7 +1008,8 @@ local LEFTHIP = TORSO["Left Hip"]
 local MOUSEPOS = m.hit.p
 local MOUSEHIT = nil
 
-
+hat('Back Bike','Head',CFrame.new(-4.2,-1.1,-0.5),CFrame.new(4.15+0*math["cos"](sine/10),2.7+0*math["cos"](sine/10),-1.22+0*math["cos"](sine/10))*CFrame.Angles(math.rad(347.94+0*math["cos"](sine/10)),math.rad(182.87+0*math["cos"](sine/10)),math.rad(0+0*math["cos"](sine/10))),false)
+ 
 
 IT = Instance.new
 CF = CFrame.new
