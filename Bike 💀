@@ -876,6 +876,13 @@ local function gp(parent, name, className)
     return nil
 end
 
+local hat2 = gp(cplayer, "Back Bike", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Torso"]
+att2.Position = Vector3.new(0, -20, -40)
+att2.Rotation = Vector3.new(90, 90, 90)
+
 local hat2 = gp(cplayer, "SeeMonkey", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
@@ -1008,8 +1015,7 @@ local LEFTHIP = TORSO["Left Hip"]
 local MOUSEPOS = m.hit.p
 local MOUSEHIT = nil
 
-hat('Back Bike','Head',CFrame.new(-4.2,-1.1,-0.5),CFrame.new(4.15+0*math["cos"](sine/10),2.7+0*math["cos"](sine/10),-1.22+0*math["cos"](sine/10))*CFrame.Angles(math.rad(347.94+0*math["cos"](sine/10)),math.rad(182.87+0*math["cos"](sine/10)),math.rad(0+0*math["cos"](sine/10))),false)
- 
+
 
 IT = Instance.new
 CF = CFrame.new
