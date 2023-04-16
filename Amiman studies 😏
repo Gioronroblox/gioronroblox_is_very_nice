@@ -1,10 +1,14 @@
+game:GetService("Players").LocalPlayer.Character.MeshPartAccessory.Name = 'international 1'
+game:GetService("Players").LocalPlayer.Character.MeshPartAccessory.Name = 'international 2'
+
 game.Players.LocalPlayer.Character["SeeMonkey"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Pink Hair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy() --LavanderHair
 game.Players.LocalPlayer.Character["LavanderHair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Robloxclassicred"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["TwitterBird"].Handle.Handle:Destroy()
-game.Players.LocalPlayer.Character["Yoga Mat"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["international 1"].Handle.Handle:Destroy()
+game.Players.LocalPlayer.Character["international 2"].Handle.Handle:Destroy()
+game.Players.LocalPlayer.Character["VANS_Umbrella"].Handle.Mesh:Destroy()
 
 
 local c = game.Players.LocalPlayer.Character
@@ -912,19 +916,74 @@ att2.Parent = cplayer["Left Leg"]
 att2.Position = Vector3.new(-0, 0, 0) 
 att2.Rotation = Vector3.new(90, 0, 0)
 
-local hat2 = gp(cplayer, "TwitterBird", "Accessory")
+local hat2 = gp(cplayer, "international 1", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Right Leg"]
-att2.Position = Vector3.new(0, 0.5, 0.5) --Robloxclassicred
+att2.Position = Vector3.new(0, 0.5, 1) --Robloxclassicred
 att2.Rotation = Vector3.new(90, 0, 0)
 
-local hat2 = gp(cplayer, "Yoga Mat", "Accessory")
+local hat2 = gp(cplayer, "international 2", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Left Leg"]
-att2.Position = Vector3.new(-0, 0.5, 0.5) 
+att2.Position = Vector3.new(-0, 0.5, 1) 
 att2.Rotation = Vector3.new(90, 0, 0)
+
+_G.loop = true
+local player = game.Players.LocalPlayer
+local char = player.Character
+local Align = function(Part0, Part1,Mesh)
+    local Aligns = {
+        AlignOrientation = Instance.new("AlignOrientation", Part0),
+        AlignPosition = Instance.new("AlignPosition", Part0)
+    }
+    
+    local Attachments = {
+        Attach0 = Instance.new("Attachment", Part0),
+        Attach1 = Instance.new("Attachment", Part1)
+    }
+    local m = Part0:FindFirstChildOfClass('SpecialMesh')--This will get the first "SpecialMesh" it finds if it does not find any, then it will return nil
+    if Mesh and m then --If Mesh is set to true and it finds a mesh it will destroy it
+        m:Destroy()
+    end
+    Part0:BreakJoints()
+    Aligns.AlignOrientation.Attachment0 = Attachments.Attach0
+    Aligns.AlignOrientation.Attachment1 = Attachments.Attach1
+    Aligns.AlignOrientation.Responsiveness = math.huge
+    Aligns.AlignOrientation.RigidityEnabled = true
+    
+    Aligns.AlignPosition.Attachment0 = Attachments.Attach0
+    Aligns.AlignPosition.Attachment1 = Attachments.Attach1
+    Aligns.AlignPosition.Responsiveness = math.huge
+    Aligns.AlignPosition.RigidityEnabled = true
+        Aligns.AlignPosition.MaxForce = 999999999
+        spawn(function()
+            while _G.loop do 
+                local mag = (Part0.Position - (Part1.CFrame*Attachments.Attach0.CFrame:Inverse()).p).magnitude--magnitude can get the distance between two cframe or position
+                if mag >= 5 then 
+                Part0.CFrame = Part1.CFrame*Attachments.Attach0.CFrame:Inverse()
+                end
+                Part0.Velocity = Vector3.new(0,35,0)
+                game['Run Service'].Heartbeat:wait()
+                end
+        end)
+ return {Attachments.Attach0, Attachments, Aligns}
+        
+end 
+local hat = Align(char['VANS_Umbrella'].Handle,char['HumanoidRootPart'],false)
+local cf = char['HumanoidRootPart'].CFrame*CFrame.new(0,-100,-0)*CFrame.Angles(math.rad(0),math.rad(0),0)
+hat[1].CFrame = cf:Inverse() * char['HumanoidRootPart'].CFrame
+spawn(function()
+    char.AncestryChanged:wait()--if you respawn, it will stop the  loop to avoid lag of using it over and over
+    _G.loop = false 
+end)
+for i,v in pairs (char:GetChildren()) do
+	if v:IsA("Accessory") then
+		v.Handle.Massless = true
+		v.Handle.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
+	end
+end
 
 game:GetObjects("rbxassetid://10756030279")[1].Parent=game.ReplicatedStorage
 game:GetObjects("rbxassetid://10756132900")[1].Parent=game.ReplicatedStorage
