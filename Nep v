@@ -1,35 +1,5 @@
 loadstring(game:HttpGet('https://pastebin.com/raw/ug4TNhzr'))()
 
-
-CountSCIFIMOVIELOL = 1
-function SCIFIMOVIELOL(Part0,Part1,Position,Angle)
-	local AlignPos = Instance.new('AlignPosition', Part1); AlignPos.Name = "AliP_"..CountSCIFIMOVIELOL
-	AlignPos.ApplyAtCenterOfMass = true;
-	AlignPos.MaxForce = 67752;
-	AlignPos.MaxVelocity = math.huge/9e110;
-	AlignPos.ReactionForceEnabled = false;
-	AlignPos.Responsiveness = 200;
-	AlignPos.RigidityEnabled = false;
-	local AlignOri = Instance.new('AlignOrientation', Part1); AlignOri.Name = "AliO_"..CountSCIFIMOVIELOL
-	AlignOri.MaxAngularVelocity = math.huge/9e110;
-	AlignOri.MaxTorque = 67752;
-	AlignOri.PrimaryAxisOnly = false;
-	AlignOri.ReactionTorqueEnabled = false;
-	AlignOri.Responsiveness = 200;
-	AlignOri.RigidityEnabled = false;
-	local AttachmentA=Instance.new('Attachment',Part1); AttachmentA.Name = "AthP_"..CountSCIFIMOVIELOL
-	local AttachmentB=Instance.new('Attachment',Part0); AttachmentB.Name = "AthP_"..CountSCIFIMOVIELOL
-	local AttachmentC=Instance.new('Attachment',Part1); AttachmentC.Name = "AthO_"..CountSCIFIMOVIELOL
-	local AttachmentD=Instance.new('Attachment',Part0); AttachmentD.Name = "AthO_"..CountSCIFIMOVIELOL
-	AttachmentC.Orientation = Angle
-	AttachmentA.Position = Position
-	AlignPos.Attachment1 = AttachmentA;
-	AlignPos.Attachment0 = AttachmentB;
-	AlignOri.Attachment1 = AttachmentC;
-	AlignOri.Attachment0 = AttachmentD;
-	CountSCIFIMOVIELOL = CountSCIFIMOVIELOL + 1
-end
-
 SCIFIMOVIELOL(workspace.non.MeshPartAccessory.Handle,workspace.non[game.Players.LocalPlayer.Name]["MeshPartAccessory"].Handle,Vector3.new(0,0,0),Vector3.new(0,0,0))
 
 -----OPTIONS
