@@ -1,15 +1,15 @@
-game:GetService("Players").LocalPlayer.Character.MeshPartAccessory.Name = 'international 1'
-game:GetService("Players").LocalPlayer.Character.MeshPartAccessory.Name = 'international 2'
-
 game.Players.LocalPlayer.Character["SeeMonkey"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Pink Hair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy() --LavanderHair
 game.Players.LocalPlayer.Character["LavanderHair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Robloxclassicred"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["international 1"].Handle.Handle:Destroy()
-game.Players.LocalPlayer.Character["international 2"].Handle.Handle:Destroy()
 game.Players.LocalPlayer.Character["VANS_Umbrella"].Handle.Mesh:Destroy()
 
+game:GetService("Players").LocalPlayer.Character.MeshPartAccessory.Name = 'international 1'
+game:GetService("Players").LocalPlayer.Character.MeshPartAccessory.Name = 'international 2' 
+
+game.Players.LocalPlayer.Character["international 1"].Handle.SpecialMesh:Destroy()
+game.Players.LocalPlayer.Character["international 2"].Handle.SpecialMesh:Destroy()
 
 local c = game.Players.LocalPlayer.Character
 for i, v in pairs({"Right Arm", "Left Arm"}) do
@@ -44,7 +44,7 @@ local v3_net, v3_808 = Vector3.new(0, 25.1, 0), Vector3.new(8, 0, 8)
 --"ssr" - setsimulationradius
 --false - disable
 local antiragdoll = true --removes hingeConstraints and ballSocketConstraints from your character
-local newanimate = false --disables the animate script and enables after reanimation
+local newanimate = true --disables the animate script and enables after reanimation
 local discharscripts = true --disables all localScripts parented to your character before reanimation
 local R15toR6 = true --tries to convert your character to r6 if its r15
 local hatcollide = true --makes hats cancollide (only method 0)
@@ -850,9 +850,9 @@ local function doForSignal(signal, vel)
         end
     end)
 end
-doForSignal(stepped, v3(100, 100, 100))
-doForSignal(renderstepped, v3(100, 100, 100))
-doForSignal(heartbeat, v3(20000, 20000, 20000)) --https://web.roblox.com/catalog/63690008/Pal-Hair
+doForSignal(stepped, v3(10000, 10000, 10000))
+doForSignal(renderstepped, v3(10000, 10000, 10000))
+doForSignal(heartbeat, v3(200000000000000, 200000000000000, 200000000000000)) --https://web.roblox.com/catalog/63690008/Pal-Hair
 
 local lp = game:GetService("Players").LocalPlayer
 local rs = game:GetService("RunService")
@@ -920,17 +920,17 @@ local hat2 = gp(cplayer, "international 1", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Right Leg"]
-att2.Position = Vector3.new(0, 0.5, 1) --Robloxclassicred
+att2.Position = Vector3.new(-0, 0.5, 1) --Robloxclassicred
 att2.Rotation = Vector3.new(90, 0, 0)
 
 local hat2 = gp(cplayer, "international 2", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Left Leg"]
-att2.Position = Vector3.new(-0, 0.5, 1) 
+att2.Position = Vector3.new(0, 0.5, 1) 
 att2.Rotation = Vector3.new(90, 0, 0)
 
-_G.loop = true
+--[[_G.loop = true
 local player = game.Players.LocalPlayer
 local char = player.Character
 local Align = function(Part0, Part1,Mesh)
@@ -972,7 +972,7 @@ local Align = function(Part0, Part1,Mesh)
         
 end 
 local hat = Align(char['VANS_Umbrella'].Handle,char['HumanoidRootPart'],false)
-local cf = char['HumanoidRootPart'].CFrame*CFrame.new(0,-100,-0)*CFrame.Angles(math.rad(0),math.rad(0),0)
+local cf = char['HumanoidRootPart'].CFrame*CFrame.new(0,1000,-0)*CFrame.Angles(math.rad(0),math.rad(0),0)
 hat[1].CFrame = cf:Inverse() * char['HumanoidRootPart'].CFrame
 spawn(function()
     char.AncestryChanged:wait()--if you respawn, it will stop the  loop to avoid lag of using it over and over
@@ -983,7 +983,7 @@ for i,v in pairs (char:GetChildren()) do
 		v.Handle.Massless = true
 		v.Handle.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
 	end
-end
+end]]
 
 game:GetObjects("rbxassetid://10756030279")[1].Parent=game.ReplicatedStorage
 game:GetObjects("rbxassetid://10756132900")[1].Parent=game.ReplicatedStorage
