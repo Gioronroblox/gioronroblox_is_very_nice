@@ -1,5 +1,3 @@
-game.Players.LocalPlayer.Character["AJBackAccessory"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["Meshes/cyberbladeMeshAccessory"].Handle.Handle:Destroy()
 game.Players.LocalPlayer.Character["VANS_Umbrella"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Pink Hair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy() --LavanderHair
@@ -1201,13 +1199,9 @@ local blade = scythe.NeonBlade
 blade.Transparency = 1
 --Handle.Transparency = 1
 
-game:GetService("Players").LocalPlayer.Character["Meshes/cyberbladeMeshAccessory"].Handle.att1_Handle.Parent = handle
+game:GetService("Players").LocalPlayer.Character["MeshPartAccessory"].Handle.att1_Handle.Parent = handle
 handle.att1_Handle.Rotation = Vector3.new(90,0,90)
-handle.att1_Handle.Position = Vector3.new(0,2,0) --PlaneModel
- 
-game:GetService("Players").LocalPlayer.Character["AJBackAccessory"].Handle.att1_Handle.Parent = blade
-blade.att1_Handle.Rotation = Vector3.new(0,0,90)
-blade.att1_Handle.Position = Vector3.new(-1,0,0)
+handle.att1_Handle.Position = Vector3.new(0,2,0)
 
 local handleWeld = createWeld(ra,handle,cf(0,-1,0) * angles(rad(-90),rad(0),rad(0)))
 
