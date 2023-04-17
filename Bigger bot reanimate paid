@@ -1,0 +1,37 @@
+game.Players.LocalPlayer.Character["PaperBagRanger"].Handle.Mesh:Destroy()
+
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/Gioronroblox/gioronroblox_is_very_nice/main/Bigger%20bot%20reanimate"),true))() --reanim 
+
+local lp = game:GetService("Players").LocalPlayer
+local rs = game:GetService("RunService")
+local stepped = rs.Stepped
+local heartbeat = rs.Heartbeat
+local renderstepped = rs.RenderStepped
+local sg = game:GetService("StarterGui")
+local ws = game:GetService("Workspace")
+local cf = CFrame.new
+local v3 = Vector3.new
+local v3_0 = Vector3.zero
+local inf = math.huge
+
+local cplayer = lp.Character
+
+local v3 = Vector3.new
+
+local function gp(parent, name, className)
+    if typeof(parent) == "Instance" then
+        for i, v in pairs(parent:GetChildren()) do
+            if (v.Name == name) and v:IsA(className) then
+                return v
+            end
+        end
+    end
+    return nil
+end
+
+local hat2 = gp(cplayer, "PaperBagRanger", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Head"]
+att2.Position = Vector3.new(0, 0, 0)
+att2.Rotation = Vector3.new(0, 0, 0)
