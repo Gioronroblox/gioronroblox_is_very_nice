@@ -1,11 +1,3 @@
-game.Players.LocalPlayer.Character["SeeMonkey"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["Pink Hair"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy() --LavanderHair
-game.Players.LocalPlayer.Character["LavanderHair"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["Robloxclassicred"].Handle.Mesh:Destroy()
-
-        game.Players.LocalPlayer.Character.Head.Anchored = true
-        game.Players.LocalPlayer.Character.LeftHand.Anchored = true
         game.Players.LocalPlayer.Character.RightHand.Anchored = true
         game.Players.LocalPlayer.Character.LeftLowerArm.Anchored = true
         game.Players.LocalPlayer.Character.RightLowerArm.Anchored = true
@@ -818,40 +810,41 @@ local function gp(parent, name, className)
     return nil
 end
 
-local hat2 = gp(cplayer, "SeeMonkey", "Accessory")
+local hat2 = gp(cplayer, "LUAhEAD", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Torso"]
-att2.Position = Vector3.new(0, -0, 0)
-att2.Rotation = Vector3.new(90, 0, 0)
+att2.Position = Vector3.new(-0, -0, 0)
+att2.Rotation = Vector3.new(0, 0, 0)
 
-local hat2 = gp(cplayer, "Pink Hair", "Accessory")
+
+local hat2 = gp(cplayer, "MoanaHat", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Left Arm"]
 att2.Position = Vector3.new(0, -0, 0)
-att2.Rotation = Vector3.new(90, 0, 0)
+att2.Rotation = Vector3.new(90, 140, 90)
 
-local hat2 = gp(cplayer, "Kate Hair", "Accessory")
+local hat2 = gp(cplayer, "LBHat", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Right Arm"]
-att2.Position = Vector3.new(-0, -0, 0)
-att2.Rotation = Vector3.new(90, 0, 0) --LavanderHair
+att2.Position = Vector3.new(0, -0, 0)
+att2.Rotation = Vector3.new(90, -140, -90) --LavanderHair
 
-local hat2 = gp(cplayer, "LavanderHair", "Accessory")
+local hat2 = gp(cplayer, "Lipstick_Bag_3.0", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Right Leg"]
-att2.Position = Vector3.new(0, 0, 0) --Robloxclassicred
-att2.Rotation = Vector3.new(90, 0, 0)
+att2.Position = Vector3.new(0, -0, 0) --Robloxclassicred
+att2.Rotation = Vector3.new(90, -90, 0)
 
-local hat2 = gp(cplayer, "Robloxclassicred", "Accessory")
+local hat2 = gp(cplayer, "Lipstick_Bag_1.0", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Left Leg"]
-att2.Position = Vector3.new(-0, 0, 0) 
-att2.Rotation = Vector3.new(90, 0, 0)
+att2.Position = Vector3.new(0, -0, 0) 
+att2.Rotation = Vector3.new(90, 90, 0) 
            
             local lastfling = nil
             local mouse = lp:GetMouse()
