@@ -898,7 +898,7 @@ att2.Parent = cplayer["Left Leg"]
 att2.Position = Vector3.new(-0, 0, 0) 
 att2.Rotation = Vector3.new(90, 0, 0) 
 
-
+--[[_G.loop = true
 local player = game.Players.LocalPlayer
 local char = player.Character
 local Align = function(Part0, Part1,Mesh)
@@ -906,7 +906,7 @@ local Align = function(Part0, Part1,Mesh)
         AlignOrientation = Instance.new("AlignOrientation", Part0),
         AlignPosition = Instance.new("AlignPosition", Part0)
     }
-    
+ 
     local Attachments = {
         Attach0 = Instance.new("Attachment", Part0),
         Attach1 = Instance.new("Attachment", Part1)
@@ -920,7 +920,7 @@ local Align = function(Part0, Part1,Mesh)
     Aligns.AlignOrientation.Attachment1 = Attachments.Attach1
     Aligns.AlignOrientation.Responsiveness = math.huge
     Aligns.AlignOrientation.RigidityEnabled = true
-    
+ 
     Aligns.AlignPosition.Attachment0 = Attachments.Attach0
     Aligns.AlignPosition.Attachment1 = Attachments.Attach1
     Aligns.AlignPosition.Responsiveness = math.huge
@@ -937,13 +937,21 @@ local Align = function(Part0, Part1,Mesh)
                 end
         end)
  return {Attachments.Attach0, Attachments, Aligns}
-        
+ 
 end 
-
+local hat = Align(char['VANS_Umbrella'].Handle,char['HumanoidRootPart'],false)
+local cf = char['HumanoidRootPart'].CFrame*CFrame.new(0,100,-0)*CFrame.Angles(math.rad(0),math.rad(0),0)
+hat[1].CFrame = cf:Inverse() * char['HumanoidRootPart'].CFrame
 spawn(function()
     char.AncestryChanged:wait()--if you respawn, it will stop the  loop to avoid lag of using it over and over
     _G.loop = false 
 end)
+for i,v in pairs (char:GetChildren()) do
+	if v:IsA("Accessory") then
+		v.Handle.Massless = true
+		v.Handle.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
+	end
+end]] --nvm
 
 --- Did actually rework heavily away from original neptunian, and the non-rework neptunian. --NoobyGames12
 --- Was supposed to be for the770zone, or VengefulProgram.
