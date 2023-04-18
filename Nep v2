@@ -3,7 +3,7 @@ game.Players.LocalPlayer.Character["Pink Hair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy() --LavanderHair
 game.Players.LocalPlayer.Character["LavanderHair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Robloxclassicred"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["MediHood"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["VANS_Umbrella"].Handle.Mesh:Destroy()
 --game.Players.LocalPlayer.Character["HawkmanWings"].Handle.Mesh:Destroy()
  --VarietyShades02
  --TennisBall
