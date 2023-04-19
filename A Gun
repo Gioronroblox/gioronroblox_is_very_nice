@@ -941,7 +941,7 @@ local Align = function(Part0, Part1,Mesh)
         
 end 
 local hat = Align(char['Cartoony Rainbow Mk.50'].Handle,char['Right Arm'],false)
-local cf = char['Right Arm'].CFrame*CFrame.new(0,-1.25,-0.25)*CFrame.Angles(math.rad(-360),math.rad(90),0)
+local cf = char['Right Arm'].CFrame*CFrame.new(0,-1.25,-0.25)*CFrame.Angles(math.rad(-360),math.rad(180),90)
 hat[1].CFrame = cf:Inverse() * char['Right Arm'].CFrame
 spawn(function()
     char.AncestryChanged:wait()--if you respawn, it will stop the  loop to avoid lag of using it over and over
