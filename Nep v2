@@ -5138,9 +5138,9 @@ for i,v in pairs(Model0:GetChildren()) do
 	end
 end
 
-game:GetService("Players").LocalPlayer.Character["Back_AccAccessory"].Handle.att1_Handle.Parent = Part475
-Part475.att1_Handle.Rotation = Vector3.new(45,90,-0)
-Part475.att1_Handle.Position = Vector3.new(-0.,-1.8,-0.3)
+game:GetService("Players").LocalPlayer.Character["MeshPartAccessory"].Handle.att1_Handle.Parent = Part475
+Part475.att1_Handle.Rotation = Vector3.new(-45,-90,0)
+Part475.att1_Handle.Position = Vector3.new(-0,-3,0)
 
 plr = game:GetService("Players").LocalPlayer
 char = plr.Character
