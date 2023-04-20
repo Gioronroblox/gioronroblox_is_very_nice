@@ -933,7 +933,7 @@ local Align = function(Part0, Part1,Mesh)
                 if mag >= 5 then 
                 Part0.CFrame = Part1.CFrame*Attachments.Attach0.CFrame:Inverse()
                 end
-                Part0.Velocity = Vector3.new(1.2,1.2,1.2)
+                Part0.Velocity = Vector3.new(1.5,1.5,1.5)
                 game['Run Service'].Heartbeat:wait()
                 end
         end)
