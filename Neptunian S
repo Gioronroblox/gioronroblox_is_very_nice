@@ -5180,20 +5180,26 @@ cf = CFrame.new
 ceuler = CFrame.fromEulerAnglesXYZ
 
 local muter = false
-local ORGID = 5801326053
-local ORVOL = 8
-local ORPIT = 0.85
+local ORGID = 1873219898
+local ORVOL = 1.15
+local ORPIT = 1.01
 local kan = Instance.new("Sound",char)
 kan.Volume = 0
 if not NoSound then
-	kan.Volume = 6
+	kan.Volume = 1.15
 end
 kan.TimePosition = 0
 kan.PlaybackSpeed = 1.01
-kan.Pitch = 0.9
-kan.SoundId = "rbxassetid://5801326053"
+kan.Pitch = 1.01
+coroutine.wrap(function()
+    if not isfile('UNIEL-Beat-Eat-nest.mp3') then
+        writefile('UNIEL-Beat-Eat-nest.mp3',game:HttpGet('https://github.com/shidemuri/scripts/blob/main/UNIEL-Beat-Eat-nest.mp3?raw=true'))
+        repeat task.wait() until isfile('UNIEL-Beat-Eat-nest.mp3')
+    end
+    repeat pcall(function() kan.SoundId = syn and getsynasset('UNIEL-Beat-Eat-nest.mp3') or getcustomasset('UNIEL-Beat-Eat-nest.mp3') end) until pcall(function() kan.SoundId = syn and getsynasset('UNIEL-Beat-Eat-nest.mp3') or getcustomasset('UNIEL-Beat-Eat-nest.mp3') end)
+end)()
+--kan.SoundId = syn and getsynasset('UNIEL-Beat-Eat-nest.mp3') or getcustomasset('UNIEL-Beat-Eat-nest.mp3') --"rbxassetid://1873219898" 525289865,1873219898,381991270
 kan.Name = "nepnepnep"
-kan.Parent = workspace
 kan.Looped = true
 kan:Play()
 
@@ -7701,7 +7707,7 @@ end
 		hum.WalkSpeed = 40
 		Speed = 40
 		kan.Pitch = 0.8
-		kan.SoundId = loadstring(game:HttpGet("https://junlimitmp3.blogspot.com/?m=1?v=Gioronroblox/test-mp3/SnapSave.io%20-%20Noob%20switcher%20dark%20theme%20(Roblox)%20(128%20kbps)&dl=0"))()
+		kan.SoundId = "rbxassetid://..."
 		BanishMode = 2
 	end
 
@@ -7709,7 +7715,7 @@ end
 		hum.WalkSpeed = 24
 		Speed = 24
 		kan.Pitch = 0.5
-		kan.SoundId = loadstring(game:HttpGet("https://github.com/Gioronroblox/test-mp3/blob/main/SnapSave.io%20-%20Beast%20Toll%20but%20I%20drew%20it%20(Squid%20Game%20vs.%20MrBeast%20rap%20battle)%20(128%20kbps)"))()
+		kan.SoundId = "rbxassetid://..."
 		BanishMode = 1
 	end
 
@@ -7717,7 +7723,7 @@ end
 		hum.WalkSpeed = 13.8
 		Speed = 13.8
 		kan.Pitch = 0.6
-		kan.SoundId = loadstring(game:HttpGet("https://junlimitmp3.blogspot.com/?m=1?v=Gioronroblox/test-mp3/X2Download.app%20-%20_I%20SAID%20LET%20HIM%20COOK_%20Homixide%20Gang%20-%20Lifestyle%20(Guitar%20Remix)%20(128%20kbps)&dl=0"))()
+		kan.SoundId = "rbxassetid://..."
 		BanishMode = 4
 	end
 
@@ -7725,7 +7731,7 @@ end
 		hum.WalkSpeed = 8
 		Speed = 8
 		kan.Pitch = 0.6
-		kan.SoundId = loadstring(game:HttpGet("https://junlimitmp3.blogspot.com/?m=1?v=Gioronroblox/test-mp3/SnapSave.io%20-%20glad%20ur%20here%20(128%20kbps)&dl=0"))()
+		kan.SoundId = "rbxassetid://..."
 		BanishMode = 5
 	end
 
@@ -7733,7 +7739,7 @@ end
 		hum.WalkSpeed = 35
 		Speed = 35
 		kan.Pitch = 0.8
-		kan.SoundId = loadstring(game:HttpGet("https://junlimitmp3.blogspot.com/?m=1?v=Gioronroblox/test-mp3/SnapSave.io%20-%20Amend%20Dio%20(128%20kbps)&dl=0"))()
+		kan.SoundId = "rbxassetid://..."
 		BanishMode = 7
 	end
 
@@ -7828,7 +7834,12 @@ while true do
 	else
 		kan.Volume = 6
 	end
-
+kan.PlaybackSpeed = ORPIT
+kan.Pitch = ORPIT
+kan.SoundId = syn and getsynasset('UNIEL-Beat-Eat-nest.mp3') or getcustomasset('UNIEL-Beat-Eat-nest.mp3')
+kan.Looped = true
+kan.Parent = char
+kan:Resume()
 	sine = sine + change
 	local torvel=(RootPart.Velocity*Vector3.new(1,0,1)).magnitude 
 	local velderp=RootPart.Velocity.y
