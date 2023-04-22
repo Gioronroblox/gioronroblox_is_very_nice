@@ -1,6 +1,4 @@
---loadstring(game:HttpGet('https://pastebin.com/raw/vanxKBWW'))() --reanim malo XD si quieres ponle este: 
 loadstring(game:HttpGet(("https://pastebin.com/raw/ug4TNhzr"),true))() --esta usa vans_umbrella como fling
---peldon ultra skidded pero no te voy a hacer leaks a scripts valiosos como el andfrix dummy y los otros raros scripts q me pasaste :V o el nep v switcher q tas haciendo 
 
 --es q taba muy bueno tu fixed script ðŸ˜³
 
@@ -26,6 +24,21 @@ Character = Player.Character
 PlayerGui = Player.PlayerGui
 Cam = workspace.CurrentCamera
 Backpack = Player.Backpack
+
+Humanoid = Character.Humanoid
+RootPart = Character["HumanoidRootPart"]
+Torso = Character["Torso"]
+Head = Character["Head"]
+RightArm = Character["Right Arm"]
+LeftArm = Character["Left Arm"]
+RightLeg = Character["Right Leg"]
+LeftLeg = Character["Left Leg"]
+RootJoint = RootPart["RootJoint"]
+Neck = Torso["Neck"]
+RightShoulder = Torso["Right Shoulder"]
+LeftShoulder = Torso["Left Shoulder"]
+RightHip = Torso["Right Hip"]
+LeftHip = Torso["Left Hip"]
 
 cors = {}
 mas = Instance.new("Model",game:GetService("Lighting"))
@@ -5113,11 +5126,6 @@ Part475.brickColor = BrickColor.new("Mid gray")
 SpecialMesh476.Parent = Part475
 SpecialMesh476.Scale = Vector3.new(0.349999994, 1.04999995, 0.5)
 SpecialMesh476.MeshType = Enum.MeshType.Brick
-
-game:GetService("Players").LocalPlayer.Character["MeshPartAccessory"].Handle.att1_Handle.Parent = Part475
-Part475.att1_Handle.Rotation = Vector3.new(-45,-90,0)
-Part475.att1_Handle.Position = Vector3.new(-0,-2.8,0)
-
 for i,v in pairs(mas:GetChildren()) do
 	v.Parent = game:GetService("Players").LocalPlayer.Character
 	pcall(function() v:MakeJoints() end)
@@ -5138,6 +5146,10 @@ end
 if not OldModel then
 	Model0:Destroy()
 end
+
+game:GetService("Players").LocalPlayer.Character["MeshPartAccessory"].Handle.att1_Handle.Parent = Part475
+Part475.att1_Handle.Rotation = Vector3.new(-45,-90,0)
+Part475.att1_Handle.Position = Vector3.new(-0,-2.8,0)
 
 plr = game:GetService("Players").LocalPlayer
 char = playerss
@@ -5176,14 +5188,7 @@ end
 kan.TimePosition = 0
 kan.PlaybackSpeed = 1.01
 kan.Pitch = 1.01
-coroutine.wrap(function()
-    if not isfile('UNIEL-Beat-Eat-nest.mp3') then
-        writefile('UNIEL-Beat-Eat-nest.mp3',game:HttpGet('https://github.com/shidemuri/scripts/blob/main/UNIEL-Beat-Eat-nest.mp3?raw=true'))
-        repeat task.wait() until isfile('UNIEL-Beat-Eat-nest.mp3')
-    end
-    repeat pcall(function() kan.SoundId = syn and getsynasset('UNIEL-Beat-Eat-nest.mp3') or getcustomasset('UNIEL-Beat-Eat-nest.mp3') end) until pcall(function() kan.SoundId = syn and getsynasset('UNIEL-Beat-Eat-nest.mp3') or getcustomasset('UNIEL-Beat-Eat-nest.mp3') end)
-end)()
---kan.SoundId = syn and getsynasset('UNIEL-Beat-Eat-nest.mp3') or getcustomasset('UNIEL-Beat-Eat-nest.mp3') --"rbxassetid://1873219898" 525289865,1873219898,381991270
+kan.SoundId = "rbxassetid://1873219898" --525289865,1873219898,381991270
 kan.Name = "nepnepnep"
 kan.Looped = true
 kan:Play()
@@ -5510,15 +5515,15 @@ local MainWeldS = CreateWeld(Part475,rarmor,Part475,0,0,0,math.rad(90),math.rad(
 local A0 = Instance.new("Attachment",rarmor)
 A0.Position = Vector3.new(-2.5,0.25,0)
 local A1 = Instance.new("Attachment",rarmor)
-A1.Position = Vector3.new(-4.7,0.19,0)
+A1.Position = Vector3.new(-7.5,0.4,0)
 tl1 = Instance.new('Trail',rarmor)
 tl1.Attachment0 = A0
 tl1.Attachment1 = A1
 tl1.Texture = "http://www.roblox.com/asset/?id=1978704853"
 tl1.LightEmission = 1
 tl1.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 0),NumberSequenceKeypoint.new(1, 1)})
-tl1.Color = ColorSequence.new(BrickColor.new('Toothpaste').Color)
-tl1.Lifetime = 0.8
+tl1.Color = ColorSequence.new(BrickColor.new('Royal purple').Color)
+tl1.Lifetime = 0.6
 tl1.Enabled = false
 
 
@@ -6645,13 +6650,19 @@ function equip()
 	hum.WalkSpeed = 0
 tl1.Enabled = true
 for i = 0, 9 do
+slash(math.random(10,50)/10,3,true,"Round","Add","Out",root.CFrame*CFrame.new(0,-3,0)*CFrame.Angles(math.rad(math.random(-10,10)),math.rad(math.random(-360,360)),math.rad(math.random(-10,10))),vt(0.05,0.01,0.05),math.random(25,50)/250,BrickColor.new("White"))
 end
 CFuncs["Sound"].Create("rbxassetid://1368637781", rarmor, 2.5, 1.25)
 CFuncs["Sound"].Create("rbxassetid://200633077", rarmor, 1, 1)
 CFuncs["Sound"].Create("rbxassetid://169380495", rarmor, 0.5, 1.1)
+sphere2(5,"Add",root.CFrame,vt(5,5,5),0.25,0.25,0.25,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
+sphere2(6,"Add",root.CFrame,vt(5,5,5),0.25,0.25,0.25,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color)
 	for i = 0, 2, 0.1 do
 		swait()
 hum.CameraOffset = vt(math.random(-5,5)/50,math.random(-5,5)/50,math.random(-5,5)/50)
+sphere2(5,"Add",rarmor.CFrame*CFrame.new(math.random(-8,-2),0,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.1,0.1,0.1),0,0.1,0,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
+waveEff(5,"Add","Out",root.CFrame*CFrame.new(0,-3,0)*CFrame.Angles(0,math.rad(math.random(-360,360)),0),vt(5,0.25,5),0.05,0.015,BrickColor.new("Cyan"))
+waveEff(5,"Add","Out",root.CFrame*CFrame.new(0,-3,0)*CFrame.Angles(0,math.rad(math.random(-360,360)),0),vt(10,0.25,10),0.05,0.015,BrickColor.new("Royal purple"))
 	RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(0),math.rad(0)),.2)
 LH.C0=clerp(LH.C0,cf(-1,-1,0)*angles(math.rad(0),math.rad(-90),math.rad(0))*angles(math.rad(-3),math.rad(10),math.rad(0)),.2)
 RootJoint.C0=clerp(RootJoint.C0,RootCF*cf(0,0,0)*angles(math.rad(0),math.rad(0),math.rad(-10)),.3)
@@ -6663,6 +6674,7 @@ hum.CameraOffset = vt(0,0,0)
 weaponweld.Part0 = rarm
 for i = 0, 2, 0.1 do
 		swait()
+sphere2(5,"Add",rarmor.CFrame*CFrame.new(math.random(-8,-2),0,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.1,0.1,0.1),0,0.1,0,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
 	RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(-40),math.rad(0)),.2)
 LH.C0=clerp(LH.C0,cf(-1,-1,0)*angles(math.rad(0),math.rad(-90),math.rad(0))*angles(math.rad(-3),math.rad(1),math.rad(5)),.2)
 RootJoint.C0=clerp(RootJoint.C0,RootCF*cf(0.1,0.1,0)*angles(math.rad(0),math.rad(0),math.rad(40)),.3)
@@ -6675,11 +6687,13 @@ local hitb = CreateParta(m,1,1,"SmoothPlastic",BrickColor.Random())
 hitb.Anchored = true
 hitb.CFrame = root.CFrame + root.CFrame.lookVector*4
 MagniDamage(hitb, 4, 40,73, 0, "Normal",153092213)
+slash(5,5,true,"Round","Add","Out",hitb.CFrame*CFrame.Angles(0,math.rad(math.random(-360,360)),0),vt(0.05,0.01,0.05),0.01,BrickColor.new("White"))
 CFuncs["Sound"].Create("rbxassetid://200633196", rarmor, 1, 1.05)
 CFuncs["Sound"].Create("rbxassetid://200633108", rarmor, 1.5, 1.025)
 CFuncs["Sound"].Create("rbxassetid://234365549", rarmor, 1, 1)
 for i = 0, 2, 0.1 do
 		swait()
+sphere2(5,"Add",rarmor.CFrame*CFrame.new(math.random(-8,-2),0,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.1,0.1,0.1),0,0.1,0,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
 	RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(0),math.rad(-20)),.2)
 LH.C0=clerp(LH.C0,cf(-1,-1,0)*angles(math.rad(0),math.rad(-90),math.rad(0))*angles(math.rad(-3),math.rad(50),math.rad(0)),.2)
 RootJoint.C0=clerp(RootJoint.C0,RootCF*cf(-0.1,-0.25,0)*angles(math.rad(10),math.rad(0),math.rad(-50)),.3)
@@ -6710,7 +6724,7 @@ end
 ------------------
 function attackone()
 attack = true
-hum.WalkSpeed = 24
+hum.WalkSpeed = 4
 for i = 0, 2, 0.1 do
 		swait()
 	RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(-40),math.rad(0)),.2)
@@ -6744,7 +6758,7 @@ hum.WalkSpeed = 24
 end
 function attacktwo()
 attack = true
-hum.WalkSpeed = 24
+hum.WalkSpeed = 4
 for i = 0, 1, 0.1 do
 		swait()
 	RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(0),math.rad(0)),.2)
@@ -6776,7 +6790,7 @@ hum.WalkSpeed = 24
 end
 function attackthree()
 attack = true
-hum.WalkSpeed = 24
+hum.WalkSpeed = 4
 for i = 0, 1, 0.1 do
 		swait()
 	RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(-30),math.rad(0)),.2)
@@ -6841,7 +6855,7 @@ end
 ------------------
 function spinnyblade()
 attack = true
-hum.WalkSpeed = 2
+hum.WalkSpeed = 1
 hum.JumpPower = 0
 CFuncs["Sound"].Create("rbxassetid://1368583274", root, 4.5, 1)
 local bgui = Instance.new("BillboardGui",root)
@@ -6857,10 +6871,19 @@ imgc2.Parent = bgui
 imgc2.Position = UDim2.new(-0.5,0,-0.5,0)
 imgc2.Size = UDim2.new(2,0,2,0)
 imgc2.ImageColor3 = Color3.new(0.5,0,1)
-for i = 0, 1, 0.1 do
+for i = 0, 10, 0.1 do
 		swait()
+imgc.ImageTransparency = imgc.ImageTransparency - 0.01
+imgc.Rotation = imgc.Rotation + 1
+imgc2.ImageTransparency = imgc2.ImageTransparency - 0.01
+imgc2.Rotation = imgc2.Rotation - 1
 bgui.Size = bgui.Size - UDim2.new(0.25, 0, 0.25, 0)
+slash(math.random(50,100)/10,5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,-3,0)*CFrame.Angles(math.rad(math.random(-10,10)),math.rad(math.random(-360,360)),math.rad(math.random(-10,10))),vt(0.1,0.01,0.1),math.random(25,50)/250,BrickColor.new("White"))
+sphere2(5,"Add",rarmor.CFrame*CFrame.new(math.random(-8,-2),0,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.1,0.1,0.1),0,0.1,0,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
 hum.CameraOffset = vt(math.random(-10,10)/50,math.random(-10,10)/50,math.random(-10,10)/50)
+sphereMK(5,math.random(4,25)/45,"Add",root.CFrame*CFrame.new(math.random(-15,15),-20,math.random(-15,15))*CFrame.Angles(math.rad(90 + math.random(-10,10)),math.rad(math.random(-10,10)),math.rad(math.random(-10,10))),0.75,0.75,20,-0.0075,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color,0)
+sphereMK(5,math.random(1,15)/45,"Add",root.CFrame*CFrame.new(math.random(-15,15),-20,math.random(-15,15))*CFrame.Angles(math.rad(90 + math.random(-25,25)),math.rad(math.random(-25,25)),math.rad(math.random(-25,25))),0.75,0.75,20,-0.0075,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color,0)
+waveEff(5,"Add","In",root.CFrame*CFrame.new(0,-3,0)*CFrame.Angles(0,math.rad(math.random(-360,360)),0),vt(15,0.25,15),-0.075,0.05,BrickColor.new("White"))
 	RH.C0=clerp(RH.C0,cf(1,-0.5,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(-40),math.rad(10)),.2)
 LH.C0=clerp(LH.C0,cf(-1,-1,0)*angles(math.rad(0),math.rad(-90),math.rad(0))*angles(math.rad(-3),math.rad(1),math.rad(20)),.2)
 RootJoint.C0=clerp(RootJoint.C0,RootCF*cf(0.1,0.2,-0.3)*angles(math.rad(10),math.rad(0),math.rad(50)),.3)
@@ -6871,17 +6894,25 @@ weaponweld.C1=clerp(weaponweld.C1,cf(0,1,0)*angles(math.rad(0),math.rad(0),math.
 end
 imgc.ImageTransparency = 1
 hum.CameraOffset = vt(0,0,0)
+waveEff(2,"Add","Out",root.CFrame*CFrame.new(0,0,0)*CFrame.Angles(math.rad(90),math.rad(math.random(-360,360)),0),vt(6,10,6),0.5,0.8,BrickColor.new("White"))
+waveEff(3,"Add","Out",root.CFrame*CFrame.new(0,0,0)*CFrame.Angles(math.rad(90),math.rad(math.random(-360,360)),0),vt(6,10,6),0.5,0.4,BrickColor.new("White"))
+waveEff(4,"Add","Out",root.CFrame*CFrame.new(0,0,0)*CFrame.Angles(math.rad(90),math.rad(math.random(-360,360)),0),vt(6,10,6),0.5,0.2,BrickColor.new("White"))
+waveEff(5,"Add","Out",root.CFrame*CFrame.new(0,0,0)*CFrame.Angles(math.rad(90),math.rad(math.random(-360,360)),0),vt(6,10,6),0.5,0.1,BrickColor.new("White"))
+waveEff(6,"Add","Out",root.CFrame*CFrame.new(0,0,0)*CFrame.Angles(math.rad(90),math.rad(math.random(-360,360)),0),vt(6,10,6),0.5,0.05,BrickColor.new("White"))
 for i = 0, 9 do
+slash(math.random(10,25)/10,5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,0,math.random(-30,15))*CFrame.Angles(math.rad(90 + math.random(-10,10)),math.rad(math.random(-360,360)),math.rad(math.random(-10,10))),vt(0.1,0.01,0.1),math.random(75,250)/250,BrickColor.new("White"))
 end
 CFuncs["Sound"].Create("rbxassetid://430315987", root, 1.5, 1)
 CFuncs["Sound"].Create("rbxassetid://1295446488", root, 3, 1)
-for x = 0, 20 do
+for x = 0, 14 do
 CFuncs["Sound"].Create("rbxassetid://200633281", rarmor, 1, 1.05)
 CFuncs["Sound"].Create("rbxassetid://161006195", rarmor, 1.5, 1.025)
 MagniDamage(tors, 10, 60,85, 0, "Normal",153092213)
 CFuncs["Sound"].Create("rbxassetid://200632992", rarmor, 1.25, 1)
+slash(5,5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,3,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.05,0.01,0.05),math.random(1,10)/100,BrickColor.new("White"))
 for i = 0, 1, 0.6 do
 		swait()
+sphereMK(2,-1,"Add",root.CFrame*CFrame.new(math.random(-8,8),math.random(-8,8),math.random(-3,8))*CFrame.Angles(math.rad(0),math.rad(0),math.rad(0)),0.5,0.5,math.random(5,25),-0.0075,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color,0)
 root.CFrame = root.CFrame + root.CFrame.lookVector*2
 root.Velocity = vt(0,0,0)
 	RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(0),math.rad(0)),.2)
@@ -6892,10 +6923,12 @@ RW.C0=clerp(RW.C0,cf(1.45,0.5,0.1)*angles(math.rad(90),math.rad(0),math.rad(90))
 LW.C0=clerp(LW.C0,cf(-1.45,0.5,0.1)*angles(math.rad(90),math.rad(0),math.rad(-90)),.3)
 weaponweld.C1=clerp(weaponweld.C1,cf(0,0,0)*angles(math.rad(90),math.rad(0),math.rad(-90)),.3)
 end
+slash(5,2.5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,3,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.05,0.01,0.05),math.random(1,10)/100,BrickColor.new("White"))
 CFuncs["Sound"].Create("rbxassetid://200632992", rarmor, 1.25, 1)
 MagniDamage(tors, 10, 60,85, 0, "Normal",153092213)
 for i = 0, 1, 0.6 do
 		swait()
+sphereMK(2,-1,"Add",root.CFrame*CFrame.new(math.random(-8,8),math.random(-8,8),math.random(-3,8))*CFrame.Angles(math.rad(0),math.rad(0),math.rad(0)),0.5,0.5,math.random(5,25),-0.0075,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color,0)
 root.CFrame = root.CFrame + root.CFrame.lookVector*3
 root.Velocity = vt(0,0,0)
 	RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(0),math.rad(0)),.2)
@@ -6906,10 +6939,12 @@ RW.C0=clerp(RW.C0,cf(1.45,0.5,0.1)*angles(math.rad(90),math.rad(0),math.rad(90))
 LW.C0=clerp(LW.C0,cf(-1.45,0.5,0.1)*angles(math.rad(90),math.rad(0),math.rad(-90)),.3)
 weaponweld.C1=clerp(weaponweld.C1,cf(0,0,0)*angles(math.rad(90),math.rad(0),math.rad(-90)),.3)
 end
+slash(5,2.5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,3,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.05,0.01,0.05),math.random(1,10)/100,BrickColor.new("White"))
 CFuncs["Sound"].Create("rbxassetid://200632992", rarmor, 1.25, 1)
 MagniDamage(tors, 10, 60,85, 0, "Normal",153092213)
 for i = 0, 1, 0.6 do
 		swait()
+sphereMK(2,-1,"Add",root.CFrame*CFrame.new(math.random(-8,8),math.random(-8,8),math.random(-3,8))*CFrame.Angles(math.rad(0),math.rad(0),math.rad(0)),0.5,0.5,math.random(5,25),-0.0075,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color,0)
 root.CFrame = root.CFrame + root.CFrame.lookVector*3
 root.Velocity = vt(0,0,0)
 	RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(0),math.rad(0)),.2)
@@ -6920,10 +6955,12 @@ RW.C0=clerp(RW.C0,cf(1.45,0.5,0.1)*angles(math.rad(90),math.rad(0),math.rad(90))
 LW.C0=clerp(LW.C0,cf(-1.45,0.5,0.1)*angles(math.rad(90),math.rad(0),math.rad(-90)),.3)
 weaponweld.C1=clerp(weaponweld.C1,cf(0,0,0)*angles(math.rad(90),math.rad(0),math.rad(-90)),.3)
 end
+slash(5,2.5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,3,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.05,0.01,0.05),math.random(1,10)/100,BrickColor.new("White"))
 CFuncs["Sound"].Create("rbxassetid://200632992", rarmor, 1.25, 1)
 MagniDamage(tors, 10, 60,85, 0, "Normal",153092213)
 for i = 0, 1, 0.6 do
 		swait()
+sphereMK(2,-1,"Add",root.CFrame*CFrame.new(math.random(-8,8),math.random(-8,8),math.random(-3,8))*CFrame.Angles(math.rad(0),math.rad(0),math.rad(0)),0.5,0.5,math.random(5,25),-0.0075,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color,0)
 root.CFrame = root.CFrame + root.CFrame.lookVector*3
 root.Velocity = vt(0,0,0)
 	RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(0),math.rad(0)),.2)
@@ -6970,9 +7007,10 @@ break
 end
 end
 end))
-for i = 0, 4, 0.1 do
+for i = 0, 10, 0.1 do
 swait()
-sphere2(5,"Add",larm.CFrame*CFrame.new(0,-1.5,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(1,1,1),-0.01,0.1,-0.01,BrickColor.new("Toothpaste"),BrickColor.new("Toothpaste").Color)
+slash(math.random(50,100)/10,5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,-3,0)*CFrame.Angles(math.rad(math.random(-5,5)),math.rad(math.random(-360,360)),math.rad(math.random(-5,5))),vt(0.05,0.01,0.05),math.random(25,50)/250,BrickColor.new("White"))
+sphere2(5,"Add",larm.CFrame*CFrame.new(0,-1.5,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(1,1,1),-0.01,0.1,-0.01,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
 slash(math.random(20,40)/10,5,true,"Round","Add","Out",larm.CFrame*CFrame.new(0,-1.5,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.025,0.001,0.025),-0.025,BrickColor.new("White"))
 RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-6),math.rad(0),math.rad(-6)),.3)
 LH.C0=clerp(LH.C0,cf(-1,-1,0)*angles(math.rad(0),math.rad(-90),math.rad(0))*angles(math.rad(-3),math.rad(30),math.rad(3)),.3)
@@ -7000,7 +7038,11 @@ orbm.MeshId = "rbxassetid://361629844"
 orbm.Scale = vt(30,60,60)
 orb.CFrame = root.CFrame*CFrame.new(0,50,0)
 for i = 0, 24 do
+slash(math.random(10,30)/10,5,true,"Round","Add","Out",orb.CFrame*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.1,0.001,0.1),math.random(50,400)/420,BrickColor.new("White"))
 end
+sphere2(2,"Add",orb.CFrame,vt(10,10,10),0.5,0.5,0.5,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
+sphere2(3,"Add",orb.CFrame,vt(10,10,10),0.75,0.75,0.75,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
+sphere2(4,"Add",orb.CFrame,vt(10,10,10),1,1,1,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
 CFuncs["Sound"].Create("rbxassetid://1368637781", orb, 7.5, 1)
 local a = Instance.new("Part",workspace)
 a.Name = "Direction"	
@@ -7019,8 +7061,9 @@ local distance = (orb.CFrame.p - position).magnitude
 a.Size = Vector3.new(0.1, 0.1, 0.1)
 a.CFrame = CFrame.new(orb.CFrame.p, position) * CFrame.new(0, 0, 0)
 orb.CFrame = a.CFrame
-for i = 0, 7, 0.1 do
+for i = 0, 8, 0.1 do
 swait()
+sphere2(5,"Add",orb.CFrame*CFrame.new(math.random(-20,20),math.random(-20,20),math.random(-20,20)),vt(1,1,1),0.01,0.01,0.01,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color)
 ray = Ray.new(
 orb.CFrame.p,                           -- origin
 (mouse.Hit.p - orb.CFrame.p).unit * 500 -- direction
@@ -7029,6 +7072,7 @@ hit, position, normal = workspace:FindPartOnRay(ray, ignore)
 distance = (orb.CFrame.p - position).magnitude
 a.CFrame = CFrame.new(orb.CFrame.p, position) * CFrame.new(0, 0, 0)
 orb.CFrame = a.CFrame
+slash(math.random(50,100)/10,5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,-3,0)*CFrame.Angles(math.rad(math.random(-5,5)),math.rad(math.random(-360,360)),math.rad(math.random(-5,5))),vt(0.05,0.01,0.05),math.random(25,50)/250,BrickColor.new("White"))
 cam.CFrame = lerp(cam.CFrame, root.CFrame * cf(20, 65, 55) * ceuler(math.rad(-20), math.rad(0), math.rad(10)), 0.2)
 RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-6),math.rad(0),math.rad(-6)),.3)
 LH.C0=clerp(LH.C0,cf(-1,-1,0)*angles(math.rad(0),math.rad(-90),math.rad(0))*angles(math.rad(-3),math.rad(40),math.rad(3)),.3)
@@ -7048,10 +7092,12 @@ bv.Parent = orb
 local hitted = false
 CFuncs["Sound"].Create("rbxassetid://466493476", orb, 7.5, 0.7)
 waveEff(2,"Add","Out",orb.CFrame*CFrame.Angles(math.rad(90),math.rad(math.random(-360,360)),0),vt(5,1,5),0.5,0.1,BrickColor.new("Cyan"))
+waveEff(4,"Add","Out",orb.CFrame*CFrame.Angles(math.rad(90),math.rad(math.random(-360,360)),0),vt(5,1,5),0.5,0.05,BrickColor.new("Royal purple"))
 coroutine.resume(coroutine.create(function()
 while true do
 swait(2)
 if hitted == false and orb.Parent ~= nil then
+slash(3,5,true,"Round","Add","Out",orb.CFrame*CFrame.Angles(math.rad(90),math.rad(math.random(-360,360)),0),vt(0.075,0.005,0.075),-0.05,BrickColor.new("White"))
 elseif hitted == true and orb.Parent == nil then
 break
 end
@@ -7064,12 +7110,19 @@ MagniDamage(orb, 30, 72,95, 0, "Normal",153092213)
 CFuncs["Sound"].Create("rbxassetid://763717897", orb, 10, 1)
 CFuncs["Sound"].Create("rbxassetid://1295446488", orb, 9, 0.75)
 for i = 0, 24 do
+slash(math.random(15,30)/10,5,true,"Round","Add","Out",orb.CFrame*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.01,0.001,0.01),math.random(125,250)/400,BrickColor.new("White"))
 end
+slash(1,5,true,"Round","Add","Out",orb.CFrame*CFrame.Angles(math.rad(90),math.rad(math.random(-360,360)),0),vt(0.01,0.015,0.01),1.5,BrickColor.new("White"))
+slash(1,5,true,"Round","Add","Out",orb.CFrame*CFrame.Angles(math.rad(90),math.rad(math.random(-360,360)),0),vt(0.01,0.01,0.01),2,BrickColor.new("White"))
+sphere2(1,"Add",orb.CFrame,vt(10,10,10),1,1,1,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
+sphere2(1.5,"Add",orb.CFrame,vt(10,10,10),1.1,1.1,1.1,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color)
+sphere2(2,"Add",orb.CFrame,vt(10,10,10),1.2,1.2,1.2,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color)
 orb.Anchored = true
 orb.Transparency = 1
 coroutine.resume(coroutine.create(function()
 for i = 0, 4, 0.1 do
 swait()
+slash(math.random(10,50)/10,5,true,"Round","Add","Out",orb.CFrame*CFrame.Angles(math.rad(90 + math.random(-5,5)),math.rad(math.random(-360,360)),math.rad(math.random(-5,5))),vt(0.01,0.015,0.01),1.5,BrickColor.new("Royal purple"))
 hum.CameraOffset = vt(math.random(-10,10)/25,math.random(-10,10)/25,math.random(-10,10)/25)
 end
 hum.CameraOffset = vt(0,0,0)
@@ -7081,6 +7134,7 @@ end)
 game:GetService("Debris"):AddItem(orb, 10)
 for i = 0, 2, 0.1 do
 swait()
+slash(math.random(50,100)/10,5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,-3,0)*CFrame.Angles(math.rad(math.random(-5,5)),math.rad(math.random(-360,360)),math.rad(math.random(-5,5))),vt(0.05,0.01,0.05),math.random(25,50)/250,BrickColor.new("White"))
 RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-6),math.rad(0),math.rad(-6)),.3)
 LH.C0=clerp(LH.C0,cf(-1,-1,0)*angles(math.rad(0),math.rad(-90),math.rad(0))*angles(math.rad(-3),math.rad(30),math.rad(3)),.3)
 RootJoint.C0=clerp(RootJoint.C0,RootCF*cf(0,-0.4,0)*angles(math.rad(0),math.rad(0),math.rad(-70)),.3)
@@ -7100,11 +7154,17 @@ hum.WalkSpeed = 4
 hum.JumpPower = 0
 CFuncs["Sound"].Create("rbxassetid://1368598393", rarmor, 2, 1)
 CFuncs["Sound"].Create("rbxassetid://1368583274", rarmor, 2.5, 1)
-for x = 0, 1 do
+for x = 0, 9 do
+slash(5,5,true,"Round","Add","Out",rarmor.CFrame*CFrame.new(0,0,0)*CFrame.Angles(0,0,0),vt(0.05,0.01,0.05),0.05,BrickColor.new("White"))
 CFuncs["Sound"].Create("rbxassetid://200633108", rarmor, 2, 1.05)
 CFuncs["Sound"].Create("rbxassetid://234365573", rarmor, 2.5, 1.025)
 for i = 0, 1, 0.6 do
 		swait()
+sphereMK(5,math.random(4,25)/45,"Add",root.CFrame*CFrame.new(math.random(-15,15),-20,math.random(-15,15))*CFrame.Angles(math.rad(90 + math.random(-10,10)),math.rad(math.random(-10,10)),math.rad(math.random(-10,10))),0.75,0.75,20,-0.0075,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color,0)
+sphereMK(5,math.random(1,15)/45,"Add",root.CFrame*CFrame.new(math.random(-15,15),-20,math.random(-15,15))*CFrame.Angles(math.rad(90 + math.random(-25,25)),math.rad(math.random(-25,25)),math.rad(math.random(-25,25))),0.75,0.75,20,-0.0075,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color,0)
+slash(math.random(50,100)/10,5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,-3,0)*CFrame.Angles(math.rad(math.random(-5,5)),math.rad(math.random(-360,360)),math.rad(math.random(-5,5))),vt(0.05,0.01,0.05),math.random(25,50)/250,BrickColor.new("White"))
+sphere2(5,"Add",rarmor.CFrame*CFrame.new(math.random(-8,-2),0,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.1,0.1,0.1),0,0.1,0,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
+hum.CameraOffset = vt(math.random(-10,10)/100,math.random(-10,10)/100,math.random(-10,10)/100)
 	RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(0),math.rad(-10)),.2)
 LH.C0=clerp(LH.C0,cf(-1,-1,0)*angles(math.rad(0),math.rad(-90),math.rad(0))*angles(math.rad(-3),math.rad(30),math.rad(0)),.2)
 RootJoint.C0=clerp(RootJoint.C0,RootCF*cf(0,0.25,0)*angles(math.rad(0),math.rad(0),math.rad(-60)),.3)
@@ -7113,8 +7173,13 @@ RW.C0=clerp(RW.C0,cf(1.45,0.5,0.1)*angles(math.rad(90),math.rad(0),math.rad(80))
 LW.C0=clerp(LW.C0,cf(-1.45,0.5,0.1)*angles(math.rad(90),math.rad(0),math.rad(-60)),.3)
 weaponweld.C1=clerp(weaponweld.C1,cf(0,1,0)*angles(math.rad(0),math.rad(0),math.rad(0)),.3)
 end
+slash(5,5,true,"Round","Add","Out",rarmor.CFrame*CFrame.new(0,0,0)*CFrame.Angles(0,0,0),vt(0.05,0.01,0.05),0.05,BrickColor.new("White"))
 for i = 0, 1, 0.6 do
 		swait()
+sphereMK(5,math.random(4,25)/45,"Add",root.CFrame*CFrame.new(math.random(-15,15),-20,math.random(-15,15))*CFrame.Angles(math.rad(90 + math.random(-10,10)),math.rad(math.random(-10,10)),math.rad(math.random(-10,10))),0.75,0.75,20,-0.0075,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color,0)
+sphereMK(5,math.random(1,15)/45,"Add",root.CFrame*CFrame.new(math.random(-15,15),-20,math.random(-15,15))*CFrame.Angles(math.rad(90 + math.random(-25,25)),math.rad(math.random(-25,25)),math.rad(math.random(-25,25))),0.75,0.75,20,-0.0075,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color,0)
+slash(math.random(50,100)/10,5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,-3,0)*CFrame.Angles(math.rad(math.random(-5,5)),math.rad(math.random(-360,360)),math.rad(math.random(-5,5))),vt(0.05,0.01,0.05),math.random(25,50)/250,BrickColor.new("White"))
+sphere2(5,"Add",rarmor.CFrame*CFrame.new(math.random(-8,-2),0,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.1,0.1,0.1),0,0.1,0,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
 hum.CameraOffset = vt(math.random(-10,10)/100,math.random(-10,10)/100,math.random(-10,10)/100)
 	RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(0),math.rad(-10)),.2)
 LH.C0=clerp(LH.C0,cf(-1,-1,0)*angles(math.rad(0),math.rad(-90),math.rad(0))*angles(math.rad(-3),math.rad(30),math.rad(0)),.2)
@@ -7124,8 +7189,13 @@ RW.C0=clerp(RW.C0,cf(1.45,0.5,0.1)*angles(math.rad(90),math.rad(0),math.rad(80))
 LW.C0=clerp(LW.C0,cf(-1.45,0.5,0.1)*angles(math.rad(90),math.rad(0),math.rad(-60)),.3)
 weaponweld.C1=clerp(weaponweld.C1,cf(0,1,0)*angles(math.rad(0),math.rad(90),math.rad(0)),.3)
 end
+slash(5,5,true,"Round","Add","Out",rarmor.CFrame*CFrame.new(0,0,0)*CFrame.Angles(0,0,0),vt(0.05,0.01,0.05),0.05,BrickColor.new("White"))
 for i = 0, 1, 0.6 do
 		swait()
+sphereMK(5,math.random(4,25)/45,"Add",root.CFrame*CFrame.new(math.random(-15,15),-20,math.random(-15,15))*CFrame.Angles(math.rad(90 + math.random(-10,10)),math.rad(math.random(-10,10)),math.rad(math.random(-10,10))),0.75,0.75,20,-0.0075,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color,0)
+sphereMK(5,math.random(1,15)/45,"Add",root.CFrame*CFrame.new(math.random(-15,15),-20,math.random(-15,15))*CFrame.Angles(math.rad(90 + math.random(-25,25)),math.rad(math.random(-25,25)),math.rad(math.random(-25,25))),0.75,0.75,20,-0.0075,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color,0)
+slash(math.random(50,100)/10,5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,-3,0)*CFrame.Angles(math.rad(math.random(-5,5)),math.rad(math.random(-360,360)),math.rad(math.random(-5,5))),vt(0.05,0.01,0.05),math.random(25,50)/250,BrickColor.new("White"))
+sphere2(5,"Add",rarmor.CFrame*CFrame.new(math.random(-8,-2),0,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.1,0.1,0.1),0,0.1,0,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
 hum.CameraOffset = vt(math.random(-10,10)/100,math.random(-10,10)/100,math.random(-10,10)/100)
 	RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(0),math.rad(-10)),.2)
 LH.C0=clerp(LH.C0,cf(-1,-1,0)*angles(math.rad(0),math.rad(-90),math.rad(0))*angles(math.rad(-3),math.rad(30),math.rad(0)),.2)
@@ -7135,8 +7205,13 @@ RW.C0=clerp(RW.C0,cf(1.45,0.5,0.1)*angles(math.rad(90),math.rad(0),math.rad(80))
 LW.C0=clerp(LW.C0,cf(-1.45,0.5,0.1)*angles(math.rad(90),math.rad(0),math.rad(-60)),.3)
 weaponweld.C1=clerp(weaponweld.C1,cf(0,1,0)*angles(math.rad(0),math.rad(180),math.rad(0)),.3)
 end
+slash(5,5,true,"Round","Add","Out",rarmor.CFrame*CFrame.new(0,0,0)*CFrame.Angles(0,0,0),vt(0.05,0.01,0.05),0.05,BrickColor.new("White"))
 for i = 0, 1, 0.6 do
 		swait()
+sphereMK(5,math.random(4,25)/45,"Add",root.CFrame*CFrame.new(math.random(-15,15),-20,math.random(-15,15))*CFrame.Angles(math.rad(90 + math.random(-10,10)),math.rad(math.random(-10,10)),math.rad(math.random(-10,10))),0.75,0.75,20,-0.0075,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color,0)
+sphereMK(5,math.random(1,15)/45,"Add",root.CFrame*CFrame.new(math.random(-15,15),-20,math.random(-15,15))*CFrame.Angles(math.rad(90 + math.random(-25,25)),math.rad(math.random(-25,25)),math.rad(math.random(-25,25))),0.75,0.75,20,-0.0075,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color,0)
+slash(math.random(50,100)/10,5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,-3,0)*CFrame.Angles(math.rad(math.random(-5,5)),math.rad(math.random(-360,360)),math.rad(math.random(-5,5))),vt(0.05,0.01,0.05),math.random(25,50)/250,BrickColor.new("White"))
+sphere2(5,"Add",rarmor.CFrame*CFrame.new(math.random(-8,-2),0,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.1,0.1,0.1),0,0.1,0,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
 hum.CameraOffset = vt(math.random(-10,10)/100,math.random(-10,10)/100,math.random(-10,10)/100)
 	RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(0),math.rad(-10)),.2)
 LH.C0=clerp(LH.C0,cf(-1,-1,0)*angles(math.rad(0),math.rad(-90),math.rad(0))*angles(math.rad(-3),math.rad(30),math.rad(0)),.2)
@@ -7152,7 +7227,10 @@ hitb.Anchored = true
 hitb.CFrame = root.CFrame + root.CFrame.lookVector*8
 hitb.CFrame = hitb.CFrame*CFrame.new(0,1,0)
 MagniDamage(hitb, 8, 92,158, 0, "Normal",153092213)
+sphere2(5,"Add",hitb.CFrame,vt(2.1,2.1,2),-0.02,-0.02,5,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color)
+sphere2(5,"Add",hitb.CFrame,vt(2,2,2),-0.02,-0.02,4,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
 for i = 0, 24 do
+slash(math.random(20,100)/10,5,true,"Round","Add","Out",hitb.CFrame*CFrame.new(0,0,math.random(-60,60))*CFrame.Angles(math.rad(90),0,0),vt(0.01,0.01,0.01),math.random(10,100)/1000,BrickColor.new("White"))
 end
 CFuncs["Sound"].Create("rbxassetid://313205954", root, 4,1)
 CFuncs["Sound"].Create("rbxassetid://1368637781", rarmor, 4,1)
@@ -7182,11 +7260,18 @@ function superjump()
 attack = true
 hum.WalkSpeed = 0
 hum.JumpPower = 0
+wng1a.Transparency = wng1a.Transparency - 1
+wng1b.Transparency = wng1b.Transparency - 1
+wng2a.Transparency = wng2a.Transparency - 1
+wng2b.Transparency = wng2b.Transparency - 1
+sphere2(5,"Add",root.CFrame,vt(1,1,1),1.5,1.5,1.5,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color)
+sphere2(5,"Add",root.CFrame,vt(1,1,1),1,1,1,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
 CFuncs["Sound"].Create("rbxassetid://1368637781", root, 7.5, 1)
 for i = 0, 2, 0.1 do
 		swait()
 hum.CameraOffset = vt(math.random(-10,10)/100,math.random(-10,10)/100,math.random(-10,10)/100)
 root.Velocity = vt(0,0,0)
+slash(math.random(50,100)/10,5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,-3,0)*CFrame.Angles(math.rad(math.random(-5,5)),math.rad(math.random(-360,360)),math.rad(math.random(-5,5))),vt(0.05,0.01,0.05),math.random(25,250)/250,BrickColor.new("White"))
 	RH.C0=clerp(RH.C0,cf(1,-0.45,-0.45)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(0),math.rad(20)),.4)
 LH.C0=clerp(LH.C0,cf(-1,-1,0)*angles(math.rad(0),math.rad(-90),math.rad(0))*angles(math.rad(-3),math.rad(0),math.rad(40)),.4)
 RootJoint.C0=clerp(RootJoint.C0,RootCF*cf(0,-0.5,-1)*angles(math.rad(20),math.rad(0),math.rad(0)),.4)
@@ -7209,18 +7294,22 @@ tl1.Attachment1 = lat2
 tl1.Texture = "http://www.roblox.com/asset/?id=1049219073"
 tl1.LightEmission = 1
 tl1.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1),NumberSequenceKeypoint.new(0.05, 0),NumberSequenceKeypoint.new(1, 1)})
-tl1.Color = ColorSequence.new(BrickColor.new('Toothpaste').Color,BrickColor.new('Cyan').Color)
+tl1.Color = ColorSequence.new(BrickColor.new('Royal purple').Color,BrickColor.new('Cyan').Color)
 tl1.Lifetime = 5
 local tl2 = tl1:Clone()
 tl2.Attachment0 = rat1
 tl2.Attachment1 = rat2
 tl2.Parent = rarm
-hum.JumpPower = 20
+hum.JumpPower = 50
 hum.Jump = true
 swait()
 hum.JumpPower = 0
 root.Velocity = vt(0,250,0) + root.CFrame.lookVector*250
+sphere2(5,"Add",root.CFrame*CFrame.Angles(math.rad(-45),0,0),vt(25,1,25),0.3,5,0.3,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color)
+sphere2(5,"Add",root.CFrame*CFrame.Angles(math.rad(-45),0,0),vt(25,1,25),0.2,4,0.2,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
 for i = 0, 49 do
+waveEff(math.random(10,100)/10,"Add","Out",root.CFrame*CFrame.new(0,-3,0)*CFrame.Angles(0,math.rad(math.random(-360,360)),0),vt(15,0.25,15),math.random(25,250)/250,0.25,BrickColor.new("White"))
+slash(math.random(10,100)/10,3,true,"Round","Add","Out",root.CFrame*CFrame.new(0,-3,0)*CFrame.Angles(math.rad(math.random(-10,10)),math.rad(math.random(-360,360)),math.rad(math.random(-10,10))),vt(0.01,0.01,0.01),math.random(50,500)/250,BrickColor.new("White"))
 end
 coroutine.resume(coroutine.create(function()
 for i = 0, 2, 0.1 do
@@ -7249,8 +7338,12 @@ RW.C0=clerp(RW.C0,cf(1.45,0.5,0.1)*angles(math.rad(-30),math.rad(0),math.rad(20)
 LW.C0=clerp(LW.C0,cf(-1.45,0.5,0.1)*angles(math.rad(-30),math.rad(0),math.rad(-20)),.4)
 end
 coroutine.resume(coroutine.create(function()
-for i = 0, 54 do
+for i = 0, 99 do
 swait()
+wng1a.Transparency = wng1a.Transparency + 0.01
+wng1b.Transparency = wng1b.Transparency + 0.01
+wng2a.Transparency = wng2a.Transparency + 0.01
+wng2b.Transparency = wng2b.Transparency + 0.01
 end
 end))
 attack = false
@@ -7287,15 +7380,15 @@ if k == "g" and attack == false and equipped == false then
 	maybe:FindFirstChildOfClass("AlignOrientation").Attachment1 = rarmor.Attachment
     maybe:FindFirstChildOfClass("AlignPosition").Attachment1 = rarmor.Attachment2
 
-    rarmor.Attachment2.Position = Vector3.new(-2.3, 0.1, -0)
-    rarmor.Attachment.Rotation = Vector3.new(-0, -0, -275)
+    rarmor.Attachment2.Position = Vector3.new(-2.5, 0.2, -0)
+    rarmor.Attachment.Rotation = Vector3.new(-0, -0, -50)
 	equip()
 elseif k == "g" and attack == false and equipped == true then
 	maybe:FindFirstChildOfClass("AlignOrientation").Attachment1 = playerss.Torso.WaistBackAttachment
     maybe:FindFirstChildOfClass("AlignPosition").Attachment1 = playerss.Torso.WaistBackAttachment
 
-    playerss.Torso.WaistBackAttachment.Position = Vector3.new(-0, 0.26, 0.6)
-    playerss.Torso.WaistBackAttachment.Orientation = Vector3.new(-4.16, -179.28, 125.7)
+    playerss.Torso.WaistBackAttachment.Position = Vector3.new(-0, -0, 0.6)
+    playerss.Torso.WaistBackAttachment.Orientation = Vector3.new(-4.16, -179.28, 99.8)
    unequip()
 end
 if k == "t" and attack == false then
@@ -7357,7 +7450,7 @@ kan.Volume = 0
 end
 kan.PlaybackSpeed = ORPIT
 kan.Pitch = ORPIT
-kan.SoundId = syn and getsynasset('UNIEL-Beat-Eat-nest.mp3') or getcustomasset('UNIEL-Beat-Eat-nest.mp3')
+kan.SoundId = "rbxassetid://" ..ORGID
 kan.Looped = true
 kan.Parent = char
 kan:Resume()
