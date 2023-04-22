@@ -1,40 +1,32 @@
-loadstring(game:HttpGet("https://pastebin.com/raw/ug4TNhzr"))()
+--loadstring(game:HttpGet('https://pastebin.com/raw/vanxKBWW'))() --reanim malo XD si quieres ponle este: 
+loadstring(game:HttpGet(("https://pastebin.com/raw/ug4TNhzr"),true))() --esta usa vans_umbrella como fling
+--peldon ultra skidded pero no te voy a hacer leaks a scripts valiosos como el andfrix dummy y los otros raros scripts q me pasaste :V o el nep v switcher q tas haciendo 
 
---- Did actually rework heavily away from original neptunian, and the non-rework neptunian. --NoobyGames12
---- Was supposed to be for the770zone, or VengefulProgram.
+--es q taba muy bueno tu fixed script ðŸ˜³
 
-warn'Neptune/Neptunian V'
-warn[[Absolutely.
+----- the hats name on explorer/dex (not name in catalog)
+local NoSound = false ----- sound or no sound (Background Music)
+local OldModel = true ----- don't put this on false.
+local ToolName = "MeshPartAccessory" ----- the hats name on explorer/dex (not name in catalog)
+--ToolName.Parent = game:GetService("Players").LocalPlayer.Character
+local playerss = game:GetService("Players").LocalPlayer.Character
+local maybe = playerss[ToolName].Handle
 
-Created by NoobyGames12
-----------------------------]]
+--maybe:FindFirstChildOfClass("AlignPosition").Name = "AlignPosition2"
+--maybe:FindFirstChildOfClass("AlignOrientation").Name = "AlignOrientation2"
 
-print[[Set your theme by: 
-id/
-vol/
-pitch/
-You can skip through the position of theme by:
-skipto/]]
+playerss.Torso.WaistBackAttachment.Position = Vector3.new(-0, 2, 0.6)
+playerss.Torso.WaistBackAttachment.Orientation = Vector3.new(-4.16, -190, 99.8)
 
-warn("Have fun using this!")
----- DO NOT CHANGE ANYTHING BELOW IF YOU'RE NOT AN EDITOR 
+local Player = game.Players.LocalPlayer
+local Plr = Player
+local mouse = Player:GetMouse()
+local Mouse = mouse
+Character = Player.Character 
+PlayerGui = Player.PlayerGui
+Cam = workspace.CurrentCamera
+Backpack = Player.Backpack
 
-
-
-function sandbox(var,func)
-	local env = getfenv(func)
-	local newenv = setmetatable({},{
-		__index = function(self,k)
-			if k=="script" then
-				return var
-			else
-				return env[k]
-			end
-		end,
-	})
-	setfenv(func,newenv)
-	return func
-end
 cors = {}
 mas = Instance.new("Model",game:GetService("Lighting"))
 Model0 = Instance.new("Model")
@@ -5528,6 +5520,27 @@ tl1.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 0),NumberSe
 tl1.Color = ColorSequence.new(BrickColor.new('Toothpaste').Color)
 tl1.Lifetime = 0.8
 tl1.Enabled = false
+
+
+
+
+--------------- WINGS
+local mainpart = CreateParta(m,1,0,"SmoothPlastic",BrickColor.Random())
+local mwingweld = CreateWeld(mainpart,tors,mainpart,0,-0.5,-0.75,math.rad(0),math.rad(0),math.rad(0),0,0,0,math.rad(0),math.rad(0),math.rad(0))
+
+local wng1a = CreateParta(m,1,0,"Neon",BrickColor.new("Alder"))
+CreateMesh(wng1a,"Wedge",0.1,4,4)
+CreateWeld(wng1a,mainpart,wng1a,0,-2,-2.5,math.rad(0),math.rad(70),math.rad(5),0,0,0,math.rad(0),math.rad(0),math.rad(0))
+local wng2a = CreateParta(m,1,0,"Neon",BrickColor.new("Alder"))
+CreateMesh(wng2a,"Wedge",0.1,4,4)
+CreateWeld(wng2a,mainpart,wng2a,0,-2,-2.5,math.rad(0),math.rad(-70),math.rad(-5),0,0,0,math.rad(0),math.rad(0),math.rad(0))
+local wng1b = CreateParta(m,1,0,"Neon",BrickColor.new("Alder"))
+CreateMesh(wng1b,"Wedge",0.1,1.5,3)
+CreateWeld(wng1b,mainpart,wng1b,0,-1,-2.25,math.rad(180),math.rad(-110),math.rad(-5),0,0,0,math.rad(0),math.rad(0),math.rad(0))
+local wng2b = CreateParta(m,1,0,"Neon",BrickColor.new("Alder"))
+CreateMesh(wng2b,"Wedge",0.1,1.5,3)
+CreateWeld(wng2b,mainpart,wng2b,0,-1,-2.25,math.rad(180),math.rad(110),math.rad(5),0,0,0,math.rad(0),math.rad(0),math.rad(0))
+------
 
 
 function lerp(object, newCFrame, alpha)
