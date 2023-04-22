@@ -5203,8 +5203,6 @@ kan.Name = "nepnepnep"
 kan.Looped = true
 kan:Play()
 
-local BanishMode = 1
-
 function CameraShake(Times, Power)
 	coroutine.resume(coroutine.create(function()
 		FV = Instance.new("BoolValue", Character)
