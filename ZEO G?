@@ -1,14 +1,8 @@
 game.Players.LocalPlayer.Character["SeeMonkey"].Handle.Mesh:Destroy()
-
-game:GetService("Players").LocalPlayer.Character.MeshPartAccessory.Name = 'international 1'
-game:GetService("Players").LocalPlayer.Character.MeshPartAccessory.Name = 'international 2' 
-
 game.Players.LocalPlayer.Character["Pink Hair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy() --LavanderHair
 game.Players.LocalPlayer.Character["LavanderHair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Robloxclassicred"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["international 1"].Handle.Handle:Destroy()
-game.Players.LocalPlayer.Character["international 2"].Handle.Handle:Destroy()
 game.Players.LocalPlayer.Character["VANS_Umbrella"].Handle.Mesh:Destroy()
 
 
