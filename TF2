@@ -79,7 +79,7 @@ local hat2 = gp(cplayer, "MeshPartAccessory", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Right Arm"]
-att2.Position = Vector3.new(0, -2.8, -2)
+att2.Position = Vector3.new(0, -0.89, -2.8)
 att2.Rotation = Vector3.new(90, -50, 45)
 
 local hat2 = gp(cplayer, "Vector Arrow", "Accessory")
@@ -93,8 +93,8 @@ local hat2 = gp(cplayer, "Star ManAccessory", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Left Arm"]
-att2.Position = Vector3.new(-0.5, -0, -0)
-att2.Rotation = Vector3.new(-0, 90, 0)
+att2.Position = Vector3.new(-0.75, -0, -0)
+att2.Rotation = Vector3.new(90, 90, 0)
 
 local shield = script.Shield
 function CreateWeldOrSnapOrMotor(TYPE, PARENT, PART0, PART1, C0, C1)
