@@ -433,14 +433,14 @@ end)
 
 local uis = game:GetService("UserInputService")
 uis.InputBegan:Connect(function(input)
-	if input.KeyCode == Enum.KeyCode.F then
+	if input.KeyCode == Enum.KeyCode.G then
 		swing()
 	end
 end)
 
 local uis = game:GetService("UserInputService")
 uis.InputBegan:Connect(function(input)
-	if input.KeyCode == Enum.KeyCode.R then
+	if input.KeyCode == Enum.KeyCode.T then
 		charge()
 	end
 end)
