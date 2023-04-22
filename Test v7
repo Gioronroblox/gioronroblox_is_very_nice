@@ -28,7 +28,7 @@ local function gp(parent, name, className)
 end]]
 
 
---[[local hat2 = gp(cplayer, "Back_AccAccessory", "Accessory")
+--[[local hat2 = gp(cplayer, "MeshPartAccessory", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = TPH
@@ -1153,60 +1153,4 @@ for i,v in pairs (char:GetChildren()) do
 		v.Handle.Massless = true
 		v.Handle.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
 	end
-end
-
-local muter = false
-local ORGID = 1873219898
-local ORVOL = 1.15
-local ORPIT = 1.01
-local kan = Instance.new("Sound",char)
-kan.Volume = 0
-if not NoSound then
-	kan.Volume = 1.15
-end
-kan.TimePosition = 0
-kan.PlaybackSpeed = 1.01
-kan.Pitch = 1.01
-coroutine.wrap(function()
-    if not isfile('UNIEL-Beat-Eat-nest.mp3') then
-        writefile('UNIEL-Beat-Eat-nest.mp3',game:HttpGet('https://github.com/shidemuri/scripts/blob/main/UNIEL-Beat-Eat-nest.mp3?raw=true'))
-        repeat task.wait() until isfile('UNIEL-Beat-Eat-nest.mp3')
-    end
-    repeat pcall(function() kan.SoundId = syn and getsynasset('UNIEL-Beat-Eat-nest.mp3') or getcustomasset('UNIEL-Beat-Eat-nest.mp3') end) until pcall(function() kan.SoundId = syn and getsynasset('UNIEL-Beat-Eat-nest.mp3') or getcustomasset('UNIEL-Beat-Eat-nest.mp3') end)
-end)()
---kan.SoundId = syn and getsynasset('UNIEL-Beat-Eat-nest.mp3') or getcustomasset('UNIEL-Beat-Eat-nest.mp3') --"rbxassetid://1873219898" 525289865,1873219898,381991270
-kan.Name = "nepnepnep"
-kan.Looped = true
-kan:Play()
-
-idleanim=.4
-while true do
-swait()
-if muter == false then
-if not NoSound then
-	kan.Volume = ORVOL
-end
-else
-kan.Volume = 0
-end
-kan.PlaybackSpeed = ORPIT
-kan.Pitch = ORPIT
-kan.SoundId = syn and getsynasset('UNIEL-Beat-Eat-nest.mp3') or getcustomasset('UNIEL-Beat-Eat-nest.mp3')
-kan.Looped = true
-kan.Parent = char
-kan:Resume()
-  sine = sine + change
-local torvel=(RootPart.Velocity*Vector3.new(1,0,1)).magnitude 
-local velderp=RootPart.Velocity.y
-hitfloor,posfloor=rayCast(RootPart.Position,(CFrame.new(RootPart.Position,RootPart.Position - Vector3.new(0,1,0))).lookVector,4,Character)
-if equipped==true or equipped==false then
-if attack==false then
-idle=idle+1
-else
-idle=0
-end
-if idle>=500 then
-if attack==false then
---Sheath()
-end
 end
