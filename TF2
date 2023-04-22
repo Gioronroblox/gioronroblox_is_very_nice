@@ -1,4 +1,47 @@
-loadstring(game:HttpGet(('https://pastebin.com/raw/ug4TNhzr'),true))()
+game.Players.LocalPlayer.Character["Star ManAccessory"].Handle.Mesh:Destroy()
+loadstring(game:HttpGet(("https://pastebin.com/raw/ug4TNhzr"),true))() --reanim 
+
+local lp = game:GetService("Players").LocalPlayer
+local rs = game:GetService("RunService")
+local stepped = rs.Stepped
+local heartbeat = rs.Heartbeat
+local renderstepped = rs.RenderStepped
+local sg = game:GetService("StarterGui")
+local ws = game:GetService("Workspace")
+local cf = CFrame.new
+local v3 = Vector3.new
+local v3_0 = Vector3.zero
+local inf = math.huge
+
+local cplayer = lp.Character
+
+local v3 = Vector3.new
+
+local function gp(parent, name, className)
+    if typeof(parent) == "Instance" then
+        for i, v in pairs(parent:GetChildren()) do
+            if (v.Name == name) and v:IsA(className) then
+                return v
+            end
+        end
+    end
+    return nil
+end
+
+local hat2 = gp(cplayer, "MeshPartAccessory", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Right Arm"]
+att2.Position = Vector3.new(0, -2.8, -2)
+att2.Rotation = Vector3.new(90, -50, 45)
+
+local hat2 = gp(cplayer, "Star ManAccessory", "Accessory")
+local handle2 = gp(hat2, "Handle", "BasePart")
+local att2 = gp(handle2, "att1_Handle", "Attachment")
+att2.Parent = cplayer["Left Arm"]
+att2.Position = Vector3.new(-0.5, -0, -0)
+att2.Rotation = Vector3.new(45, -90, 0) 
+--end of reanim
 
 local script = game:GetObjects("rbxassetid://13179307551")[1] --13178470959
 script.Parent = game:GetService("Players").LocalPlayer  --Mouse = Player:GetMouse() 
@@ -74,20 +117,6 @@ local function gp(parent, name, className)
     end
     return nil
 end
-
-local hat2 = gp(cplayer, "MeshPartAccessory", "Accessory")
-local handle2 = gp(hat2, "Handle", "BasePart")
-local att2 = gp(handle2, "att1_Handle", "Attachment")
-att2.Parent = cplayer["Right Arm"]
-att2.Position = Vector3.new(0, -2.8, -0)
-att2.Rotation = Vector3.new(90, -50, 40)
-
-local hat2 = gp(cplayer, "MedivalShield", "Accessory")
-local handle2 = gp(hat2, "Handle", "BasePart")
-local att2 = gp(handle2, "att1_Handle", "Attachment")
-att2.Parent = cplayer["Left Arm"]
-att2.Position = Vector3.new(-0.5, -0, -0)
-att2.Rotation = Vector3.new(-0, 90, 0)
 
 local shield = script.Shield
 function CreateWeldOrSnapOrMotor(TYPE, PARENT, PART0, PART1, C0, C1)
