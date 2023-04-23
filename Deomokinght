@@ -3,7 +3,7 @@ loadstring(game:HttpGet('https://pastebin.com/raw/ug4TNhzr'))()
 local script = game:GetObjects("rbxassetid://13179307551")[1] --13178470959
 script.Parent = game:GetService("Players").LocalPlayer  --Mouse = Player:GetMouse() 
 
-Mouse = Player:GetMouse() 
+--Mouse = Player:GetMouse() 
 wait(1)
 
 local events = script.Events
@@ -18,7 +18,7 @@ local myHead = myChar.Head
 
 thing = 0
 local rootJointC0 = myRoot.RootJoint.C0
---local Mouse = Plr:GetMouse()
+local Mouse = Plr:GetMouse()
 
 local function weldBetween(a, b)
 	local weldd = Instance.new("ManualWeld")
@@ -421,7 +421,7 @@ events.LClick.OnClientEvent:Connect(function()
 end)
 events.KeyCode.OnClientEvent:Connect(function(plr,keyCode)
 	if not debounce then
-		if keyCode == "1" then
+		if keyCode == "Q" then
 			debounce = true
 			charge()
 			debounce = false
