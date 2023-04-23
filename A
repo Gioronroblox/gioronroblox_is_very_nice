@@ -1,7 +1,5 @@
-game.Players.LocalPlayer.Character["Surfboard"].Handle.Handle:Destroy()
 game.Players.LocalPlayer.Character["VANS_Umbrella"].Handle.Mesh:Destroy()
 
---loadstring(game:HttpGet('https://pastebin.com/raw/0wJsE0yv'))()
 loadstring(game:HttpGet('https://pastebin.com/raw/ug4TNhzr'))()
 
 local script = game:GetObjects("rbxassetid://13196734827")[1]
