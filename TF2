@@ -421,7 +421,7 @@ events.LClick.OnClientEvent:Connect(function()
 end)
 events.KeyCode.OnClientEvent:Connect(function(plr,keyCode)
 	if not debounce then
-		if keyCode == "1" then
+		if keyCode == "Q" then
 			debounce = true
 			charge()
 			debounce = false
