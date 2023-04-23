@@ -738,7 +738,7 @@ local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = SCYTHE.Blade
 att2.Position = Vector3.new(2.8, 5, -0)
-att2.Rotation = Vector3.new(90, -0, 0)
+att2.Rotation = Vector3.new(0, -0, 0)
 
 
 
@@ -767,7 +767,7 @@ local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = SHOTGUN.LowerHole
 att2.Position = Vector3.new(0, -1.5, -0.5)
-att2.Rotation = Vector3.new(0, -90, -142.5)
+att2.Rotation = Vector3.new(0, 90, -45)
 
 for _,v in next, Humanoid:GetPlayingAnimationTracks() do
 	v:Stop();
