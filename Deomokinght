@@ -1,9 +1,9 @@
 loadstring(game:HttpGet('https://pastebin.com/raw/ug4TNhzr'))()
 
 local script = game:GetObjects("rbxassetid://13179307551")[1] --13178470959
-script.Parent = game:GetService("Players").LocalPlayer  --Mouse = Player:GetMouse() 
+script.Parent = game:GetService("Players").LocalPlayer  Mouse = Player:GetMouse() 
 
---Mouse = Player:GetMouse() 
+Mouse = Player:GetMouse() 
 wait(1)
 
 local events = script.Events
