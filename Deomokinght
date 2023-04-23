@@ -18,7 +18,7 @@ local myHead = myChar.Head
 
 thing = 0
 local rootJointC0 = myRoot.RootJoint.C0
-local Mouse = Plr:GetMouse()
+--local Mouse = Plr:GetMouse()
 
 local function weldBetween(a, b)
 	local weldd = Instance.new("ManualWeld")
