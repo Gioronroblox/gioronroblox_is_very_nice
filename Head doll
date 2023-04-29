@@ -1,0 +1,232 @@
+--[[
+sorry bro him it's dead😭😭😭😭
+]]--
+
+Head = 'CleoCatra'
+HumanDied = false
+for i,v in next, game:GetService("Players").LocalPlayer.Character:GetDescendants() do
+if v:IsA("BasePart") and v.Name ~="HumanoidRootPart" and v.Name~="Torso" and v.Name~="Head" then 
+game:GetService("RunService").Heartbeat:connect(function()
+v.Velocity = Vector3.new(-18.55,.5,-18.55)
+end)
+end
+end
+
+local plr = game.Players.LocalPlayer
+local char = plr.Character
+local srv = game:GetService('RunService')
+local ct = {}
+
+top = Instance.new('Part',char)
+top.Size = Vector3.new(1,1,1)
+top.Position = Vector3.new(char.Torso.Position.x,char.Torso.Position.y + 9,char.Torso.Position.z)
+top.Anchored = true
+top.CanCollide = false
+top.Transparency = 1
+
+rope = Instance.new('Part',char)
+rope.Size = Vector3.new(1,2,1)
+rope.Position = Vector3.new(char.Torso.Position.x,char.Torso.Position.y + 8,char.Torso.Position.z)
+rope.Anchored = false
+rope.CanCollide = true
+rope.Transparency = 1
+
+rope1 = Instance.new('Part',char)
+rope1.Size = Vector3.new(1,2,1)
+rope1.Position = Vector3.new(char.Torso.Position.x,char.Torso.Position.y + 6,char.Torso.Position.z)
+rope1.Anchored = false
+rope1.CanCollide = true
+rope1.Transparency = 1
+
+move = Instance.new('Part',char)
+move.Name = 'DragDoll'
+move.Position = char.Torso.Position
+move.Size = Vector3.new(1,1,1)
+move.Transparency = 1
+move.CanCollide = false
+
+CF = CFrame.new
+VT = Vector3.new
+RAD = math.rad
+ANGLES = CFrame.Angles
+
+function create(part, parent, p, r)
+part.AccessoryWeld:Remove()
+Instance.new("Attachment",part)
+Instance.new("AlignPosition",part)
+Instance.new("AlignOrientation",part)
+Instance.new("Attachment",parent)
+part.Attachment.Name = part.Name
+parent.Attachment.Name = part.Name
+part.AlignPosition.Attachment0 = part[part.Name]
+part.AlignOrientation.Attachment0 = part[part.Name]
+part.AlignPosition.Attachment1 = parent[part.Name]
+part.AlignOrientation.Attachment1 = parent[part.Name]
+parent[part.Name].Position = p or Vector3.new()
+part[part.Name].Orientation = r or Vector3.new()
+part.AlignPosition.MaxForce = 999999999
+part.AlignPosition.MaxVelocity = math.huge
+part.AlignPosition.ReactionForceEnabled = false
+part.AlignPosition.Responsiveness = math.huge
+part.AlignOrientation.Responsiveness = math.huge
+part.AlignPosition.RigidityEnabled = false
+part.AlignOrientation.MaxTorque = 999999999
+end
+
+function rmesh(e)
+for i,v in next, e:GetDescendants() do
+if v:IsA('Mesh') or v:IsA('SpecialMesh') then
+v:Remove()
+end
+end
+end
+
+rmesh(char['MediHood'].Handle)
+rmesh(char['Robloxclassicred'].Handle)
+rmesh(char['Hat1'].Handle)
+create(char['MediHood'].Handle,top)
+create(char['Robloxclassicred'].Handle,rope,Vector3.new(),Vector3.new(90,0,0))
+create(char['Hat1'].Handle,rope1,Vector3.new(),Vector3.new(90,0,0))
+
+local socket1 = Instance.new('BallSocketConstraint')
+local a11 = Instance.new('Attachment')
+local a21 = Instance.new('Attachment')
+a11.Parent = rope
+a21.Parent = rope1
+socket1.Parent = rope
+socket1.Attachment0 = a11
+socket1.Attachment1 = a21
+a11.CFrame = CF(0,0,0)*ANGLES(RAD(0),RAD(0),RAD(0))
+a21.CFrame = CF(0,1.5,0)*ANGLES(RAD(0),RAD(0),RAD(0))
+socket1.LimitsEnabled = true
+socket1.TwistLimitsEnabled = true
+
+local socket2 = Instance.new('BallSocketConstraint')
+local a12 = Instance.new('Attachment')
+local a22 = Instance.new('Attachment')
+a12.Parent = top
+a22.Parent = rope
+socket2.Parent = top
+socket2.Attachment0 = a12
+socket2.Attachment1 = a22
+a12.CFrame = CF(0,0,0)*ANGLES(RAD(0),RAD(0),RAD(0))
+a22.CFrame = CF(0,1.5,0)*ANGLES(RAD(0),RAD(0),RAD(0))
+socket2.LimitsEnabled = true
+socket2.TwistLimitsEnabled = true
+
+local socket23 = Instance.new('BallSocketConstraint')
+local a123 = Instance.new('Attachment')
+local a223 = Instance.new('Attachment')
+a123.Parent = rope1
+a223.Parent = move
+socket23.Parent = rope1
+socket23.Attachment0 = a123
+socket23.Attachment1 = a223
+a123.CFrame = CF(0,0,0)*ANGLES(RAD(0),RAD(0),RAD(0))
+a223.CFrame = CF(0,1.5,0)*ANGLES(RAD(0),RAD(0),RAD(0))
+socket23.LimitsEnabled = true
+socket23.TwistLimitsEnabled = true
+
+char.Archivable = true
+local reanim = char:Clone()
+reanim.Name = 'Nexo '..plr.Name..''
+reanim.Parent = workspace
+
+rmesh(char['SeeMonkey'].Handle)
+rmesh(char['Pal Hair'].Handle)
+rmesh(char['Pink Hair'].Handle)
+rmesh(char['Kate Hair'].Handle)
+rmesh(char['LavanderHair'].Handle)
+
+--[[
+for i,v in next, char:GetDescendants() do
+if v:IsA('Accessory') then
+v.Handle.AccessoryWeld:Remove()
+create(v.Handle,reanim[v.Name].Handle)
+end
+end]]
+
+create(char[Head].Handle,reanim['Head'])
+create(char['SeeMonkey'].Handle,reanim['Torso'],Vector3.new(),Vector3.new(90,0,0))
+create(char['LavanderHair'].Handle,reanim['Left Arm'],Vector3.new(),Vector3.new(90,0,0))
+create(char['Pink Hair'].Handle,reanim['Right Arm'],Vector3.new(),Vector3.new(90,0,0))
+create(char['Pal Hair'].Handle,reanim['Left Leg'],Vector3.new(),Vector3.new(90,0,0))
+create(char['Kate Hair'].Handle,reanim['Right Leg'],Vector3.new(),Vector3.new(90,0,0))
+
+for i,v in next, reanim:GetDescendants() do if v:IsA('BasePart') or v:IsA('Decal') then v.Transparency = 1 end end
+
+table.insert(ct,srv.RenderStepped:Connect(function()
+for i,v in next, reanim:GetDescendants() do
+if v:IsA('BasePart') then
+v.CanCollide = false
+end
+end
+end))
+
+table.insert(ct,srv.Stepped:Connect(function()
+for i,v in next, reanim:GetDescendants() do
+if v:IsA('BasePart') then
+v.CanCollide = false
+end
+end
+end))
+ 
+_G.netted = true
+
+game:GetService("RunService").Heartbeat:Connect(function()
+    setsimulationradius(math.huge)
+end)
+
+if _G.netted ~= true then
+	_G.netted = true
+	coroutine.wrap(function()
+		settings().Physics.PhysicsEnvironmentalThrottle = Enum.EnviromentalPhysicsThrottle.Disabled
+		settings().Physics.AllowSleep = false
+		game:GetService("RunService").RenderStepped:Connect(function()
+			game:FindFirstChildOfClass("Players").LocalPlayer.MaximumSimulationRadius=math.pow(math.huge,math.huge)
+			sethiddenproperty(game:FindFirstChildOfClass("Players").LocalPlayer,"SimulationRadius",math.huge*math.huge)
+		end)
+	end)()
+end
+
+mouse = plr:GetMouse()
+
+bp = Instance.new('BodyPosition',reanim.HumanoidRootPart)
+bp.Position = Vector3.new(rope1.Position.x,rope1.Position.y-1,rope1.Position.z)
+bp.D = 0
+bp.P = 9e9
+bp.MaxForce = Vector3.new(10000,10000,10000)
+
+table.insert(ct,srv.RenderStepped:Connect(function()
+bp.Position = Vector3.new(rope1.Position.x,rope1.Position.y-1,rope1.Position.z)
+--reanim.HumanoidRootPart =
+end))
+
+table.insert(ct,char.Humanoid.Died:Connect(function()
+reanim:Destroy()
+HumanDied = true
+for _,v in pairs(ct) do v:Disconnect() end
+end))
+
+function ragdoll(model)
+--model.Humanoid.PlatformStand = true
+for _,joint in pairs(model:GetDescendants()) do
+if joint:IsA('Motor6D') then
+local socket = Instance.new('BallSocketConstraint')
+local a1 = Instance.new('Attachment')
+local a2 = Instance.new('Attachment')
+a1.Parent = joint.Part0
+a2.Parent = joint.Part1
+socket.Parent = joint.Parent
+socket.Attachment0 = a1
+socket.Attachment1 = a2
+a1.CFrame = joint.C0
+a2.CFrame = joint.C1
+socket.LimitsEnabled = true
+socket.TwistLimitsEnabled = true
+joint:Destroy()
+end
+end
+end
+
+ragdoll(reanim)
