@@ -541,8 +541,8 @@ whandelmesh.MeshId = "rbxassetid://3447918423"
 --Surfboard
 
 game:GetService("Players").LocalPlayer.Character["MeshPartAccessory"].Handle.att1_Handle.Parent = whandel
-whandel.att1_Handle.Rotation = Vector3.new(-180,90,30)
-whandel.att1_Handle.Position = Vector3.new(-0,0.25,0)
+whandel.att1_Handle.Rotation = Vector3.new(-90,0,40)
+whandel.att1_Handle.Position = Vector3.new(-0,1.25,0)
 
 wmain = Instance.new("Part",Torso)
 wmain.Size = Vector3.new(1,1,1)
