@@ -1,7 +1,6 @@
-game.Players.LocalPlayer.Character["MeshPartAccessory"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["Meshes/cyberbladeMeshAccessory"].Handle.SpecialMesh:Destroy()
+game.Players.LocalPlayer.Character["Nike Shoebox Costume"].Handle.Mesh:Destroy()
 
-loadstring(game:HttpGet('https://pastebin.com/raw/ug4TNhzr'))()
+loadstring(game:HttpGet(("https://pastebin.com/Wjv1cbKR"),true))()
 
 
 --By Rufus14 lolol
@@ -79,9 +78,9 @@ for i,v in pairs(mas:GetChildren()) do
  pcall(function() v:MakeJoints() end)
 end
 
-game:GetService("Players").LocalPlayer.Character["MeshPartAccessory"].Handle.att1_Handle.Parent = Part0
+game:GetService("Players").LocalPlayer.Character["Nike Shoebox Costume"].Handle.att1_Handle.Parent = Part0
 Part0.att1_Handle.Rotation = Vector3.new(0,0,0)
-Part0.att1_Handle.Position = Vector3.new(90,0,0) --another one
+Part0.att1_Handle.Position = Vector3.new(0,0,0) --another one
 
 mas:Destroy()
 for i,v in pairs(cors) do
@@ -234,11 +233,7 @@ function kys()
     if game.Players.LocalPlayer.Character.Torso:findFirstChild("Neck") then
      game.Players.LocalPlayer.Character.Torso.Neck:destroy()
      
-     game:GetService("Players").LocalPlayer.Character["Meshes/cyberbladeMeshAccessory"].Handle.att1_Handle.Parent = collidepartofleftleg
-collidepartofleftleg.att1_Handle.Rotation = Vector3.new(-90,0,0)
-collidepartofleftleg.att1_Handle.Position = Vector3.new(0,4,0) --another one
-
-    end
+        end
     if game.Players.LocalPlayer.Character.Head:findFirstChild("face") then
      game.Players.LocalPlayer.Character.Head.face.Texture = "http://www.roblox.com/asset/?id=810245460"
     end
