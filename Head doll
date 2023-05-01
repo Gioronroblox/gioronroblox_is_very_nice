@@ -1,6 +1,6 @@
-game.Players.LocalPlayer.Character["Nike Shoebox Costume"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["LUAhEAD"].Handle.Mesh:Destroy()
 
-loadstring(game:HttpGet(("https://pastebin.com/Wjv1cbKR"),true))()
+loadstring(game:HttpGet(("https://pastebin.com/raw/SifZLN0b"),true))()
 
 
 --By Rufus14 lolol
@@ -78,7 +78,7 @@ for i,v in pairs(mas:GetChildren()) do
  pcall(function() v:MakeJoints() end)
 end
 
-game:GetService("Players").LocalPlayer.Character["Nike Shoebox Costume"].Handle.att1_Handle.Parent = Part0
+game:GetService("Players").LocalPlayer.Character["LUAhEAD"].Handle.att1_Handle.Parent = Part0
 Part0.att1_Handle.Rotation = Vector3.new(0,0,0)
 Part0.att1_Handle.Position = Vector3.new(0,0,0) --another one
 
