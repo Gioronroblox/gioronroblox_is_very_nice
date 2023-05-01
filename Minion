@@ -1,0 +1,287 @@
+--[[ by PokeSterk#6532
+https://www.roblox.com/catalog/4489239608/International-Fedora-United-Kingdom
+https://www.roblox.com/catalog/3438342658/International-Fedora-Argentina
+https://www.roblox.com/catalog/3992084515/International-Fedora-Vietnam
+https://www.roblox.com/catalog/4391384843/International-Fedora-Russia
+
+Shirt : (buy if u want to look Like minion) its just 5 bobux
+
+https://www.roblox.com/catalog/10599934426/Minion-Puppet -- (You can make your own shirt too but make it left arm)
+
+AND skin tone to gray]]--
+
+if type(setfpscap) == "function" then
+   setfpscap(60)
+else
+   game:Shutdown() -- Closes the game if the kid got a trashy executor.
+end
+
+HumanDied = false
+
+local plr = game.Players.LocalPlayer
+local char = plr.Character
+local srv = game:GetService('RunService')
+local cttt = {}
+
+char.Archivable = true
+local reanim = char:Clone()
+reanim.Name = 'Tangerex '..plr.Name..''
+fl=Instance.new('Folder',char) fl.Name ='Tangerex'
+reanim.Animate.Disabled=true
+char.HumanoidRootPart:Destroy()
+char.Humanoid:ChangeState(16)
+
+for i,v in next, char.Humanoid:GetPlayingAnimationTracks() do
+v:Stop()
+end
+char.Animate:Remove()
+
+local Vector3_101 = Vector3.new(1, 0, 1)
+local netless_Y = Vector3.new(0, 25.1, 0)
+local function getNetlessVelocity(realPartVelocity)
+    local mag = realPartVelocity.Magnitude
+    if (mag > 1) and (mag < 100 xss=removed> 0.25) or (unit.Y < -0.75) then
+            return realPartVelocity * (25.1 / realPartVelocity.Y)
+        end
+        realPartVelocity = unit * 125
+    end
+    return (realPartVelocity * Vector3_101) + netless_Y
+end
+
+alignmentparts = 0
+function create(part, parent, p, r)
+Instance.new("Attachment",part)
+Instance.new("AlignPosition",part)
+Instance.new("AlignOrientation",part)
+Instance.new("Attachment",parent)
+part.Attachment.Name = part.Name..alignmentparts
+parent.Attachment.Name = part.Name..alignmentparts
+part.AlignPosition.Attachment0 = part[part.Name..alignmentparts]
+part.AlignOrientation.Attachment0 = part[part.Name..alignmentparts]
+part.AlignPosition.Attachment1 = parent[part.Name..alignmentparts]
+part.AlignOrientation.Attachment1 = parent[part.Name..alignmentparts]
+parent[part.Name..alignmentparts].Position = p or Vector3.new()
+part[part.Name..alignmentparts].Orientation = r or Vector3.new()
+part.AlignPosition.MaxForce = 1e+35
+part.AlignPosition.MaxVelocity = 1e+35
+part.AlignPosition.ReactionForceEnabled = false
+part.AlignPosition.Responsiveness = 1e+35
+part.AlignOrientation.Responsiveness = 1e+35
+part.AlignPosition.RigidityEnabled = false
+part.AlignOrientation.MaxTorque = 1e+35
+table.insert(cttt,game:GetService("RunService").Heartbeat:connect(function()
+local md = reanim.Humanoid.MoveDirection
+local ws = reanim.Humanoid.WalkSpeed
+local humroot = reanim.Humanoid.RootPart
+settings().Physics.AllowSleep = false
+part.Velocity = getNetlessVelocity(parent.Velocity)
+sethiddenproperty(part,"IsNetworkSleeping",false)
+sethiddenproperty(game.Players.LocalPlayer,"MaximumSimulationRadius",1e+10)
+sethiddenproperty(game.Players.LocalPlayer,"SimulationRadius",1e+10)
+end))
+end
+
+for i,v in next, char:GetDescendants() do
+if v:IsA('Accessory') and v.Name ~= "InternationalFedora" and v.Name ~= "MeshPartAccessory" then
+v.Handle:BreakJoints()
+create(v.Handle,reanim[v.Name].Handle)
+end
+end
+
+local partanchor = Instance.new("Part",char)
+partanchor.CFrame = char.Torso.CFrame*CFrame.new(0,10,0)
+partanchor.Anchored = true
+partanchor.CanCollide = false
+partanchor.Transparency = 1
+
+create(char.Torso,partanchor)
+
+char.Torso['Left Shoulder']:Destroy()
+char['Right Arm']:Destroy()
+char['Left Leg']:Destroy()
+char['Right Leg']:Destroy()
+
+create(char['Left Arm'],reanim['Torso'])
+
+char["InternationalFedora"].Name = "Left Arm Small"
+char["InternationalFedora"].Name = "Right Arm Small"
+char["MeshPartAccessory"].Name = "Left Leg Small"
+char["MeshPartAccessory"].Name = "Right Leg Small"
+char["Left Arm Small"].Handle:BreakJoints()
+char["Right Arm Small"].Handle:BreakJoints()
+char["Left Arm Small"].Handle:FindFirstChildOfClass("SpecialMesh"):Destroy()
+char["Right Arm Small"].Handle:FindFirstChildOfClass("SpecialMesh"):Destroy()
+char["Left Leg Small"].Handle:FindFirstChildOfClass("SpecialMesh"):Destroy()
+char["Right Leg Small"].Handle:FindFirstChildOfClass("SpecialMesh"):Destroy()
+char["Left Leg Small"].Handle:BreakJoints()
+char["Right Leg Small"].Handle:BreakJoints()
+
+create(char["Left Arm Small"].Handle,reanim["Left Arm"])
+create(char["Right Arm Small"].Handle,reanim["Right Arm"])
+create(char["Left Leg Small"].Handle,reanim["Left Leg"],Vector3.new(0,-0.5,0))
+create(char["Right Leg Small"].Handle,reanim["Right Leg"],Vector3.new(0,-0.5,0))
+
+for i,v in next, reanim:GetDescendants() do if v:IsA('BasePart') or v:IsA('Decal') then v.Transparency = 1 end end
+
+reanim.Parent = fl
+
+for i,v in next, reanim:GetDescendants() do
+if v:IsA('BasePart') then
+table.insert(cttt,srv.RenderStepped:Connect(function()
+v.CanCollide = false
+end))
+end
+end
+
+for i,v in next, char:GetDescendants() do
+if v:IsA('BasePart') then
+table.insert(cttt,srv.RenderStepped:Connect(function()
+v.CanCollide = false
+end))
+end
+end
+
+for i,v in next, reanim:GetDescendants() do
+if v:IsA('BasePart') then
+table.insert(cttt,srv.Stepped:Connect(function()
+v.CanCollide = false
+end))
+end
+end
+
+for i,v in next, char:GetDescendants() do
+if v:IsA('BasePart') then
+table.insert(cttt,srv.Stepped:Connect(function()
+v.CanCollide = false
+end))
+end
+end
+
+table.insert(cttt,reanim.Humanoid.Died:Connect(function()
+sethiddenproperty(game.Players.LocalPlayer,"MaximumSimulationRadius",1000)
+sethiddenproperty(game.Players.LocalPlayer,"SimulationRadius",1000)
+plr.Character = char
+char:BreakJoints()
+reanim:Destroy()
+game.Players:Chat('-gr')
+HumanDied = true
+for _,v in pairs(cttt) do v:Disconnect() end
+end))
+
+plr.Character = reanim
+workspace.CurrentCamera.CameraSubject = reanim.Humanoid
+
+local tangerex = loadstring(game:HttpGet("https://31645703-63d0-4449-8f89-04447a57bcc6.id.repl.co/Tangerex/Template/main.lua"))()
+
+reanimate = tangerex:Reanimate("Custom",false --[[Usage: true or false to toggle click fling]]) -- SP / Simple, LF / Leg Fling, TF / Torso Fling, PD / Perma Death [Fling]
+
+--Put the hat here
+
+workspace.Camera.CameraSubject.WalkSpeed = 32
+
+reanimate:NewMode("Dance",function()
+RH.Part0 = workspace.Camera.CameraSubject.Parent.Torso
+LH.Part0 = workspace.Camera.CameraSubject.Parent.Torso
+NECK.C0=NECK.C0:Lerp(CFrame.new(0+0*math.cos(sine/6),1+0*math.cos(sine/6),0+0*math.cos(sine/6))*CFrame.Angles(math.rad(0+0*math.cos(sine/6)),math.rad(0+0*math.cos(sine/6)),math.rad(0+0*math.cos(sine/6))),0.5) 
+RJ.C0=RJ.C0:Lerp(CFrame.new(0+0.5*math.cos(sine/6),-2+0*math.cos(sine/6),0.5+0.5*math.sin(sine/6))*CFrame.Angles(math.rad(0+0*math.cos(sine/6)),math.rad(0+0*math.cos(sine/6)),math.rad(0+0*math.cos(sine/6))),0.5) 
+RS.C0=RS.C0:Lerp(CFrame.new(1+0*math.cos(sine/6),-0.25+0.25*math.cos(sine/6),0+0.25*math.cos(sine/6))*CFrame.Angles(math.rad(90+0*math.cos(sine/6)),math.rad(0+-20*math.sin(sine/6)),math.rad(20+-20*math.cos(sine/6))),0.5) 
+LS.C0=LS.C0:Lerp(CFrame.new(-1+0*math.cos(sine/6),-0.25+0.25*math.cos(sine/6),0+0.25*math.cos(sine/6))*CFrame.Angles(math.rad(90+0*math.cos(sine/6)),math.rad(0+20*math.sin(sine/6)),math.rad(-20+20*math.cos(sine/6))),0.5) 
+RH.C0=RH.C0:Lerp(CFrame.new(0.5+0*math.cos(sine/6),0+0*math.cos(sine/6),-0.5+0*math.cos(sine/6))*CFrame.Angles(math.rad(0+10*math.sin(sine/6)),math.rad(-10+0*math.cos(sine/6)),math.rad(10+-10*math.cos(sine/6))),0.5) 
+LH.C0=LH.C0:Lerp(CFrame.new(-0.5+0*math.cos(sine/6),0+0*math.cos(sine/6),-0.5+0*math.cos(sine/6))*CFrame.Angles(math.rad(0+10*math.sin(sine/6)),math.rad(10+0*math.cos(sine/6)),math.rad(-10+-10*math.cos(sine/6))),0.5)
+end)
+
+reanimate:NewMode("Dance2",function()
+RH.Part0 = workspace.Camera.CameraSubject.Parent.Torso
+LH.Part0 = workspace.Camera.CameraSubject.Parent.Torso
+NECK.C0=NECK.C0:Lerp(CFrame.new(0+0*math.cos(sine/10),1+0*math.cos(sine/10),0+0*math.cos(sine/10))*CFrame.Angles(math.rad(0+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10))),0.5) 
+RJ.C0=RJ.C0:Lerp(CFrame.new(0+0*math.cos(sine/10),-1.5+-0.25*math.cos(sine/3),0+0*math.cos(sine/6))*CFrame.Angles(math.rad(8+0*math.cos(sine/3)),math.rad(0+5*math.cos(sine/6)),math.rad(0+5*math.cos(sine/6))),0.5) 
+RS.C0=RS.C0:Lerp(CFrame.new(0.8+0*math.cos(sine/10),-0.65+0.25*math.sin(sine/3),-0.5+0*math.cos(sine/10))*CFrame.Angles(math.rad(70+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10)),math.rad(-85+0*math.cos(sine/10))),0.5) 
+LS.C0=LS.C0:Lerp(CFrame.new(-0.8+0*math.cos(sine/10),-0.5+0.25*math.sin(sine/3),-0.5+0*math.cos(sine/10))*CFrame.Angles(math.rad(85+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10)),math.rad(65+0*math.cos(sine/10))),0.5) 
+RH.C0=RH.C0:Lerp(CFrame.new(0.5+0*math.cos(sine/10),-0.5+-0.25*math.cos(sine/6),0+0.5*math.cos(sine/6))*CFrame.Angles(math.rad(20+50*math.cos(sine/6)),math.rad(0+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10))),0.5) 
+LH.C0=LH.C0:Lerp(CFrame.new(-0.5+0*math.cos(sine/10),-0.5+0.25*math.cos(sine/6),0+-0.5*math.cos(sine/6))*CFrame.Angles(math.rad(20+-50*math.cos(sine/6)),math.rad(0+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10))),0.5)
+end)
+
+reanimate:NewMode("Dance3",function()
+RH.Part0 = workspace.Camera.CameraSubject.Parent.Torso
+LH.Part0 = workspace.Camera.CameraSubject.Parent.Torso
+NECK.C0=NECK.C0:Lerp(CFrame.new(0+0*math.cos(sine/10),1+0*math.cos(sine/10),0+0*math.cos(sine/10))*CFrame.Angles(math.rad(0+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10))),0.5) 
+RJ.C0=RJ.C0:Lerp(CFrame.new(0+0.25*math.sin(sine/10),-2+0.175*math.cos(sine/5),0.5+0*math.sin(sine/10))*CFrame.Angles(math.rad(10+0*math.cos(sine/10)),math.rad(0+20*math.cos(sine/10)),math.rad(0+25*math.sin(sine/10))),0.5) 
+RS.C0=RS.C0:Lerp(CFrame.new(1.25+0*math.cos(sine/10),0+-0.25*math.cos(sine/10),0+0*math.cos(sine/10))*CFrame.Angles(math.rad(135+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10)),math.rad(0+-25*math.cos(sine/10))),0.5) 
+LS.C0=LS.C0:Lerp(CFrame.new(-1.25+0*math.cos(sine/10),0+0.25*math.cos(sine/10),0+0*math.cos(sine/10))*CFrame.Angles(math.rad(135+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10)),math.rad(0+-25*math.cos(sine/10))),0.5) 
+RH.C0=RH.C0:Lerp(CFrame.new(0.5+0.5*math.sin(sine/10),0+0*math.cos(sine/10),-0.5+0*math.cos(sine/10))*CFrame.Angles(math.rad(-10+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10)),math.rad(10+-30*math.sin(sine/10))),0.5) 
+LH.C0=LH.C0:Lerp(CFrame.new(-0.5+0.5*math.sin(sine/10),0+0*math.cos(sine/10),-0.5+0*math.cos(sine/10))*CFrame.Angles(math.rad(-10+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10)),math.rad(-10+-30*math.sin(sine/10))),0.5)
+end)
+
+reanimate:Animation("idle",function()
+RH.Part0 = workspace.Camera.CameraSubject.Parent.Torso
+LH.Part0 = workspace.Camera.CameraSubject.Parent.Torso
+NECK.C0=NECK.C0:Lerp(CFrame.new(0+0*math.cos(sine/10),1+0*math.cos(sine/10),0+0*math.cos(sine/10))*CFrame.Angles(math.rad(0+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10))),0.5) 
+RJ.C0=RJ.C0:Lerp(CFrame.new(0+0*math.cos(sine/10),-2+0.175*math.cos(sine/10),0.25+0.25*math.cos(sine/10))*CFrame.Angles(math.rad(0+5*math.sin(sine/10)),math.rad(0+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10))),0.5) 
+RS.C0=RS.C0:Lerp(CFrame.new(1+0*math.cos(sine/10),0+0*math.cos(sine/10),0+0*math.cos(sine/10))*CFrame.Angles(math.rad(0+10*math.sin(sine/10)),math.rad(0+10*math.cos(sine/10)),math.rad(40+10*math.cos(sine/10))),0.5) 
+LS.C0=LS.C0:Lerp(CFrame.new(-1+0*math.cos(sine/10),0+0*math.cos(sine/10),0+0*math.cos(sine/10))*CFrame.Angles(math.rad(-5+10*math.sin(sine/10)),math.rad(0+-10*math.cos(sine/10)),math.rad(-40+-10*math.cos(sine/10))),0.5) 
+RH.C0=RH.C0:Lerp(CFrame.new(0.5+0*math.cos(sine/10),0+-0.175*math.cos(sine/10),-0.25+-0.25*math.cos(sine/10))*CFrame.Angles(math.rad(0+0*math.sin(sine/10)),math.rad(-10+-10*math.sin(sine/10)),math.rad(5+0*math.cos(sine/10))),0.5) 
+LH.C0=LH.C0:Lerp(CFrame.new(-0.5+0*math.cos(sine/10),0+-0.175*math.cos(sine/10),-0.25+-0.25*math.cos(sine/10))*CFrame.Angles(math.rad(0+0*math.sin(sine/10)),math.rad(10+10*math.sin(sine/10)),math.rad(-5+0*math.cos(sine/10))),0.5)
+end)
+
+reanimate:Animation("walk",function()
+--walklerphere
+end)
+
+local dancing = false
+
+reanimate:Keybind("e",function()
+if dancing == false then
+    workspace.Camera.CameraSubject.WalkSpeed = 1
+    reanimate:SetMode("Dance")
+    dancing = true
+elseif dancing then
+    workspace.Camera.CameraSubject.WalkSpeed = 32
+    reanimate:SetMode("Normal")
+    dancing = false
+end
+end)
+
+reanimate:Keybind("t",function()
+if dancing == false then
+    workspace.Camera.CameraSubject.WalkSpeed = 1
+    reanimate:SetMode("Dance2")
+    dancing = true
+elseif dancing then
+    workspace.Camera.CameraSubject.WalkSpeed = 32
+    reanimate:SetMode("Normal")
+    dancing = false
+end
+end)
+
+reanimate:Keybind("g",function()
+if dancing == false then
+    workspace.Camera.CameraSubject.WalkSpeed = 1
+    reanimate:SetMode("Dance3")
+    dancing = true
+elseif dancing then
+    workspace.Camera.CameraSubject.WalkSpeed = 32
+    reanimate:SetMode("Normal")
+    dancing = false
+end
+end)
+
+reanimate:Animation("run",function()
+RH.Part0 = workspace.Camera.CameraSubject.Parent.Torso
+LH.Part0 = workspace.Camera.CameraSubject.Parent.Torso
+NECK.C0=NECK.C0:Lerp(CFrame.new(0+0*math.cos(sine/10),1+0*math.cos(sine/10),0+0*math.cos(sine/10))*CFrame.Angles(math.rad(0+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10)),math.rad(0+0*math.cos(sine/10))),0.5) 
+RJ.C0=RJ.C0:Lerp(CFrame.new(0+0*math.cos(sine/10),-2+-0.175*math.cos(sine/2),0+0*math.cos(sine/10))*CFrame.Angles(math.rad(8+-5*math.sin(sine/2))*lookvel,math.rad(0+0*math.cos(sine/10)),math.rad(-8+5*math.sin(sine/2))*rightvel),0.5) 
+RS.C0=RS.C0:Lerp(CFrame.new(1+0*math.cos(sine/10),0+0*math.cos(sine/10),0+0*math.cos(sine/10))*CFrame.Angles(math.rad(0+-30*math.sin(sine/4))*lookvel,math.rad(0+-30*math.sin(sine/4))*lookvel,math.rad(20+0*math.cos(sine/10))),0.5) 
+LS.C0=LS.C0:Lerp(CFrame.new(-1+0*math.cos(sine/10),0+0*math.cos(sine/10),0+0*math.cos(sine/10))*CFrame.Angles(math.rad(0+30*math.sin(sine/4))*lookvel,math.rad(0+-30*math.sin(sine/4))*lookvel,math.rad(-20+0*math.cos(sine/10))),0.5) 
+RH.C0=RH.C0:Lerp(CFrame.new(0.5+0.25*math.sin(sine/4)*rightvel,0+0.175*math.cos(sine/4),0+-0.25*math.sin(sine/4)*lookvel)*CFrame.Angles(math.rad(-7.5+30*math.sin(sine/4))*lookvel,math.rad(0+0*math.cos(sine/10)),math.rad(0+30*math.sin(sine/4))*rightvel),0.5) 
+LH.C0=LH.C0:Lerp(CFrame.new(-0.5+-0.25*math.sin(sine/4)*rightvel,0+-0.175*math.cos(sine/4),0+0.25*math.sin(sine/4)*lookvel)*CFrame.Angles(math.rad(-7.5+-30*math.sin(sine/4))*lookvel,math.rad(0+0*math.cos(sine/10)),math.rad(0+-30*math.sin(sine/4))*rightvel),0.5)
+end)
+
+reanimate:Animation("jump",function()
+--jumplerphere
+end)
+
+reanimate:Animation("fall",function()
+--falllerphere
+end)
+
+-- Read the documentation for modes/attacks/keybinds/clickbinds
