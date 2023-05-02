@@ -1,45 +1,413 @@
-loadstring(game:HttpGet(("https://pastebin.com/raw/ug4TNhzr"),true))() --esta usa vans_umbrella como fling
+game.Players.LocalPlayer.Character["Pink Hair"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy()  
+game.Players.LocalPlayer.Character["LavanderHair"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["Robloxclassicred"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["VANS_Umbrella"].Handle.Mesh:Destroy()
+   
+HumanDied = false
+local CountSCIFIMOVIELOL = 1
+function SCIFIMOVIELOL(Part0,Part1,Position,Angle)
+	local AlignPos = Instance.new('AlignPosition', Part1); AlignPos.Name = "AliP_"..CountSCIFIMOVIELOL
+	AlignPos.ApplyAtCenterOfMass = true;
+	AlignPos.MaxForce = 5772000--67752;
+	AlignPos.MaxVelocity = math.huge/9e110;
+	AlignPos.ReactionForceEnabled = false;
+	AlignPos.Responsiveness = 200;
+	AlignPos.RigidityEnabled = false;
+	local AlignOri = Instance.new('AlignOrientation', Part1); AlignOri.Name = "AliO_"..CountSCIFIMOVIELOL
+	AlignOri.MaxAngularVelocity = math.huge/9e110;
+	AlignOri.MaxTorque = 5772000
+	AlignOri.PrimaryAxisOnly = false;
+	AlignOri.ReactionTorqueEnabled = false;
+	AlignOri.Responsiveness = 200;
+	AlignOri.RigidityEnabled = false;
+	local AttachmentA=Instance.new('Attachment',Part1); AttachmentA.Name = "Ath_"..CountSCIFIMOVIELOL
+	local AttachmentB=Instance.new('Attachment',Part0); AttachmentB.Name = "Ath_"..CountSCIFIMOVIELOL
+	AttachmentA.Orientation = Angle or Vector3.new(0,0,0)
+	AttachmentA.Position = Position or Vector3.new(0,0,0)
+	AlignPos.Attachment1 = AttachmentA;
+	AlignPos.Attachment0 = AttachmentB;
+	AlignOri.Attachment1 = AttachmentA;
+	AlignOri.Attachment0 = AttachmentB;
+	CountSCIFIMOVIELOL = CountSCIFIMOVIELOL + 1
+	return {AlignPos,AlignOri,AttachmentA,AttachmentB}
+end
+ 
+game:FindFirstChildOfClass("Players").LocalPlayer["Character"].Archivable = true
+local hatnameclone = {}
+for _,v in next, game:FindFirstChildOfClass("Players").LocalPlayer["Character"]:GetChildren() do
+	if v:IsA("Accessory") then
+		if hatnameclone[v.Name] then
+			if hatnameclone[v.Name] == "s" then
+				hatnameclone[v.Name] = {}
+			end
+			table.insert(hatnameclone[v.Name],v)
+		else
+			hatnameclone[v.Name] = "s"
+		end
+	end
+end
+for _,v in pairs(hatnameclone) do
+	if type(v) == "table" then
+		local num = 1
+		for _,w in pairs(v) do
+			w.Name = w.Name..num
+			num = num + 1
+		end
+	end
+end
+hatnameclone = nil
 
---es q taba muy bueno tu fixed script ðŸ˜³
+local DeadChar = game:FindFirstChildOfClass("Players").LocalPlayer.Character
 
------ the hats name on explorer/dex (not name in catalog)
-local NoSound = false ----- sound or no sound (Background Music)
-local OldModel = true ----- don't put this on false.
-local ToolName = "MeshPartAccessory" ----- the hats name on explorer/dex (not name in catalog)
---ToolName.Parent = game:GetService("Players").LocalPlayer.Character
-local playerss = game:GetService("Players").LocalPlayer.Character
-local maybe = playerss[ToolName].Handle
+local fldr = Instance.new("Folder",game:FindFirstChildOfClass("Players").LocalPlayer["Character"])
+fldr.Name = "DMYF"
+local CloneChar = DeadChar:Clone()
 
---maybe:FindFirstChildOfClass("AlignPosition").Name = "AlignPosition2"
---maybe:FindFirstChildOfClass("AlignOrientation").Name = "AlignOrientation2"
+local ANIMATIONHERE
+if CloneChar:FindFirstChild("Animate") then
+	ANIMATIONHERE = CloneChar:FindFirstChild("Animate"):Clone()
+	CloneChar:FindFirstChild("Animate"):Destroy()
+end
+if CloneChar:FindFirstChildOfClass("Folder") then CloneChar:FindFirstChildOfClass("Folder"):Destroy() end
+if CloneChar.Torso:FindFirstChild("Neck") then
+	local Clonessss = CloneChar.Torso:FindFirstChild("Neck"):Clone()
+	Clonessss.Part0 = nil
+	Clonessss.Part1 = DeadChar.Head
+	Clonessss.Parent = DeadChar.Torso
+end
+CloneChar.Parent = fldr
+CloneChar.HumanoidRootPart.CFrame = DeadChar.HumanoidRootPart.CFrame
+CloneChar.Humanoid.BreakJointsOnDeath = false
+CloneChar.Humanoid.DisplayDistanceType = "None"
 
-playerss.Torso.WaistBackAttachment.Position = Vector3.new(-0, 2, 0.6)
-playerss.Torso.WaistBackAttachment.Orientation = Vector3.new(-4.16, -190, 99.8)
+for _,v in next, DeadChar:GetChildren() do
+	if v:IsA("Accessory") then
+		local topacc = false
+		if v.Handle:FindFirstChildOfClass("Weld") then v.Handle:FindFirstChildOfClass("Weld"):Destroy() end
+		v.Handle.Massless = true
+		v.Handle.CanCollide = false
+		 
+        local bv = Instance.new("BodyVelocity",v.Handle)
+		bv.Velocity = Vector3.new(0,0,0)
+		coroutine.wrap(function()
+			if topacc then
+				local allthings = SCIFIMOVIELOL(v.Handle,DeadChar.Torso,Vector3.new(0,1.5,0)+ (DeadChar.Head[topacc].Position + (v.Handle[topacc].Position*-1)),Vector3.new(0,0,0))
+				local normaltop = allthings[1].Attachment1
+				local alipos = allthings[1]
+				local alirot = allthings[2]
+				local p0 = v.Handle
+				local p1 = DeadChar.Head
+				alipos.Parent = CloneChar:FindFirstChild(v.Name).Handle
+				alirot.Parent = CloneChar:FindFirstChild(v.Name).Handle
+				while true do
+					game:GetService("RunService").RenderStepped:wait()
+					if HumanDied then break end
+					coroutine.wrap(function()
+						if alipos.Attachment1 == normaltop then
+							p0.CFrame = p0.CFrame:lerp((((DeadChar.Torso.CFrame * CFrame.new(0,1.5,0)) * p1[topacc].CFrame) * p0[topacc].CFrame:inverse()),1)
+						else
+							v.Handle.CFrame = v.Handle.CFrame:lerp(alipos.Attachment1.Parent.CFrame * CFrame.new(alipos.Attachment1.Position) * CFrame.Angles(math.rad(alipos.Attachment1.Rotation.X),math.rad(alipos.Attachment1.Rotation.Y),math.rad(alipos.Attachment1.Rotation.Z)),1)
+						end
+					end)()
+				end
+			else
+				SCIFIMOVIELOL(v.Handle,CloneChar[v.Name].Handle,Vector3.new(0,0,0),Vector3.new(0,0,0))
+			end
+		end)()
+    end
+end
 
-local Player = game.Players.LocalPlayer
-local Plr = Player
-local mouse = Player:GetMouse()
-local Mouse = mouse
-Character = Player.Character 
-PlayerGui = Player.PlayerGui
-Cam = workspace.CurrentCamera
-Backpack = Player.Backpack
+local a = DeadChar.Torso
+local b = DeadChar.HumanoidRootPart
+local c = DeadChar.Humanoid
+a.Parent = game:FindFirstChildOfClass("Workspace")
+c.Parent = game:FindFirstChildOfClass("Workspace")
+local told = a:Clone()
+local told1 = c:Clone()
+b["RootJoint"].Part0 = told
+b["RootJoint"].Part1 = DeadChar.Head
+a.Name = "torso"
+a.Neck:Destroy()
+c.Name = "Mizt Hub Best"
+told.Parent = DeadChar
+told1.Parent = DeadChar
+DeadChar.PrimaryPart = told
+told1.Health = 0
+b:Destroy()
+a.Parent = DeadChar
+c.Parent = DeadChar
+told:Destroy()
+told1:Destroy()
+a.Name = "Torso"
 
-Humanoid = Character.Humanoid
-RootPart = Character["HumanoidRootPart"]
-Torso = Character["Torso"]
-Head = Character["Head"]
-RightArm = Character["Right Arm"]
-LeftArm = Character["Left Arm"]
-RightLeg = Character["Right Leg"]
-LeftLeg = Character["Left Leg"]
-RootJoint = RootPart["RootJoint"]
-Neck = Torso["Neck"]
-RightShoulder = Torso["Right Shoulder"]
-LeftShoulder = Torso["Left Shoulder"]
-RightHip = Torso["Right Hip"]
-LeftHip = Torso["Left Hip"]
+if CloneChar.Head:FindFirstChildOfClass("Decal") then CloneChar.Head:FindFirstChildOfClass("Decal").Transparency = 1 end
+if DeadChar:FindFirstChild("Animate") then DeadChar:FindFirstChild("Animate"):Destroy() end
 
+local Collider
+function UnCollide()
+    if HumanDied then Collider:Disconnect(); return end
+    --[[for _,Parts in next, CloneChar:GetChildren() do
+        if Parts:IsA("BasePart") then
+            Parts.CanCollide = false 
+        end 
+    end]]
+    for _,Parts in next, DeadChar:GetChildren() do
+        if Parts:IsA("BasePart") then
+        Parts.CanCollide = false
+        end 
+    end 
+end
+Collider = game:GetService("RunService").Stepped:Connect(UnCollide)
+
+local resetBindable = Instance.new("BindableEvent")
+resetBindable.Event:connect(function()
+    game:GetService("StarterGui"):SetCore("ResetButtonCallback", true)
+	resetBindable:Destroy()
+	HumanDied = true
+    pcall(function()
+		game:FindFirstChildOfClass("Players").LocalPlayer.Character = DeadChar
+		DeadChar.Head:Destroy()
+		DeadChar:FindFirstChildOfClass("Humanoid"):Destroy()
+		game:FindFirstChildOfClass("Players").LocalPlayer.Character = CloneChar
+		if DeadChar:FindFirstChildOfClass("Folder") then DeadChar:FindFirstChildOfClass("Folder"):Destroy() end
+	end)
+end)
+game:GetService("StarterGui"):SetCore("ResetButtonCallback", resetBindable)
+
+coroutine.wrap(function()
+    while true do
+        game:GetService("RunService").RenderStepped:wait()
+        if not CloneChar or not CloneChar:FindFirstChild("Head") or not CloneChar:FindFirstChildOfClass("Humanoid") or CloneChar:FindFirstChildOfClass("Humanoid").Health <= 0 and not DeadChar or not DeadChar:FindFirstChild("Head") or not DeadChar:FindFirstChildOfClass("Humanoid") or DeadChar:FindFirstChildOfClass("Humanoid").Health <= 0 then 
+            HumanDied = true
+            pcall(function()
+				game:FindFirstChildOfClass("Players").LocalPlayer.Character = DeadChar
+				DeadChar.Head:Destroy()
+				DeadChar:FindFirstChildOfClass("Humanoid"):Destroy()
+				game:FindFirstChildOfClass("Players").LocalPlayer.Character = CloneChar
+				if DeadChar:FindFirstChildOfClass("Folder") then DeadChar:FindFirstChildOfClass("Folder"):Destroy() end
+			end)
+            if resetBindable then
+                game:GetService("StarterGui"):SetCore("ResetButtonCallback", true)
+                resetBindable:Destroy()
+            end
+            break
+        end		
+    end
+end)()
+
+
+SCIFIMOVIELOL(DeadChar["Head"],CloneChar["Head"])
+SCIFIMOVIELOL(DeadChar["Torso"],CloneChar["Torso"])
+ 
+DeadChar["Left Leg"]:Destroy()
+DeadChar["Right Leg"]:Destroy()
+DeadChar["Left Arm"]:Destroy()
+DeadChar["Right Arm"]:Destroy()
+
+
+ char  = game.Players.LocalPlayer.Character
+char["Pink Hair"].Handle.AccessoryWeld:Destroy() -- destroys the accessoryweld
+att0 = Instance.new("Attachment",char["Pink Hair"].Handle) -- creates a attachment into the hat
+att0.Orientation = Vector3.new(90, -0, 0) -- rotation
+att0.Position = Vector3.new(0, -0, -0) -- position
+att1 = Instance.new("Attachment",CloneChar["Left Arm"]) -- what body part that the hat should be attached to (to make it work with r15 go down
+ap = Instance.new("AlignPosition",char["Pink Hair"].Handle) -- align position
+ap.Attachment0 = att0
+ap.Attachment1 = att1
+ap.RigidityEnabled = true -- if its false it will make the hat be wobbly
+ao = Instance.new("AlignOrientation",char["Pink Hair"].Handle) -- align rotation
+ao.Attachment0 = att0
+ao.Attachment1 = att1
+ao.RigidityEnabled = true -- if its false it will make the hat be wobbly
+  
+for i,v in pairs(char:GetChildren()) do -- gets all ur characters children
+if v:IsA("Accessory") and v.Name == "Kate Hair" then -- dex name for the hat 
+v.Name = "Kate Hair" -- name it whatever you want
+end
+end
+char["Kate Hair"].Handle.AccessoryWeld:Destroy() -- destroys the accessoryweld
+att0 = Instance.new("Attachment",char["Kate Hair"].Handle) -- creates a attachment into the hat
+att0.Orientation = Vector3.new(90, 0, 0) -- rotation
+att0.Position = Vector3.new(0, -0, -0) -- position
+att1 = Instance.new("Attachment",CloneChar["Right Arm"]) -- what body part that the hat should be attached to (to make it work with r15 go down
+ap = Instance.new("AlignPosition",char["Kate Hair"].Handle) -- align position
+ap.Attachment0 = att0
+ap.Attachment1 = att1
+ap.RigidityEnabled = true -- if its false it will make the hat be wobbly
+ao = Instance.new("AlignOrientation",char["Kate Hair"].Handle) -- align rotation
+ao.Attachment0 = att0
+ao.Attachment1 = att1
+ao.RigidityEnabled = true -- if its false it will make the hat be wobbly
+  
+for i,v in pairs(char:GetChildren()) do -- gets all ur characters children
+if v:IsA("Accessory") and v.Name == "LavanderHair" then -- dex name for the hat 
+v.Name = "LavanderHair" -- name it whatever you want
+end
+end
+char["LavanderHair"].Handle.AccessoryWeld:Destroy() -- destroys the accessoryweld
+att0 = Instance.new("Attachment",char["LavanderHair"].Handle) -- creates a attachment into the hat
+att0.Orientation = Vector3.new(90, 0, 0)-- rotation
+att0.Position = Vector3.new(0, 0, 0) -- position
+att1 = Instance.new("Attachment",CloneChar["Right Leg"]) -- what body part that the hat should be attached to (to make it work with r15 go down
+ap = Instance.new("AlignPosition",char["LavanderHair"].Handle) -- align position
+ap.Attachment0 = att0
+ap.Attachment1 = att1
+ap.RigidityEnabled = true -- if its false it will make the hat be wobbly
+ao = Instance.new("AlignOrientation",char["LavanderHair"].Handle) -- align rotation
+ao.Attachment0 = att0
+ao.Attachment1 = att1
+ao.RigidityEnabled = true -- if its false it will make the hat be wobbly
+ 
+   
+for i,v in pairs(char:GetChildren()) do -- gets all ur characters children
+if v:IsA("Accessory") and v.Name == "Robloxclassicred" then -- dex name for the hat 
+v.Name = "Robloxclassicred" -- name it whatever you want
+end
+end
+char["Robloxclassicred"].Handle.AccessoryWeld:Destroy() -- destroys the accessoryweld
+att0 = Instance.new("Attachment",char["Robloxclassicred"].Handle) -- creates a attachment into the hat
+att0.Orientation = Vector3.new(90, 0, 0)-- rotation
+att0.Position = Vector3.new(-0, 0, 0)  -- position
+att1 = Instance.new("Attachment",CloneChar["Left Leg"]) -- what body part that the hat should be attached to (to make it work with r15 go down
+ap = Instance.new("AlignPosition",char["Robloxclassicred"].Handle) -- align position
+ap.Attachment0 = att0
+ap.Attachment1 = att1
+ap.RigidityEnabled = true -- if its false it will make the hat be wobbly
+ao = Instance.new("AlignOrientation",char["Robloxclassicred"].Handle) -- align rotation
+ao.Attachment0 = att0
+ao.Attachment1 = att1
+ao.RigidityEnabled = true -- if its false it will make the hat be wobbly
+ 
+ for _,v in pairs(DeadChar:GetChildren()) do
+	if v:IsA("BasePart") and v.Name ~= "Head" then
+		--[[local bv = Instance.new("BodyVelocity",v)
+		bv.Velocity = Vector3.new(0,0,0)
+		coroutine.wrap(function()
+			while true do
+				game:GetService("RunService").RenderStepped:wait()
+				if HumanDied then break end
+				v.CFrame = CloneChar[v.Name].CFrame
+			end
+		end)()]]
+	elseif v:IsA("BasePart") and v.Name == "Head" then
+		local bv = Instance.new("BodyVelocity",v)
+		bv.Velocity = Vector3.new(0,0,0)
+		coroutine.wrap(function()
+			while true do
+				game:GetService("RunService").RenderStepped:wait()
+				if HumanDied then break end
+				v.CFrame = DeadChar.Torso.CFrame * CFrame.new(0,1.5,0)
+			end
+		end)()
+	end
+end
+
+for _,BodyParts in next, CloneChar:GetDescendants() do
+if BodyParts:IsA("BasePart") or BodyParts:IsA("Part") then
+BodyParts.Transparency = 1 end end
+game:GetService("RunService").RenderStepped:wait()
+game:FindFirstChildOfClass("Players").LocalPlayer.Character = CloneChar
+game:FindFirstChildOfClass("Workspace"):FindFirstChildOfClass("Camera").CameraSubject = CloneChar.Humanoid
+
+for _,v in next, DeadChar:GetChildren() do
+	if v:IsA("Accessory") then
+		if v.Handle:FindFirstChildOfClass("Weld") then v.Handle:FindFirstChildOfClass("Weld"):Destroy() end
+	end
+end
+
+if ANIMATIONHERE then ANIMATIONHERE.Parent = CloneChar end
+
+_G.loop = true
+local player = game.Players.LocalPlayer
+local char = player.Character
+local Align = function(Part0, Part1,Mesh)
+    local Aligns = {
+        AlignOrientation = Instance.new("AlignOrientation", Part0),
+        AlignPosition = Instance.new("AlignPosition", Part0)
+    }
+    
+    local Attachments = {
+        Attach0 = Instance.new("Attachment", Part0),
+        Attach1 = Instance.new("Attachment", Part1)
+    }
+    local m = Part0:FindFirstChildOfClass('SpecialMesh')--This will get the first "SpecialMesh" it finds if it does not find any, then it will return nil
+    if Mesh and m then --If Mesh is set to true and it finds a mesh it will destroy it
+        m:Destroy()
+    end
+    Part0:BreakJoints()
+    Aligns.AlignOrientation.Attachment0 = Attachments.Attach0
+    Aligns.AlignOrientation.Attachment1 = Attachments.Attach1
+    Aligns.AlignOrientation.Responsiveness = math.huge
+    Aligns.AlignOrientation.RigidityEnabled = true
+    
+    Aligns.AlignPosition.Attachment0 = Attachments.Attach0
+    Aligns.AlignPosition.Attachment1 = Attachments.Attach1
+    Aligns.AlignPosition.Responsiveness = math.huge
+    Aligns.AlignPosition.RigidityEnabled = true
+        Aligns.AlignPosition.MaxForce = 999999999
+        spawn(function()
+            while _G.loop do 
+                local mag = (Part0.Position - (Part1.CFrame*Attachments.Attach0.CFrame:Inverse()).p).magnitude--magnitude can get the distance between two cframe or position
+                if mag >= 5 then 
+                Part0.CFrame = Part1.CFrame*Attachments.Attach0.CFrame:Inverse()
+                end
+                Part0.Velocity = Vector3.new(0,35,0)
+                game['Run Service'].Heartbeat:wait()
+                end
+        end)
+ return {Attachments.Attach0, Attachments, Aligns}
+        
+end 
+local hat = Align(char['VANS_Umbrella'].Handle,char['HumanoidRootPart'],false)
+local cf = char['HumanoidRootPart'].CFrame*CFrame.new(0,-20,-0)*CFrame.Angles(math.rad(0),math.rad(0),0)
+hat[1].CFrame = cf:Inverse() * char['HumanoidRootPart'].CFrame
+spawn(function()
+    char.AncestryChanged:wait()--if you respawn, it will stop the  loop to avoid lag of using it over and over
+    _G.loop = false 
+end)
+for i,v in pairs (char:GetChildren()) do
+	if v:IsA("Accessory") then
+		v.Handle.Massless = true
+		v.Handle.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
+	end
+end
+
+--- Did actually rework heavily away from original neptunian, and the non-rework neptunian. --NoobyGames12
+--- Was supposed to be for the770zone, or VengefulProgram.
+
+warn'Neptune/Neptunian V'
+warn[[Absolutely.
+
+Created by NoobyGames12
+----------------------------]]
+
+print[[Set your theme by: 
+id/
+vol/
+pitch/
+You can skip through the position of theme by:
+skipto/]]
+
+warn("Have fun using this!")
+---- DO NOT CHANGE ANYTHING BELOW IF YOU'RE NOT AN EDITOR 
+
+
+
+function sandbox(var,func)
+	local env = getfenv(func)
+	local newenv = setmetatable({},{
+		__index = function(self,k)
+			if k=="script" then
+				return var
+			else
+				return env[k]
+			end
+		end,
+	})
+	setfenv(func,newenv)
+	return func
+end
 cors = {}
 mas = Instance.new("Model",game:GetService("Lighting"))
 Model0 = Instance.new("Model")
@@ -5125,7 +5493,12 @@ Part475.TopSurface = Enum.SurfaceType.SmoothNoOutlines
 Part475.brickColor = BrickColor.new("Mid gray")
 SpecialMesh476.Parent = Part475
 SpecialMesh476.Scale = Vector3.new(0.349999994, 1.04999995, 0.5)
-SpecialMesh476.MeshType = Enum.MeshType.Brick
+SpecialMesh476.MeshType = Enum.MeshType.Brick 
+
+game:GetService("Players").LocalPlayer.Character["MeshPartAccessory"].Handle.att1_Handle.Parent = Part475
+Part475.att1_Handle.Rotation = Vector3.new(-45,-90,0)
+Part475.att1_Handle.Position = Vector3.new(-0,-2.5,0)
+
 for i,v in pairs(mas:GetChildren()) do
 	v.Parent = game:GetService("Players").LocalPlayer.Character
 	pcall(function() v:MakeJoints() end)
@@ -5138,21 +5511,15 @@ for i,v in pairs(cors) do
 end
 for i,v in pairs(Model0:GetChildren()) do
 	if v:IsA("Part") then
-        v.Locked = true
+                v.Locked = true
 		v.Anchored = false
-        v.CanCollide = false
+                v.CanCollide = false
 	end
 end
-if not OldModel then
-	Model0:Destroy()
-end
 
-game:GetService("Players").LocalPlayer.Character["MeshPartAccessory"].Handle.att1_Handle.Parent = Part475
-Part475.att1_Handle.Rotation = Vector3.new(-45,-90,0)
-Part475.att1_Handle.Position = Vector3.new(-0,-2.8,0)
 
 plr = game:GetService("Players").LocalPlayer
-char = playerss
+char = plr.Character
 hum = char.Humanoid
 local cam = game.Workspace.CurrentCamera
 t = char.Torso
@@ -5180,11 +5547,8 @@ local muter = false
 local ORGID = 1873219898
 local ORVOL = 1.15
 local ORPIT = 1.01
-local kan = Instance.new("Sound",char)
-kan.Volume = 0
-if not NoSound then
-	kan.Volume = 1.15
-end
+local kan = Instance.new("Sound",plr.PlayerGui)
+kan.Volume = 1.15
 kan.TimePosition = 0
 kan.PlaybackSpeed = 1.01
 kan.Pitch = 1.01
@@ -5192,6 +5556,66 @@ kan.SoundId = "rbxassetid://1873219898" --525289865,1873219898,381991270
 kan.Name = "nepnepnep"
 kan.Looped = true
 kan:Play()
+
+--------------------------- GUI STUFF
+local basgui = it("GuiMain")
+basgui.Parent = plr.PlayerGui
+basgui.Name = "VISgui"
+local fullscreenz = it("Frame")
+fullscreenz.Parent = basgui
+fullscreenz.BackgroundColor3 = Color3.new(255, 255, 255)
+fullscreenz.BackgroundTransparency = 1
+fullscreenz.BorderColor3 = Color3.new(17, 17, 17)
+fullscreenz.Size = UDim2.new(1, 0, 1, 0)
+fullscreenz.Position = UDim2.new(0, 0, 0, 0)
+local imgl2 = Instance.new("ImageLabel",fullscreenz)
+imgl2.BackgroundTransparency = 1
+imgl2.BorderSizePixel = 0
+imgl2.ImageTransparency = 0.5
+imgl2.ImageColor3 = Color3.new(1,0,0)
+imgl2.Position = UDim2.new(0.75,0,0.55,0)
+imgl2.Size = UDim2.new(0,600,0,600)
+imgl2.Image = "rbxassetid://320731120"
+local techc = imgl2:Clone()
+techc.Parent = fullscreenz
+techc.ImageTransparency = 0.5
+techc.Size = UDim2.new(0,700,0,700)
+techc.Position = UDim2.new(0.75,-50,0.55,-50)
+techc.ImageColor3 = Color3.new(0.5,0,1)
+techc.Image = "rbxassetid://521073910"
+local circl = imgl2:Clone()
+circl.Parent = fullscreenz
+circl.ImageTransparency = 0
+circl.Size = UDim2.new(0,500,0,500)
+circl.Position = UDim2.new(0.75,50,0.55,50)
+circl.ImageColor3 = Color3.new(0,0.5,1)
+circl.Image = "rbxassetid://997291547"
+local circl2 = imgl2:Clone()
+circl2.Parent = fullscreenz
+circl2.ImageTransparency = 0
+circl2.ImageColor3 = Color3.new(0.5,0,1)
+circl2.Image = "rbxassetid://997291547"
+local imgl2b = imgl2:Clone()
+imgl2b.Parent = fullscreenz
+imgl2b.ImageTransparency = 0
+imgl2b.Size = UDim2.new(0,500,0,500)
+imgl2b.Position = UDim2.new(0.75,50,0.55,50)
+local ned = Instance.new("TextLabel",fullscreenz)
+ned.ZIndex = 2
+ned.Font = "SciFi"
+ned.BackgroundTransparency = 1
+ned.BorderSizePixel = 0.65
+ned.Size = UDim2.new(0.4,0,0.2,0)
+ned.Position = UDim2.new(0.6,0,0.8,0)
+ned.TextColor3 = BrickColor.new("Royal purple").Color
+ned.TextStrokeColor3 = BrickColor.new("Cyan").Color
+ned.TextScaled = true
+ned.TextStrokeTransparency = 0
+ned.Text = "NEPTUNIAN V"
+ned.TextSize = 24
+ned.Rotation = 1
+--ned.TextXAlignment = "Right"
+ned.TextYAlignment = "Bottom"
 
 function CameraShake(Times, Power)
 coroutine.resume(coroutine.create(function()
@@ -5311,9 +5735,8 @@ end)
 chat()
 end
 
-FELOADLIBRARY = {}
-loadstring(game:GetObjects("rbxassetid://5209815302")[1].Source)()
-local Create = FELOADLIBRARY.Create
+
+
 
 CFuncs = {	
 	["Part"] = {
@@ -5400,7 +5823,7 @@ CFuncs = {
 					Volume = vol,
 					Pitch = pit or 1,
 					SoundId = id,
-					Parent = char,
+					Parent = par or workspace,
 				}
 				wait() 
 				S:play() 
@@ -5595,7 +6018,7 @@ function CreateWeld(Parent, Part0, Part1, C0, C1)
 end
 
 Player=game:GetService("Players").LocalPlayer
-Character=playerss 
+Character=Player.Character 
 PlayerGui=Player.PlayerGui 
 Backpack=Player.Backpack 
 Torso=Character.Torso 
@@ -5763,11 +6186,8 @@ end
  
 so = function(id,par,vol,pit) 
 coroutine.resume(coroutine.create(function()
-local sou = Instance.new("Sound",char)
-sou.Volume = 0
-if not NoSound then
-	sou.Volume=vol
-end
+local sou = Instance.new("Sound",par or workspace)
+sou.Volume=vol
 sou.Pitch=pit or 1
 sou.SoundId=id
 swait() 
@@ -5941,193 +6361,7 @@ return unpack(list)
 end
  
 
-function Damagefunc(Part, hit, minim, maxim, knockback, Type, Property, Delay, HitSound, HitPitch)
-  if hit.Parent == nil then
-    return
-  end
-  local h = hit.Parent:FindFirstChildOfClass("Humanoid")
-  for _, v in pairs(hit.Parent:children()) do
-    if v:IsA("Humanoid") then
-      h = v
-    end
-  end
-  if h ~= nil and hit.Parent.Name ~= Character.Name and hit.Parent:FindFirstChild("Torso") ~= nil or h ~= nil and hit.Parent.Name ~= Character.Name and hit.Parent:FindFirstChild("UpperTorso") ~= nil then
-    if hit.Parent:findFirstChild("DebounceHit") ~= nil and hit.Parent.DebounceHit.Value == true then
-      return
-    end
-    local c = Create("ObjectValue")({
-      Name = "creator",
-      Value = game:service("Players").LocalPlayer,
-      Parent = h
-    })
-    game:GetService("Debris"):AddItem(c, 0.5)
-    if HitSound ~= nil and HitPitch ~= nil then
-      CFuncs.Sound.Create(HitSound, hit, 1, HitPitch)
-    end
-    local Damage = math.random(minim, maxim)
-    local blocked = false
-    local block = hit.Parent:findFirstChild("Block")
-    if block ~= nil and block.className == "IntValue" and block.Value > 0 then
-      blocked = true
-      block.Value = block.Value - 1
-      print(block.Value)
-    end
-    if blocked == false then
-	DamageFling(hit.Parent)
-      if HitHealth ~= h.Health and HitHealth ~= 0 and 0 >= h.Health and h.Parent.Name ~= "Hologram" then
-        print("gained kill")
-      end
-      ShowDamage(Part.CFrame * CFrame.new(0, 0, Part.Size.Z / 2).p + Vector3.new(0, 1.5, 0), -Damage, 1.5, Part.BrickColor.Color)
-    else
-	DamageFling(hit.Parent)
-      ShowDamage(Part.CFrame * CFrame.new(0, 0, Part.Size.Z / 2).p + Vector3.new(0, 1.5, 0), -Damage, 1.5, Part.BrickColor.Color)
-    end
-    if Type == "Knockdown" then
-      local hum = hit.Parent.Humanoid
-      hum.PlatformStand = true
-      coroutine.resume(coroutine.create(function(HHumanoid)
-        swait(1)
-        HHumanoid.PlatformStand = false
-      end), hum)
-      local angle = hit.Position - (Property.Position + Vector3.new(0, 0, 0)).unit
-      local bodvol = Create("BodyVelocity")({
-        velocity = angle * knockback,
-        P = 5000,
-        maxForce = Vector3.new(8000, 8000, 8000),
-        Parent = hit
-      })
-      local rl = Create("BodyAngularVelocity")({
-        P = 3000,
-        maxTorque = Vector3.new(500000, 500000, 500000) * 50000000000000,
-        angularvelocity = Vector3.new(math.random(-10, 10), math.random(-10, 10), math.random(-10, 10)),
-        Parent = hit
-      })
-      game:GetService("Debris"):AddItem(bodvol, 0.5)
-      game:GetService("Debris"):AddItem(rl, 0.5)
-    elseif Type == "Normal" then
-      local vp = Create("BodyVelocity")({
-        P = 500,
-        maxForce = Vector3.new(math.huge, 0, math.huge),
-        velocity = Property.CFrame.lookVector * knockback + Property.Velocity / 1.05
-      })
-      if knockback > 0 then
-        vp.Parent = hit.Parent.Torso
-      end
-      game:GetService("Debris"):AddItem(vp, 0.5)
-    elseif Type == "Up" then
-      local bodyVelocity = Create("BodyVelocity")({
-        velocity = Vector3.new(0, 20, 0),
-        P = 5000,
-        maxForce = Vector3.new(8000, 8000, 8000),
-        Parent = hit
-      })
-      game:GetService("Debris"):AddItem(bodyVelocity, 0.5)
-      local bodyVelocity = Create("BodyVelocity")({
-        velocity = Vector3.new(0, 20, 0),
-        P = 5000,
-        maxForce = Vector3.new(8000, 8000, 8000),
-        Parent = hit
-      })
-      game:GetService("Debris"):AddItem(bodyVelocity, 1)
-    elseif Type == "Leech" then
-      local hum = hit.Parent.Humanoid
-      if hum ~= nil then
-        for i = 0, 2 do
-          Effects.Sphere.Create(BrickColor.new("Bright red"), hit.Parent.Torso.CFrame * cn(0, 0, 0) * angles(math.random(-50, 50), math.random(-50, 50), math.random(-50, 50)), 1, 15, 1, 0, 5, 0, 0.02)
-        end
-      end
-    elseif Type == "UpKnock" then
-      local hum = hit.Parent.Humanoid
-      hum.PlatformStand = true
-      if hum ~= nil then
-        hitr = true
-      end
-      coroutine.resume(coroutine.create(function(HHumanoid)
-        swait(5)
-        HHumanoid.PlatformStand = false
-        hitr = false
-      end), hum)
-      local bodyVelocity = Create("BodyVelocity")({
-        velocity = Vector3.new(0, 20, 0),
-        P = 5000,
-        maxForce = Vector3.new(8000, 8000, 8000),
-        Parent = hit
-      })
-      game:GetService("Debris"):AddItem(bodyVelocity, 0.5)
-      local bodyVelocity = Create("BodyVelocity")({
-        velocity = Vector3.new(0, 20, 0),
-        P = 5000,
-        maxForce = Vector3.new(8000, 8000, 8000),
-        Parent = hit
-      })
-      game:GetService("Debris"):AddItem(bodyVelocity, 1)
-    elseif Type == "Snare" then
-      local bp = Create("BodyPosition")({
-        P = 2000,
-        D = 100,
-        maxForce = Vector3.new(math.huge, math.huge, math.huge),
-        position = hit.Parent.Torso.Position,
-        Parent = hit.Parent.Torso
-      })
-      game:GetService("Debris"):AddItem(bp, 1)
-    elseif Type == "Slashnare" then
-      Effects.Block.Create(BrickColor.new("Pastel Blue"), hit.Parent.Torso.CFrame * cn(0, 0, 0), 15*4, 15*4, 15*4, 3*4, 3*4, 3*4, 0.07)
-      for i = 1, math.random(4, 5) do
-        Effects.Sphere.Create(BrickColor.new("Teal"), hit.Parent.Torso.CFrame * cn(math.random(-5, 5), math.random(-5, 5), math.random(-5, 5)) * angles(math.random(-50, 50), math.random(-50, 50), math.random(-50, 50)), 1, 15, 1, 0, 5, 0, 0.02)
-      end
-      local bp = Create("BodyPosition")({
-        P = 2000,
-        D = 100,
-        maxForce = Vector3.new(math.huge, math.huge, math.huge),
-        position = hit.Parent.Torso.Position,
-        Parent = hit.Parent.Torso
-      })
-      game:GetService("Debris"):AddItem(bp, 1)
-    elseif Type == "Spike" then
-      CreateBigIceSword(hit.Parent.Torso.CFrame)
-      local bp = Create("BodyPosition")({
-        P = 2000,
-        D = 100,
-        maxForce = Vector3.new(math.huge, math.huge, math.huge),
-        position = hit.Parent.Torso.Position,
-        Parent = hit.Parent.Torso
-      })
-      game:GetService("Debris"):AddItem(bp, 1)
-    elseif Type == "Freeze" then
-      local BodPos = Create("BodyPosition")({
-        P = 50000,
-        D = 1000,
-        maxForce = Vector3.new(math.huge, math.huge, math.huge),
-        position = hit.Parent.Torso.Position,
-        Parent = hit.Parent.Torso
-      })
-      local BodGy = Create("BodyGyro")({
-        maxTorque = Vector3.new(400000, 400000, 400000) * math.huge,
-        P = 20000,
-        Parent = hit.Parent.Torso,
-        cframe = hit.Parent.Torso.CFrame
-      })
-      hit.Parent.Torso.Anchored = true
-      coroutine.resume(coroutine.create(function(Part)
-        swait(1.5)
-        Part.Anchored = false
-      end), hit.Parent.Torso)
-      game:GetService("Debris"):AddItem(BodPos, 3)
-      game:GetService("Debris"):AddItem(BodGy, 3)
-    end
-    local debounce = Create("BoolValue")({
-      Name = "DebounceHit",
-      Parent = hit.Parent,
-      Value = true
-    })
-    game:GetService("Debris"):AddItem(debounce, Delay)
-    c = Instance.new("ObjectValue")
-    c.Name = "creator"
-    c.Value = Player
-    c.Parent = h
-    game:GetService("Debris"):AddItem(c, 0.5)
-  end
-end
+
 function ShowDamage(Pos, Text, Time, Color)
   local Rate = 0.1
   local Pos = Pos or Vector3.new(0, 0, 0)
@@ -6189,7 +6423,7 @@ function MagniDamage(Part, magni, mindam, maxdam, knock, Type,Sound)
         local targ = head.Position - Part.Position
         local mag = targ.magnitude
         if magni >= mag and c.Name ~= Player.Name then
-          Damagefunc(head, head, mindam, maxdam, knock, Type, RootPart, 0.1, "rbxassetid://" ..Sound, 1)
+          --Damagefunc(head, head, mindam, maxdam, knock, Type, RootPart, 0.1, "rbxassetid://" ..Sound, 1)
         end
       end
       local head = c:findFirstChild("UpperTorso")
@@ -6217,6 +6451,7 @@ bgf.CFrame = bgf.CFrame * CFrame.fromEulerAnglesXYZ(math.rad(-90),0,0)
 --[[local val = Instance.new("BoolValue",dude)
 val.Name = "IsHit"]]--
 local ds = coroutine.wrap(function()
+dude:WaitForChild("Head"):BreakJoints()
 for i, v in pairs(dude:GetChildren()) do
 if v:IsA("Part") or v:IsA("MeshPart") then
 v.Name = "DEMINISHED"
@@ -6233,20 +6468,21 @@ CFuncs["Sound"].Create("rbxassetid://62339698", char, 0.25, 0.285)
 coroutine.resume(coroutine.create(function()
 for i, v in pairs(dude:GetChildren()) do
 if v:IsA("Accessory") then
-
+v:Destroy()
 end
 if v:IsA("Humanoid") then
-
+v:Destroy()
 end
 if v:IsA("CharacterMesh") then
-
+v:Destroy()
 end
 if v:IsA("Model") then
-
+v:Destroy()
 end
 if v:IsA("Part") or v:IsA("MeshPart") then
 for x, o in pairs(v:GetChildren()) do
 if o:IsA("Decal") then
+o:Destroy()
 end
 end
 coroutine.resume(coroutine.create(function()
@@ -6265,16 +6501,19 @@ bld.Speed = NumberRange.new(2,5)
 bld.VelocitySpread = 50000
 bld.Rotation = NumberRange.new(-500,500)
 bld.RotSpeed = NumberRange.new(-500,500)
-local sbs = Instance.new("BodyPosition", v)
-sbs.P = 3000
-sbs.D = 1000
-sbs.maxForce = Vector3.new(50000000000, 50000000000, 50000000000)
-sbs.position = v.Position + Vector3.new(math.random(-2,2),10 + math.random(-2,2),math.random(-2,2))
+        local sbs = Instance.new("BodyPosition", v)
+        sbs.P = 3000
+        sbs.D = 1000
+        sbs.maxForce = Vector3.new(50000000000, 50000000000, 50000000000)
+        sbs.position = v.Position + Vector3.new(math.random(-2,2),10 + math.random(-2,2),math.random(-2,2))
 v.Color = BrickColor.new("Royal purple").Color
 coroutine.resume(coroutine.create(function()
 for i = 0, 49 do
 swait(1)
+v:BreakJoints()
+v.Transparency = v.Transparency + 0.02
 end
+v:BreakJoints()
 for i = 0, 4 do
 slash(math.random(10,50)/10,3,true,"Round","Add","Out",v.CFrame*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.01,0.0025,0.01),math.random(10,100)/2500,BrickColor.new("White"))
 end
@@ -6290,6 +6529,8 @@ wait(4)
 coroutine.resume(coroutine.create(function()
 for i = 0, 99 do
 swait()
+v:Destroy()
+dude:Destroy()
 end
 end))
 end))
@@ -6616,7 +6857,6 @@ rng:Destroy()
 end))
 end
 
-rarmor.Attachment.Name = "Attachment2"
 function FindNearestTorso(Position, Distance, SinglePlayer)
 	if SinglePlayer then
 		return (SinglePlayer.Torso.CFrame.p - Position).magnitude < Distance
@@ -6641,6 +6881,9 @@ local dashing = false
 local floatmode = false
 local OWS = hum.WalkSpeed
 local equipped = false
+Humanoid.Name = "NEPTUNIA"
+Humanoid.MaxHealth = math.huge
+Humanoid.Health = math.huge
 Instance.new("ForceField",char).Visible = false
 Humanoid.Animator.Parent = nil
 ------------------
@@ -6685,15 +6928,15 @@ weaponweld.C1=clerp(weaponweld.C1,cf(0,1,0)*angles(math.rad(0),math.rad(0),math.
 end
 local hitb = CreateParta(m,1,1,"SmoothPlastic",BrickColor.Random())
 hitb.Anchored = true
-hitb.CFrame = root.CFrame + root.CFrame.lookVector*4
-MagniDamage(hitb, 4, 40,73, 0, "Normal",153092213)
+--hitb.CFrame = root.CFrame + root.CFrame.lookVector*4
+--MagniDamage(hitb, 4, 40,73, 0, "Normal",153092213)
 slash(5,5,true,"Round","Add","Out",hitb.CFrame*CFrame.Angles(0,math.rad(math.random(-360,360)),0),vt(0.05,0.01,0.05),0.01,BrickColor.new("White"))
 CFuncs["Sound"].Create("rbxassetid://200633196", rarmor, 1, 1.05)
 CFuncs["Sound"].Create("rbxassetid://200633108", rarmor, 1.5, 1.025)
 CFuncs["Sound"].Create("rbxassetid://234365549", rarmor, 1, 1)
 for i = 0, 2, 0.1 do
 		swait()
-sphere2(5,"Add",rarmor.CFrame*CFrame.new(math.random(-8,-2),0,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.1,0.1,0.1),0,0.1,0,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
+--sphere2(5,"Add",rarmor.CFrame*CFrame.new(math.random(-8,-2),0,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.1,0.1,0.1),0,0.1,0,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
 	RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(0),math.rad(-20)),.2)
 LH.C0=clerp(LH.C0,cf(-1,-1,0)*angles(math.rad(0),math.rad(-90),math.rad(0))*angles(math.rad(-3),math.rad(50),math.rad(0)),.2)
 RootJoint.C0=clerp(RootJoint.C0,RootCF*cf(-0.1,-0.25,0)*angles(math.rad(10),math.rad(0),math.rad(-50)),.3)
@@ -6737,8 +6980,8 @@ weaponweld.C1=clerp(weaponweld.C1,cf(0,1,0)*angles(math.rad(0),math.rad(0),math.
 end
 local hitb = CreateParta(m,1,1,"SmoothPlastic",BrickColor.Random())
 hitb.Anchored = true
-hitb.CFrame = root.CFrame + root.CFrame.lookVector*4
-MagniDamage(hitb, 4, 24,30, 0, "Normal",153092213)
+--hitb.CFrame = root.CFrame + root.CFrame.lookVector*4
+--MagniDamage(hitb, 4, 24,30, 0, "Normal",153092213)
 CFuncs["Sound"].Create("rbxassetid://200633196", rarmor, 1, 1.05)
 CFuncs["Sound"].Create("rbxassetid://200633108", rarmor, 1.5, 1.025)
 CFuncs["Sound"].Create("rbxassetid://234365549", rarmor, 1, 1)
@@ -6769,10 +7012,10 @@ RW.C0=clerp(RW.C0,cf(1.25,0.5,-0.65)*angles(math.rad(100),math.rad(0),math.rad(-
 LW.C0=clerp(LW.C0,cf(-0.5,0.5,-0.25)*angles(math.rad(90),math.rad(0),math.rad(40)),.3)
 weaponweld.C1=clerp(weaponweld.C1,cf(0,1,0)*angles(math.rad(0),math.rad(180),math.rad(0)),.3)
 end
-local hitb = CreateParta(m,1,1,"SmoothPlastic",BrickColor.Random())
-hitb.Anchored = true
-hitb.CFrame = root.CFrame + root.CFrame.lookVector*4
-MagniDamage(hitb, 4, 24,30, 0, "Normal",153092213)
+--local hitb = CreateParta(m,1,1,"SmoothPlastic",BrickColor.Random())
+--hitb.Anchored = true
+--hitb.CFrame = root.CFrame + root.CFrame.lookVector*4
+--MagniDamage(hitb, 4, 24,30, 0, "Normal",153092213)
 CFuncs["Sound"].Create("rbxassetid://200633281", rarmor, 1, 1.05)
 CFuncs["Sound"].Create("rbxassetid://161006195", rarmor, 1.5, 1.025)
 for i = 0, 1, 0.1 do
@@ -6805,9 +7048,9 @@ for x = 0, 2 do
 CFuncs["Sound"].Create("rbxassetid://200633108", rarmor, 1, 1.05)
 CFuncs["Sound"].Create("rbxassetid://234365573", rarmor, 1.5, 1.025)
 local hitb = CreateParta(m,1,1,"SmoothPlastic",BrickColor.Random())
-hitb.Anchored = true
-hitb.CFrame = root.CFrame + root.CFrame.lookVector*4
-MagniDamage(hitb, 4, 12,15, 0, "Normal",153092213)
+--hitb.Anchored = true
+--hitb.CFrame = root.CFrame + root.CFrame.lookVector*4
+--MagniDamage(hitb, 4, 12,15, 0, "Normal",153092213)
 for i = 0, 1, 0.6 do
 		swait()
 	RH.C0=clerp(RH.C0,cf(1,-1,0)*angles(math.rad(0),math.rad(90),math.rad(0))*angles(math.rad(-3),math.rad(0),math.rad(-10)),.2)
@@ -6907,7 +7150,7 @@ CFuncs["Sound"].Create("rbxassetid://1295446488", root, 3, 1)
 for x = 0, 14 do
 CFuncs["Sound"].Create("rbxassetid://200633281", rarmor, 1, 1.05)
 CFuncs["Sound"].Create("rbxassetid://161006195", rarmor, 1.5, 1.025)
-MagniDamage(tors, 10, 60,85, 0, "Normal",153092213)
+--MagniDamage(tors, 10, 60,85, 0, "Normal",153092213)
 CFuncs["Sound"].Create("rbxassetid://200632992", rarmor, 1.25, 1)
 slash(5,5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,3,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.05,0.01,0.05),math.random(1,10)/100,BrickColor.new("White"))
 for i = 0, 1, 0.6 do
@@ -6925,7 +7168,7 @@ weaponweld.C1=clerp(weaponweld.C1,cf(0,0,0)*angles(math.rad(90),math.rad(0),math
 end
 slash(5,2.5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,3,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.05,0.01,0.05),math.random(1,10)/100,BrickColor.new("White"))
 CFuncs["Sound"].Create("rbxassetid://200632992", rarmor, 1.25, 1)
-MagniDamage(tors, 10, 60,85, 0, "Normal",153092213)
+--MagniDamage(tors, 10, 60,85, 0, "Normal",153092213)
 for i = 0, 1, 0.6 do
 		swait()
 sphereMK(2,-1,"Add",root.CFrame*CFrame.new(math.random(-8,8),math.random(-8,8),math.random(-3,8))*CFrame.Angles(math.rad(0),math.rad(0),math.rad(0)),0.5,0.5,math.random(5,25),-0.0075,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color,0)
@@ -6941,7 +7184,7 @@ weaponweld.C1=clerp(weaponweld.C1,cf(0,0,0)*angles(math.rad(90),math.rad(0),math
 end
 slash(5,2.5,true,"Round","Add","Out",root.CFrame*CFrame.new(0,3,0)*CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360))),vt(0.05,0.01,0.05),math.random(1,10)/100,BrickColor.new("White"))
 CFuncs["Sound"].Create("rbxassetid://200632992", rarmor, 1.25, 1)
-MagniDamage(tors, 10, 60,85, 0, "Normal",153092213)
+--MagniDamage(tors, 10, 60,85, 0, "Normal",153092213)
 for i = 0, 1, 0.6 do
 		swait()
 sphereMK(2,-1,"Add",root.CFrame*CFrame.new(math.random(-8,8),math.random(-8,8),math.random(-3,8))*CFrame.Angles(math.rad(0),math.rad(0),math.rad(0)),0.5,0.5,math.random(5,25),-0.0075,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color,0)
@@ -7376,38 +7619,19 @@ if equipped == true then
 end
 end)
 mouse.KeyDown:connect(function(k)
-if k == "g" and attack == false and equipped == false then
-	maybe:FindFirstChildOfClass("AlignOrientation").Attachment1 = rarmor.Attachment
-    maybe:FindFirstChildOfClass("AlignPosition").Attachment1 = rarmor.Attachment2
-
-    rarmor.Attachment2.Position = Vector3.new(-2.5, 0.2, -0)
-    rarmor.Attachment.Rotation = Vector3.new(-0, -0, -50)
+if k == "f" and attack == false and equipped == false then
 	equip()
-elseif k == "g" and attack == false and equipped == true then
-	maybe:FindFirstChildOfClass("AlignOrientation").Attachment1 = playerss.Torso.WaistBackAttachment
-    maybe:FindFirstChildOfClass("AlignPosition").Attachment1 = playerss.Torso.WaistBackAttachment
-
-    playerss.Torso.WaistBackAttachment.Position = Vector3.new(-0, -0, 0.6)
-    playerss.Torso.WaistBackAttachment.Orientation = Vector3.new(-4.16, -179.28, 99.8)
+elseif k == "f" and attack == false and equipped == true then
    unequip()
 end
-if k == "t" and attack == false then
+if k == "r" and attack == false then
 superjump()
-end
-if k == "v" and attack == false then
-g1 = Instance.new("BodyGyro", Root)
-g1.D = 175
-g1.P = 20000
-g1.MaxTorque = Vector3.new(0,9000,0)
-g1.CFrame = CFrame.new(playerss:FindFirstChild("HumanoidRootPart").Position,mouse.Hit.p)
-game:GetService("Debris"):AddItem(g1,.05)
-playerss:FindFirstChild("HumanoidRootPart").CFrame = CFrame.new(mouse.Hit.p) * CFrame.new(0,3.3,0)
 end
 if equipped == true then
 if k == "z" and attack == false then
 spinnyblade()
 end
-if k == "x" and attack == false then
+if k == "bozo" and attack == false then
 eightbitmegablade()
 end
 if k == "c" and attack == false then
@@ -7419,9 +7643,7 @@ muter = true
 kan.Volume = 0
 elseif k == "l" and muter == true then
 muter = false
-if not NoSound then
-	kan.Volume = 1.25
-end
+kan.Volume = 1.25
 end
 end)
 plr.Chatted:connect(function(message)
@@ -7442,9 +7664,7 @@ idleanim=.4
 while true do
 swait()
 if muter == false then
-if not NoSound then
-	kan.Volume = ORVOL
-end
+kan.Volume = ORVOL
 else
 kan.Volume = 0
 end
@@ -7452,8 +7672,15 @@ kan.PlaybackSpeed = ORPIT
 kan.Pitch = ORPIT
 kan.SoundId = "rbxassetid://" ..ORGID
 kan.Looped = true
-kan.Parent = char
+kan.Parent = plr.PlayerGui
 kan:Resume()
+techc.Rotation = techc.Rotation + 0.1
+imgl2.Rotation = imgl2.Rotation - kan.PlaybackLoudness/50
+imgl2.ImageColor3 = Color3.new(0.15 + kan.PlaybackLoudness/2500,0,0.6 + kan.PlaybackLoudness/1000)
+imgl2b.Rotation = imgl2b.Rotation + kan.PlaybackLoudness/25
+imgl2b.ImageColor3 = Color3.new(0,0.3 + kan.PlaybackLoudness/1500,0.6 + kan.PlaybackLoudness/1000)
+ned.Rotation = 0 - 2 * math.cos(sine / 24)
+ned.Position = UDim2.new(0.6,0 - 10 * math.cos(sine / 32),0.8,0 - 10 * math.cos(sine / 45))
   sine = sine + change
 local torvel=(RootPart.Velocity*Vector3.new(1,0,1)).magnitude 
 local velderp=RootPart.Velocity.y
@@ -7554,4 +7781,3 @@ end
 end
 end
 end
-------
