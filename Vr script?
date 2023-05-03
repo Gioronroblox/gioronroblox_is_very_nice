@@ -56,9 +56,9 @@ local AccurateHandPosition = false -- Position your Roblox hands according to yo
  
 local AccessorySettings = {
         LeftArm         = "LavanderHair"; -- Name of hat used as this limb
-        RightArm        = "Pal Hair"; -- Name of hat used as this limb
+        RightArm        = "Pink Hair"; -- Name of hat used as this limb
         LeftLeg         = "Kate Hair"; -- Name of hat used as this limb
-        RightLeg        = "Hat1"; -- Name of hat used as this limb
+        RightLeg        = "Robloxclassicred"; -- Name of hat used as this limb
         Torso           = "SeeMonkey"; -- Name of hat used as this limb
         Head            = true; -- Are extra hats assumed to be worn?
  
@@ -329,10 +329,10 @@ if method == 0 then
         return
     end
 end
-c["Pal Hair"].Handle:FindFirstChildOfClass("SpecialMesh"):Destroy()
+c["Robloxclassicred"].Handle:FindFirstChildOfClass("SpecialMesh"):Destroy()
 c["LavanderHair"].Handle:FindFirstChildOfClass("SpecialMesh"):Destroy()
 c["Kate Hair"].Handle:FindFirstChildOfClass("SpecialMesh"):Destroy()
-c["Hat1"].Handle:FindFirstChildOfClass("SpecialMesh"):Destroy()
+c["Pink Hair"].Handle:FindFirstChildOfClass("SpecialMesh"):Destroy()
 c["SeeMonkey"].Handle:FindFirstChildOfClass("SpecialMesh"):Destroy()
 for i,x in pairs(c:GetChildren()) do
         if x:IsA("Accessory") then
