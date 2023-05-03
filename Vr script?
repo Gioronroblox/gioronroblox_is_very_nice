@@ -1,0 +1,182 @@
+game.Players.LocalPlayer.Character["VANS_Umbrella"].Handle.Mesh:Destroy()
+
+game.Players.LocalPlayer.Character:FindFirstChild("MeshPartAccessory").Name = "MeshPartAccessory2"
+
+local Headscale = 3.2 --The cameras headscale (3.2) is recommended
+local HeadHat = "VANS_Umbrella" --The hat assummed to be worn for the head
+
+local VRFlyspeed = 1 -- (1 - 0.1) 1 = Fast and rigid 0.1 = Slow and smooth
+local VRControllersShown = false --true =  Roblox Default VR Controllers, false = No Controllers
+local VRBottomBar = false --false = Bottom Bar Destroyed (More Immersion), true Bottom bar doesn't change
+
+local AntiBreak = true --Uses my Experimental Netbypass (Very Stable), False Uses netless v4 (Less Stable)
+local AntiLag = false --Use only on Low-end PCS for best experience
+
+local LeftCFrameRotoOffset = Vector3.new(140,-120,185) -- Vector3.new(130,-90,180)
+local RightCFrameRotoOffset = Vector3.new(130,120,-185)
+
+--// Now the script
+
+local VRService = game:GetService("VRService")
+local Player = game:GetService("Players").LocalPlayer
+local Character = Player.Character
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Camera = game:GetService("Workspace").CurrentCamera
+
+local function CreatePart(Size,Name)
+	local Part = Instance.new("Part",Character)
+	Part.Size = Size
+	Part.Name = Name
+	Part.Transparency = 1
+	Part.CanCollide = false
+	Part.Anchored = true
+	Part.CFrame = Character["Head"].CFrame
+	return Part
+end
+
+local MoveLeftHand = CreatePart(Vector3.new(1,1,1),"LHand")
+local MoveRightHand = CreatePart(Vector3.new(1,1,1),"RHand")
+local MoveHead = CreatePart(Vector3.new(0.01,0.01,0.01),"Head")
+
+local function Align(Part0,Part1,CFrameOffset)
+	local AttachmentA = Instance.new("Attachment",Part0)
+	local AttachmentB = Instance.new("Attachment",Part1)
+	local AlignPosition = Instance.new("AlignPosition",Part0)
+	local AlignOrientation = Instance.new("AlignOrientation")
+	AlignPosition.Responsiveness = 200
+	AlignPosition.MaxForce = math.huge
+	AlignPosition.MaxVelocity = math.huge
+	AlignPosition.RigidityEnabled = false
+	AlignOrientation.Responsiveness = 200
+	AlignOrientation.MaxTorque = math.huge
+	AlignOrientation.MaxAngularVelocity = math.huge
+	AlignOrientation.RigidityEnabled = false
+	AlignPosition.Attachment0 = AttachmentA
+	AlignPosition.Attachment1 = AttachmentB
+	AlignOrientation.Attachment0 = AttachmentA
+	AlignOrientation.Attachment1 = AttachmentB
+	AttachmentA.CFrame = AttachmentA.CFrame 
+	Part0:BreakJoints()
+	if AntiBreak == true then
+		local Handle = Part0
+		local ReplicationHandle = Part1
+		local velo = Instance.new("BodyVelocity", Handle)
+		velo.Velocity = Vector3.new(-0.0006,90,-0.0006)
+		velo.P = math.huge
+		velo.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+		velo = Instance.new("BodyThrust", Handle)
+		velo.Force = Vector3.new(0.00455,0.000455,0.000455)
+		velo.Location = Handle.Position
+		velo = Instance.new("BodyGyro",Handle)
+		game:GetService("RunService").Heartbeat:connect(function()
+			if Handle then
+				Handle.CFrame = ReplicationHandle.CFrame
+				Handle.Velocity = Vector3.new(-0.524524161, 27.515423852, 0.512789952)
+				Handle.CFrame = ReplicationHandle.CFrame*CFrame.new(math.random(0.01, 0.001),0.0001,0.001) 
+				Handle.CFrame = ReplicationHandle.CFrame 
+				Handle.Velocity = Vector3.new(-0.524524161, 27.515423852, 0.512789952)
+				Handle.CFrame = ReplicationHandle.CFrame*CFrame.new(math.random(0.01, 0.001),0.0001,0.001) 
+				Handle.CFrame = ReplicationHandle.CFrame 
+				Handle.Velocity = Vector3.new(-0.524524161, 27.515423852, 0.512789952)
+				Handle.CFrame = ReplicationHandle.CFrame*CFrame.new(math.random(0.01, 0.001),0.0001,0.001) 
+				Handle.CFrame = ReplicationHandle.CFrame 
+				Handle.Velocity = Vector3.new(-0.524524161, 27.515423852, 0.512789952)
+				Handle.CFrame = ReplicationHandle.CFrame 
+				Handle.Velocity = Vector3.new(-0.524524161, 27.515423852, 0.512789952)
+				Handle.CFrame = ReplicationHandle.CFrame 
+				Handle.Velocity = Vector3.new(-0.524524161, 27.515423852, 0.512789952)
+				Handle.CFrame = ReplicationHandle.CFrame*CFrame.new(math.random(0.01, 0.001),0.0001,0.001) 
+				Handle.CFrame = ReplicationHandle.CFrame 
+				Handle.Velocity = Vector3.new(-0.524524161, 27.515423852, 0.512789952)
+				Handle.CFrame = ReplicationHandle.CFrame*CFrame.new(math.random(0.01, 0.001),0.0001,0.001) 
+				Handle.CFrame = ReplicationHandle.CFrame 
+				Handle.Velocity = Vector3.new(-0.524524161, 27.515423852, 0.512789952)
+				Handle.CFrame = ReplicationHandle.CFrame*CFrame.new(math.random(0.01, 0.001),0.0001,0.001) 
+				Handle.CFrame = ReplicationHandle.CFrame 
+				Handle.Velocity = Vector3.new(-0.524524161, 27.515423852, 0.512789952)
+				Handle.CFrame = ReplicationHandle.CFrame*CFrame.new(math.random(0.01, 0.001),0.0001,0.001) 
+				Handle.Velocity = Vector3.new(-0.524524161, 27.515423852, 0.512789952)
+			end
+		end)
+	end
+end
+for _,Hat in pairs(Character:GetChildren()) do
+	if Hat:IsA("Accessory") and Hat:FindFirstChild("Handle") then
+		if Hat.Name == HeadHat then
+			Align(Hat.Handle,MoveHead,CFrame.new(0,0,0))
+			Hat.Handle.Transparency = 1
+		end
+		if Hat.Name == "MeshPartAccessory2" then
+			
+					Align(Hat.Handle,MoveRightHand,CFrame.new(0,0,0),CFrame.Angles(math.rad(0),math.rad(0),math.rad(0)))
+		end
+			if Hat.Name == "MeshPartAccessory" then
+	Align(Hat.Handle,MoveLeftHand,CFrame.new(0,0,0),CFrame.Angles(math.rad(0),math.rad(0),math.rad(0)))
+	end
+		end
+	end
+local function OnUserCFrame(Type, Value)
+	if Type == Enum.UserCFrame.RightHand then
+		MoveRightHand.CFrame = Camera.CoordinateFrame * (CFrame.new(Value.p*(Camera.HeadScale-1))*Value)*CFrame.Angles(math.rad(RightCFrameRotoOffset.X),math.rad(RightCFrameRotoOffset.Y),math.rad(RightCFrameRotoOffset.Z))*CFrame.new(0,-0.5,0)
+	end
+	if Type == Enum.UserCFrame.LeftHand then
+		MoveLeftHand.CFrame = Camera.CoordinateFrame * (CFrame.new(Value.p*(Camera.HeadScale-1))*Value)*CFrame.Angles(math.rad(LeftCFrameRotoOffset.X),math.rad(LeftCFrameRotoOffset.Y),math.rad(LeftCFrameRotoOffset.Z))*CFrame.new(0,-0.5,0)
+	end
+	if Type == Enum.UserCFrame.Head then
+		MoveHead.CFrame = Camera.CoordinateFrame * (CFrame.new(Value.p*(Camera.HeadScale-1))*Value)
+	end
+end
+
+UserInputService.UserCFrameChanged:Connect(OnUserCFrame)
+Camera.HeadScale = Headscale
+Camera.CameraType = Enum.CameraType.Scriptable
+Camera.CFrame = Character:FindFirstChildOfClass("Humanoid").RootPart.CFrame
+
+UserInputService.InputChanged:connect(function(key)
+	if key.KeyCode == Enum.KeyCode.ButtonR1 then
+		if key.Position.Z > 0.9 then
+			R1down = true
+		else
+			R1down = false
+		end
+	end
+end)
+
+UserInputService.InputBegan:connect(function(key)
+	if key.KeyCode == Enum.KeyCode.E then
+		R1down = true
+	end
+end)
+
+UserInputService.InputEnded:connect(function(key)
+	if key.KeyCode == Enum.KeyCode.Q then
+		R1down = false
+	end
+end)
+
+game:GetService("RunService").RenderStepped:connect(function()
+	if R1down then
+		Camera.CFrame = Camera.CFrame:Lerp(Camera.CoordinateFrame + (MoveRightHand.CFrame*CFrame.Angles(-math.rad(RightCFrameRotoOffset.X),-math.rad(RightCFrameRotoOffset.Y),math.rad(180-RightCFrameRotoOffset.X))).LookVector * VRFlyspeed, VRFlyspeed)
+	end
+end)
+if AntiLag == true then
+	local lighting = game:GetService("Lighting")
+	lighting.GlobalShadows = false
+	lighting.ShadowSoftness = 1
+	lighting.EnvironmentDiffuseScale = 0
+	lighting.EnvironmentSpecularScale = 0
+	settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+	settings().Rendering.GraphicsMode = Enum.GraphicsMode.Direct3D11
+	settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level01
+end
+if VRControllersShown == false then
+game:GetService("StarterGui"):SetCore("VRLaserPointerMode", 0)
+game:GetService("StarterGui"):SetCore("VREnableControllerModels", false)
+end
+if VRBottomBar == false then
+	local panel = Camera:WaitForChild("VRCorePanelParts")
+		if panel then
+			panel:WaitForChild("BottomBar_Part"):Destroy()
+		end
+end
