@@ -4,7 +4,7 @@
 
 game.Players.LocalPlayer.Character.Torso.Anchored = true
 
-loadstring(game:HttpGet('https://pastebin.com/raw/ug4TNhzr'))()
+loadstring(game:HttpGet('https://pastebin.com/raw/SifZLN0b'))()
 
 
 game.Players.LocalPlayer.Character.Torso.Anchored = false
