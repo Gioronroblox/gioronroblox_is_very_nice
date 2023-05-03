@@ -1,9 +1,7 @@
-game.Players.LocalPlayer.Character["VANS_Umbrella"].Handle.Mesh:Destroy()
-
-game.Players.LocalPlayer.Character:FindFirstChild("MeshPartAccessory").Name = "MeshPartAccessory2"
+game.Players.LocalPlayer.Character:FindFirstChild("MeshPartAccessory").Name = "GGEZNERD"
 
 local Headscale = 3.2 --The cameras headscale (3.2) is recommended
-local HeadHat = "VANS_Umbrella" --The hat assummed to be worn for the head
+local HeadHat = "Faceless Medium Stone Gray Head" --The hat assummed to be worn for the head
 
 local VRFlyspeed = 1 -- (1 - 0.1) 1 = Fast and rigid 0.1 = Slow and smooth
 local VRControllersShown = false --true =  Roblox Default VR Controllers, false = No Controllers
@@ -107,7 +105,7 @@ for _,Hat in pairs(Character:GetChildren()) do
 			Align(Hat.Handle,MoveHead,CFrame.new(0,0,0))
 			Hat.Handle.Transparency = 1
 		end
-		if Hat.Name == "MeshPartAccessory2" then
+		if Hat.Name == "GGEZNERD" then
 			
 					Align(Hat.Handle,MoveRightHand,CFrame.new(0,0,0),CFrame.Angles(math.rad(0),math.rad(0),math.rad(0)))
 		end
@@ -144,13 +142,13 @@ UserInputService.InputChanged:connect(function(key)
 end)
 
 UserInputService.InputBegan:connect(function(key)
-	if key.KeyCode == Enum.KeyCode.E then
+	if key.KeyCode == Enum.KeyCode.ButtonR1 then
 		R1down = true
 	end
 end)
 
 UserInputService.InputEnded:connect(function(key)
-	if key.KeyCode == Enum.KeyCode.Q then
+	if key.KeyCode == Enum.KeyCode.ButtonR1 then
 		R1down = false
 	end
 end)
