@@ -1,4 +1,4 @@
-loadstring(game:HttpGet("https://pastebin.com/raw/SifZLN0b"))()
+loadstring(game:HttpGet("https://pastebin.com/raw/ug4TNhzr"))()
 
 --- Did actually rework heavily away from original neptunian, and the non-rework neptunian. --NoobyGames12
 --- Was supposed to be for the770zone, or VengefulProgram.
@@ -5179,7 +5179,7 @@ kan.Volume = 1.15
 kan.TimePosition = 0
 kan.PlaybackSpeed = 1.01
 kan.Pitch = 1.01
-kan.SoundId = "rbxassetid://1837070127
+kan.SoundId = "rbxassetid://1873219898
 kan.Name = "nepnepnep"
 kan.Looped = true
 kan:Play()
