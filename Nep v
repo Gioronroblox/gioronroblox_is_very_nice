@@ -5179,7 +5179,7 @@ kan.Volume = 1.15
 kan.TimePosition = 0
 kan.PlaybackSpeed = 1.01
 kan.Pitch = 1.01
-kan.SoundId = "rbxassetid://1873219898" --525289865,1873219898,381991270
+kan.SoundId = "rbxassetid://1837070127
 kan.Name = "nepnepnep"
 kan.Looped = true
 kan:Play()
@@ -7246,19 +7246,19 @@ if equipped == true then
 end
 end)
 mouse.KeyDown:connect(function(k)
-if k == "f" and attack == false and equipped == false then
+if k == "g" and attack == false and equipped == false then
 	equip()
-elseif k == "f" and attack == false and equipped == true then
+elseif k == "g" and attack == false and equipped == true then
    unequip()
 end
-if k == "r" and attack == false then
+if k == "t" and attack == false then
 superjump()
 end
 if equipped == true then
 if k == "z" and attack == false then
 spinnyblade()
 end
-if k == "bozo" and attack == false then
+if k == "x" and attack == false then
 eightbitmegablade()
 end
 if k == "c" and attack == false then
