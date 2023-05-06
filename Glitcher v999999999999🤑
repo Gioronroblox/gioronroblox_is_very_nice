@@ -4,7 +4,7 @@ game.Players.LocalPlayer.Character["another wing"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["MeshPartAccessory"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["fff_fox"].Handle.Mesh:Destroy()
 --BRO THIS SCRIPT DON'T USE SCRIPT = IDKNUMBER, SCRIPT.PARENT = CHARACTER???
-loadstring(game:HttpGet(("https://pastebin.com/raw/gmyrx1F1"),true))() --reanim 
+loadstring(game:HttpGet(("https://pastebin.com/raw/SifZLN0b"),true))() --reanim 
 
 --//====================================================\\-
 --||               CHAOTIC GLITCHER
