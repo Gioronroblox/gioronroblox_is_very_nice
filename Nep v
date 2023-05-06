@@ -1,4 +1,4 @@
-loadstring(game:HttpGet("https://pastebin.com/raw/SifZLN0b"))()
+loadstring(game:HttpGet("https://pastebin.com/raw/ug4TNhzr"))()
 
 --- Did actually rework heavily away from original neptunian, and the non-rework neptunian. --NoobyGames12
 --- Was supposed to be for the770zone, or VengefulProgram.
@@ -5118,15 +5118,13 @@ Part475.RightSurface = Enum.SurfaceType.SmoothNoOutlines
 Part475.RotVelocity = Vector3.new(-2.08372262e-06, 1.18487212e-14, 1.58565669e-07)
 Part475.TopSurface = Enum.SurfaceType.SmoothNoOutlines
 Part475.brickColor = BrickColor.new("Mid gray")
-
-game:GetService("Players").LocalPlayer.Character["MeshPartAccessory"].Handle.att1_Handle.Parent = Part475
-Part475.att1_Handle.Rotation = Vector3.new(-45,-90,0)
-Part475.att1_Handle.Position = Vector3.new(-0,-2.5,0)
-
 SpecialMesh476.Parent = Part475
 SpecialMesh476.Scale = Vector3.new(0.349999994, 1.04999995, 0.5)
 SpecialMesh476.MeshType = Enum.MeshType.Brick 
 
+game:GetService("Players").LocalPlayer.Character["MeshPartAccessory"].Handle.att1_Handle.Parent = Part475
+Part475.att1_Handle.Rotation = Vector3.new(-45,-90,0)
+Part475.att1_Handle.Position = Vector3.new(-0,-2.5,0)
 
 for i,v in pairs(mas:GetChildren()) do
 	v.Parent = game:GetService("Players").LocalPlayer.Character
@@ -5181,12 +5179,70 @@ kan.Volume = 1.15
 kan.TimePosition = 0
 kan.PlaybackSpeed = 1.01
 kan.Pitch = 1.01
-kan.SoundId = "rbxassetid://1873219898" --525289865,1873219898,381991270
+kan.SoundId = "rbxassetid://1873219898
 kan.Name = "nepnepnep"
 kan.Looped = true
 kan:Play()
 
-local BanishMode = 1
+--------------------------- GUI STUFF
+local basgui = it("GuiMain")
+basgui.Parent = plr.PlayerGui
+basgui.Name = "VISgui"
+local fullscreenz = it("Frame")
+fullscreenz.Parent = basgui
+fullscreenz.BackgroundColor3 = Color3.new(255, 255, 255)
+fullscreenz.BackgroundTransparency = 1
+fullscreenz.BorderColor3 = Color3.new(17, 17, 17)
+fullscreenz.Size = UDim2.new(1, 0, 1, 0)
+fullscreenz.Position = UDim2.new(0, 0, 0, 0)
+local imgl2 = Instance.new("ImageLabel",fullscreenz)
+imgl2.BackgroundTransparency = 1
+imgl2.BorderSizePixel = 0
+imgl2.ImageTransparency = 0.5
+imgl2.ImageColor3 = Color3.new(1,0,0)
+imgl2.Position = UDim2.new(0.75,0,0.55,0)
+imgl2.Size = UDim2.new(0,600,0,600)
+imgl2.Image = "rbxassetid://320731120"
+local techc = imgl2:Clone()
+techc.Parent = fullscreenz
+techc.ImageTransparency = 0.5
+techc.Size = UDim2.new(0,700,0,700)
+techc.Position = UDim2.new(0.75,-50,0.55,-50)
+techc.ImageColor3 = Color3.new(0.5,0,1)
+techc.Image = "rbxassetid://521073910"
+local circl = imgl2:Clone()
+circl.Parent = fullscreenz
+circl.ImageTransparency = 0
+circl.Size = UDim2.new(0,500,0,500)
+circl.Position = UDim2.new(0.75,50,0.55,50)
+circl.ImageColor3 = Color3.new(0,0.5,1)
+circl.Image = "rbxassetid://997291547"
+local circl2 = imgl2:Clone()
+circl2.Parent = fullscreenz
+circl2.ImageTransparency = 0
+circl2.ImageColor3 = Color3.new(0.5,0,1)
+circl2.Image = "rbxassetid://997291547"
+local imgl2b = imgl2:Clone()
+imgl2b.Parent = fullscreenz
+imgl2b.ImageTransparency = 0
+imgl2b.Size = UDim2.new(0,500,0,500)
+imgl2b.Position = UDim2.new(0.75,50,0.55,50)
+local ned = Instance.new("TextLabel",fullscreenz)
+ned.ZIndex = 2
+ned.Font = "SciFi"
+ned.BackgroundTransparency = 1
+ned.BorderSizePixel = 0.65
+ned.Size = UDim2.new(0.4,0,0.2,0)
+ned.Position = UDim2.new(0.6,0,0.8,0)
+ned.TextColor3 = BrickColor.new("Royal purple").Color
+ned.TextStrokeColor3 = BrickColor.new("Cyan").Color
+ned.TextScaled = true
+ned.TextStrokeTransparency = 0
+ned.Text = "NEPTUNIAN V"
+ned.TextSize = 24
+ned.Rotation = 1
+--ned.TextXAlignment = "Right"
+ned.TextYAlignment = "Bottom"
 
 function CameraShake(Times, Power)
 coroutine.resume(coroutine.create(function()
