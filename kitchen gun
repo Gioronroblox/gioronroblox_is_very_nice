@@ -3,7 +3,6 @@ game.Players.LocalPlayer.Character["Pink Hair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy() --LavanderHair
 game.Players.LocalPlayer.Character["LavanderHair"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["Robloxclassicred"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["fff_fox"].Handle.Mesh:Destroy()
 
 local c = game.Players.LocalPlayer.Character
 for i, v in pairs({"Right Arm", "Left Arm"}) do
