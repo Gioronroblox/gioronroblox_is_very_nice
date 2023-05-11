@@ -857,14 +857,14 @@ hat2:BreakJoints()
 local weld2 = Instance.new("Weld",hat2)
 weld2.Part0 = SniperH
 weld2.Part1 = hat2
-weld2.C0 = CFrame.new(-2.0,-3,0) * CFrame.Angles(math.rad(90), math.rad(230), math.rad(90))
+weld2.C0 = CFrame.new(-2.0,-3,0) * CFrame.Angles(math.rad(180), math.rad(230), math.rad(180))
 
 local hat3 = game.Players.LocalPlayer.Character['AJBackAccessory'].Handle
 hat3:BreakJoints()
 local weld3 = Instance.new("Weld",hat3)
 weld3.Part0 = ShottyH
 weld3.Part1 = hat3
-weld3.C0 =  CFrame.new(0,-1.5,-0.5) * CFrame.Angles(math.rad(0),0, math.rad(180))
+weld3.C0 =  CFrame.new(0,-1.5,-0.5) * CFrame.Angles(math.rad(0),0, math.rad(90))
 
 local hat4 = game.Players.LocalPlayer.Character['Cartoony Rainbow Mk.50'].Handle
 hat4:BreakJoints()
