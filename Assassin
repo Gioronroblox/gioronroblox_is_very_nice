@@ -1,4 +1,37 @@
-loadstring(game:HttpGet(('https://pastebin.com/raw/SifZLN0b'),true))()
+game.Players.LocalPlayer.Character["RunningBull"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["Hat"].Handle.Mesh:Destroy()
+
+loadstring(game:HttpGet(("https://pastebin.com/raw/SifZLN0b"),true))() --reanim 
+
+local folder = game:GetObjects('rbxassetid://10012397982')[1]
+folder.Parent = game.Players.LocalPlayer.Character
+
+local lp = game:GetService("Players").LocalPlayer
+local rs = game:GetService("RunService")
+local stepped = rs.Stepped
+local heartbeat = rs.Heartbeat
+local renderstepped = rs.RenderStepped
+local sg = game:GetService("StarterGui")
+local ws = game:GetService("Workspace")
+local cf = CFrame.new
+local v3 = Vector3.new
+local v3_0 = Vector3.zero
+local inf = math.huge
+
+local cplayer = lp.Character
+
+local v3 = Vector3.new
+
+local function gp(parent, name, className)
+    if typeof(parent) == "Instance" then
+        for i, v in pairs(parent:GetChildren()) do
+            if (v.Name == name) and v:IsA(className) then
+                return v
+            end
+        end
+    end
+    return nil
+end
 
 
 ------------
@@ -852,7 +885,7 @@ weld.Part0 = alignto
 weld.Part1 = hat
 weld.C0 = CFrame.new(0, 0, 0.1) * CFrame.Angles(math.rad(135), math.rad(0), 0)
 
-local hat2 = game.Players.LocalPlayer.Character['MeshPartAccessory'].Handle
+local hat2 = game.Players.LocalPlayer.Character['Hat'].Handle
 hat2:BreakJoints()
 local weld2 = Instance.new("Weld",hat2)
 weld2.Part0 = SniperH
@@ -860,7 +893,7 @@ weld2.Part1 = hat2
 weld2.C0 = CFrame.new(0, 0, 0) * CFrame.Angles(math.rad(90), math.rad(-180), math.rad(45))
 --CFrame.new(0, 3, -0.1) * CFrame.Angles(math.rad(90), math.rad(88), math.rad(48))
 
-local hat3 = game.Players.LocalPlayer.Character['Keyboard'].Handle
+local hat3 = game.Players.LocalPlayer.Character['RunningBull'].Handle
 hat3:BreakJoints()
 local weld3 = Instance.new("Weld",hat3)
 weld3.Part0 = ShottyH
