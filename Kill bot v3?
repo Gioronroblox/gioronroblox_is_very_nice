@@ -1,6 +1,6 @@
 game.Players.LocalPlayer.Character["DiwaliHat"].Handle.Mesh:Destroy()
 game.Players.LocalPlayer.Character["AppleMenaCoffePour"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["fff_fox"].Handle.Handle:Destroy()
+game.Players.LocalPlayer.Character["PrimeRaven"].Handle.Handle:Destroy()
 
 loadstring(game:HttpGet(("https://pastebin.com/raw/SifZLN0b"),true))() --reanim 
 
@@ -48,7 +48,7 @@ att2.Parent = cplayer["Right Arm"]
 att2.Position = Vector3.new(-0, 0.5, -0)
 att2.Rotation = Vector3.new(90, -30, 0)
 
-local hat2 = gp(cplayer, "fff_fox", "Accessory")
+local hat2 = gp(cplayer, "PrimeRaven", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Right Arm"]
