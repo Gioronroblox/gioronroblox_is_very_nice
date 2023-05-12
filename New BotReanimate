@@ -1,0 +1,139 @@
+game.Players.LocalPlayer.Character["SeeMonkey"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["Pink Hair"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["Kate Hair"].Handle.Mesh:Destroy() --LavanderHair
+game.Players.LocalPlayer.Character["LavanderHair"].Handle.Mesh:Destroy()
+game.Players.LocalPlayer.Character["Robloxclassicred"].Handle.Mesh:Destroy()
+
+game.TestService.IsSleepAllowed = false
+for i,v in next, game:GetService("Players").LocalPlayer.Character:GetDescendants() do
+	if v:IsA("BasePart") then 
+		game:GetService("RunService").Heartbeat:connect(function()
+			v.Velocity = Vector3.new(-40,0,-10)
+			pcall(function()
+				v.CanCollide = false
+			end)
+			pcall(function()
+				v.CanQuery = false
+			end)
+		end)
+	end
+end
+
+Bypass = "death"
+loadstring(game:GetObjects("rbxassetid://5325226148")[1].Source)()
+
+
+plr = game.Players.LocalPlayer 
+char = Workspace.non
+
+ 
+for i,v in pairs(char:GetChildren()) do -- gets all ur characters children
+if v:IsA("Accessory") and v.Name == "SeeMonkey" then -- dex name for the hat 
+v.Name = "SeeMonkey" -- name it whatever you want
+end
+end
+char["SeeMonkey"].Handle.AccessoryWeld:Destroy() -- destroys the accessoryweld
+att0 = Instance.new("Attachment",char["SeeMonkey"].Handle) -- creates a attachment into the hat
+att0.Orientation = Vector3.new(90, 0, 0) -- rotation
+att0.Position = Vector3.new(0, 0, 0) -- position
+att1 = Instance.new("Attachment",char["Torso"]) -- what body part that the hat should be attached to (to make it work with r15 go down
+ap = Instance.new("AlignPosition",char["SeeMonkey"].Handle) -- align position
+ap.Attachment0 = att0
+ap.Attachment1 = att1
+ap.RigidityEnabled = true -- if its false it will make the hat be wobbly
+ao = Instance.new("AlignOrientation",char["SeeMonkey"].Handle) -- align rotation
+ao.Attachment0 = att0
+ao.Attachment1 = att1
+ao.RigidityEnabled = true -- if its false it will make the hat be wobbly
+
+for i,v in pairs(char:GetChildren()) do -- gets all ur characters children
+if v:IsA("Accessory") and v.Name == "Pink Hair" then -- dex name for the hat 
+v.Name = "Pink Hair" -- name it whatever you want
+end
+end
+char["Pink Hair"].Handle.AccessoryWeld:Destroy() -- destroys the accessoryweld
+att0 = Instance.new("Attachment",char["Pink Hair"].Handle) -- creates a attachment into the hat
+att0.Orientation = Vector3.new(90, -0, 0) -- rotation
+att0.Position = Vector3.new(0, -0, -0) -- position
+att1 = Instance.new("Attachment",char["Left Arm"]) -- what body part that the hat should be attached to (to make it work with r15 go down
+ap = Instance.new("AlignPosition",char["Pink Hair"].Handle) -- align position
+ap.Attachment0 = att0
+ap.Attachment1 = att1
+ap.RigidityEnabled = true -- if its false it will make the hat be wobbly
+ao = Instance.new("AlignOrientation",char["Pink Hair"].Handle) -- align rotation
+ao.Attachment0 = att0
+ao.Attachment1 = att1
+ao.RigidityEnabled = true -- if its false it will make the hat be wobbly
+
+ 
+for i,v in pairs(char:GetChildren()) do -- gets all ur characters children
+if v:IsA("Accessory") and v.Name == "Kate Hair" then -- dex name for the hat 
+v.Name = "Kate Hair" -- name it whatever you want
+end
+end
+char["Kate Hair"].Handle.AccessoryWeld:Destroy() -- destroys the accessoryweld
+att0 = Instance.new("Attachment",char["Kate Hair"].Handle) -- creates a attachment into the hat
+att0.Orientation = Vector3.new(90, 0, 0) -- rotation
+att0.Position = Vector3.new(0, -0, -0) -- position
+att1 = Instance.new("Attachment",char["Right Arm"]) -- what body part that the hat should be attached to (to make it work with r15 go down
+ap = Instance.new("AlignPosition",char["Kate Hair"].Handle) -- align position
+ap.Attachment0 = att0
+ap.Attachment1 = att1
+ap.RigidityEnabled = true -- if its false it will make the hat be wobbly
+ao = Instance.new("AlignOrientation",char["Kate Hair"].Handle) -- align rotation
+ao.Attachment0 = att0
+ao.Attachment1 = att1
+ao.RigidityEnabled = true -- if its false it will make the hat be wobbly
+ 
+  
+for i,v in pairs(char:GetChildren()) do -- gets all ur characters children
+if v:IsA("Accessory") and v.Name == "LavanderHair" then -- dex name for the hat 
+v.Name = "LavanderHair" -- name it whatever you want
+end
+end
+char["LavanderHair"].Handle.AccessoryWeld:Destroy() -- destroys the accessoryweld
+att0 = Instance.new("Attachment",char["LavanderHair"].Handle) -- creates a attachment into the hat
+att0.Orientation = Vector3.new(90, 0, 0)-- rotation
+att0.Position = Vector3.new(0, 0, 0) -- position
+att1 = Instance.new("Attachment",char["Right Leg"]) -- what body part that the hat should be attached to (to make it work with r15 go down
+ap = Instance.new("AlignPosition",char["LavanderHair"].Handle) -- align position
+ap.Attachment0 = att0
+ap.Attachment1 = att1
+ap.RigidityEnabled = true -- if its false it will make the hat be wobbly
+ao = Instance.new("AlignOrientation",char["LavanderHair"].Handle) -- align rotation
+ao.Attachment0 = att0
+ao.Attachment1 = att1
+ao.RigidityEnabled = true -- if its false it will make the hat be wobbly
+ 
+   
+for i,v in pairs(char:GetChildren()) do -- gets all ur characters children
+if v:IsA("Accessory") and v.Name == "Robloxclassicred" then -- dex name for the hat 
+v.Name = "Robloxclassicred" -- name it whatever you want
+end
+end
+char["Robloxclassicred"].Handle.AccessoryWeld:Destroy() -- destroys the accessoryweld
+att0 = Instance.new("Attachment",char["Robloxclassicred"].Handle) -- creates a attachment into the hat
+att0.Orientation = Vector3.new(90, 0, 0)-- rotation
+att0.Position = Vector3.new(-0, 0, 0)  -- position
+att1 = Instance.new("Attachment",char["Left Leg"]) -- what body part that the hat should be attached to (to make it work with r15 go down
+ap = Instance.new("AlignPosition",char["Robloxclassicred"].Handle) -- align position
+ap.Attachment0 = att0
+ap.Attachment1 = att1
+ap.RigidityEnabled = true -- if its false it will make the hat be wobbly
+ao = Instance.new("AlignOrientation",char["Robloxclassicred"].Handle) -- align rotation
+ao.Attachment0 = att0
+ao.Attachment1 = att1
+ao.RigidityEnabled = true -- if its false it will make the hat be wobbly
+
+for i,v in next, char:GetDescendants() do
+	if v:IsA("BasePart") then 
+		game:GetService("RunService").Heartbeat:connect(function()
+			pcall(function()
+				v.CanCollide = false
+			end)
+			pcall(function()
+				v.CanQuery = false
+			end)
+		end)
+	end
+end
