@@ -1,0 +1,36 @@
+-- Methods
+local Methods = loadstring(game:HttpGet("https://raw.githubusercontent.com/coolsk8rboy/The-John-Cena-Factory/main/JohnCenasMain.lua"))()
+-- Setup
+Methods:SetIdleAnimation(10842851957, 0.2)
+Methods:SetWalkAnimation(10856503017, 0.2)
+Methods:SetWalkSpeed(8)
+Methods:EnableSprinting(9185718057, 0.2, 16)
+-- Fling
+Methods:BodyPartFlingOnTouch("Right Arm")
+Methods:BodyPartFlingOnTouch("Left Arm")
+Methods:BodyPartFlingOnTouch("Right Leg")
+Methods:BodyPartFlingOnTouch("Left Leg")
+-- Attacks
+Methods:NewAttack("Attack1", "z", 11904689765, -.6, 5)
+Methods:NewAttack("Attack2", "x", 11904600628, -.6, 5)
+Methods:NewAttack("Attack3", "c", 11159546054, .1, 3)
+Methods:NewAttack("Attack4", "v", 11159545307, .1, 3)
+Methods:NewAttack("Attack5", "b", 11159544716, .1, 1)
+Methods:NewAttack("Attack6", "m", 9189912488, .1, 2)
+Methods:NewAttack("Attack7", "e", 9185655675, .1, 0)
+Methods:NewAttack("Attack8", "f", 9185698427, .1, 0)
+-- Finishing up
+Methods:SetScriptCreator("CROAXER made and MAXILITO(animations)")
+Methods:SystemMessage([[Controls:
+z - slash 1
+x - slash 2
+c - grab soul 1 lol
+v - grab soul 2 lol
+b - blinded
+e - scream
+f - block attacks
+m - final attack 
+Left Alt - Sprint
+]])
+Methods:PlaySound(7024340270, true)
+Methods:RunScript()
