@@ -1,7 +1,5 @@
-game.Players.LocalPlayer.Character["RunningBull"].Handle.Mesh:Destroy()
-game.Players.LocalPlayer.Character["Hat"].Handle.Mesh:Destroy()
 
-loadstring(game:HttpGet(("https://pastebin.com/raw/SifZLN0b"),true))() --reanim 
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/Gioronroblox/gioronroblox_is_very_nice/main/New%20reanimation%20v5"),true))() --reanim 
 
 local folder = game:GetObjects('rbxassetid://10012397982')[1]
 folder.Parent = game.Players.LocalPlayer.Character
