@@ -1,4 +1,4 @@
-loadstring(game:HttpGet('https://pastebin.com/raw/ug4TNhzr'))()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Gioronroblox/gioronroblox_is_very_nice/main/New%20reanimation%20v%202'))()
 
 local script = game:GetObjects("rbxassetid://13179307551")[1] --13178470959
 script.Parent = game:GetService("Players").LocalPlayer  --Mouse = Player:GetMouse() 
