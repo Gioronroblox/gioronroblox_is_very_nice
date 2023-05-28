@@ -147,7 +147,7 @@ Livesy.TextSize = 38.000
 Livesy.MouseButton1Down:connect(function()
 
 --Reanimate
-loadstring(game:HttpGet(("https://pastebin.com/raw/GYbekeRj"),true))()
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/Gioronroblox/gioronroblox_is_very_nice/main/New%20reanimation%20v%201"),true))()
 
 local playing = false
 local rtrnv;
