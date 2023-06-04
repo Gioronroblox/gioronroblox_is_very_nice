@@ -886,11 +886,11 @@ local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Right Leg"]
 att2.Position = Vector3.new(-0, -0, 0) --Robloxclassicred
-att2.Rotation = Vector3.new(-90, -90, 90)
+att2.Rotation = Vector3.new(0, 90, 90)
 
 local hat2 = gp(cplayer, "RectangleHead", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Left Leg"]
 att2.Position = Vector3.new(-0, 0, 0)
-att2.Rotation = Vector3.new(-90, -90, 90)
+att2.Rotation = Vector3.new(0, -90, 90)
