@@ -1,5 +1,51 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Gioronroblox/gioronroblox_is_very_nice/main/Reanim%20v1%20(paid)"))()
 
+local Global = (getgenv and getgenv()) or getfenv(0)
+local ReanimateData = Global.ReanimateData
+
+local CA = CFrame.Angles
+local Random = math.random
+
+local isnetworkowner = isnetworkowner or function(Part)
+	return Part.ReceiveAge == 0
+end
+
+local RunService = game:GetService("RunService")
+local Client = game:GetService("Players").LocalPlayer
+local Character = Client.Character
+local RootPart = Character:WaitForChild("HumanoidRootPart", 10)
+local Mouse = Client:GetMouse()
+
+local Bullet = ReanimateData.FlingPart
+warn(Bullet.Name)
+local Connections = ReanimateData.Connections
+ReanimateData.FlingEnabled = true
+local Flinging = false
+table.insert(Connections, Mouse.Button1Down:Connect(function()
+	Flinging = true
+end))
+
+table.insert(Connections, Mouse.Button1Up:Connect(function()
+	Flinging = false
+end))
+local OffsetDown = CFrame.new(0, -12, 0)
+local Rotation = CA(Random(-360,360),Random(-360,360),Random(-360,360))
+local V3 = Vector3.new
+table.insert(Connections, RunService.Heartbeat:Connect(function()
+	Rotation = CA(Random(-360,360),Random(-360,360),Random(-360,360))
+	if (Bullet and isnetworkowner(Bullet)) then
+		if Flinging then
+			Bullet.RotVelocity = V3(0,7500,0)
+			if Mouse.Target ~= nil then
+				Bullet.CFrame = Mouse.Hit * Rotation
+			end
+		else
+			Bullet.RotVelocity = V3(0,Random(0, 30),0)
+			Bullet.CFrame = RootPart.CFrame * OffsetDown * Rotation
+		end
+	end
+end))
+
 --- Did actually rework heavily away from original neptunian, and the non-rework neptunian. --NoobyGames12
 --- Was supposed to be for the770zone, or VengefulProgram.
 
