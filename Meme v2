@@ -29,7 +29,7 @@ local FavIDs = {
 	}
 
 --Reanimate
-loadstring(game:HttpGet(("https://raw.githubusercontent.com/Gioronroblox/gioronroblox_is_very_nice/main/Reanim%20v1%20(paid)"),true))()
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/Gioronroblox/gioronroblox_is_very_nice/main/Reanimation%20v2%20(paid)"),true))()
 
 FELOADLIBRARY = {}
 loadstring(game:GetObjects("rbxassetid://5209815302")[1].Source)()
