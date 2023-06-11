@@ -1,0 +1,20 @@
+local Global = (getgenv and getgenv()) or getfenv(0)
+Global.ReanimateSettings = {
+    AntiSleep = true, -- Recommended: True
+    AntiVoid = true, -- Recommended: True
+    NoClip = true, -- Recommended: False
+    DynamicalVelocity = true, -- Recommended: True
+    Animations = true, -- Recommended: False for scripts / Other than that True.
+    ToolFling = false, -- Recommended: Up to you.
+    NewRunServiceEvents = true, -- Recommended: True
+
+    HatsType = "Default", -- "Default", "Free", "Custom"
+    CustomHats = { -- HatsType must be set to Custom in order for it to work / Fill the Value with TextureId of the hat.
+        ['Torso'] = {'rbxassetid://8634308160', CFrame.new(0,0,0), CFrame.Angles(0,0,0)},
+        ['Right Arm'] = {'rbxassetid://12344591101', CFrame.new(0,0,0), CFrame.Angles(-125,0,0)},
+        ['Left Arm'] = {'rbxassetid://12344545199', CFrame.new(0,0,0), CFrame.Angles(-125,0,0)},
+        ['Right Leg'] = {'rbxassetid://12876444737', CFrame.new(-0.25,-0.25,-0.25), CFrame.Angles(0,-90,90)},
+        ['Left Leg'] = {'rbxassetid://12876454636', CFrame.new(-0.25,-0.25,-0.25), CFrame.Angles(0,90,90)}
+    }
+}
+loadstring(game:HttpGet("https://raw.githubusercontent.com/toldblock/GelatekReanimateV2/main/main.lua"))()
