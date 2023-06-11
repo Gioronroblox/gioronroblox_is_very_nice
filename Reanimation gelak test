@@ -1,0 +1,22 @@
+local Global = (getgenv and getgenv()) or getfenv(0)
+local Rad = math.rad
+Global.ReanimateSettings = {
+    AntiSleep = true, -- Recommended: True
+    AntiVoid = true, -- Recommended: True
+    NoClip = false, -- Recommended: False
+    DynamicalVelocity = true, -- Recommended: True
+    Animations = false, -- Recommended: False for scripts / Other than that True.
+    ToolFling = true, -- Recommended: Up to you.
+    NewRunServiceEvents = true, -- Recommended: True
+    KeepCharacter = false, -- Recommended: false
+    ExtraOptimization = true, -- Recommended: Up to you.
+    DefinedHats = {
+        -- true: MeshId, false = TextureId
+        ["Right Arm"] = {"rbxassetid://12344591101", CFrame.new(0, 0, 0), CFrame.Angles(Rad(-125), 0, 0), true},
+        ["Left Arm"] = {"rbxassetid://12344545199", CFrame.new(0, 0, 0), CFrame.Angles(Rad(-125), 0, 0), true},
+        ["Right Leg"] = {"rbxassetid://12876444737", CFrame.new(0, 0, 0), CFrame.Angles(0, Rad(-90), Rad(90)), true},
+        ["Left Leg"] = {"rbxassetid://12876454636", CFrame.new(0, 0, 0), CFrame.Angles(0, Rad(90), Rad(90)), true},
+        ["Torso"] = {"rbxassetid://8634308160", CFrame.new(0, 0, 0), CFrame.Angles(0, 0, 0), true},
+    }
+}
+loadstring(game:HttpGet("https://raw.githubusercontent.com/toldblock/GelatekReanimateV2/main/main.lua"))()
