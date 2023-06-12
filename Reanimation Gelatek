@@ -10,11 +10,11 @@ Global.ReanimateSettings = {
 
     HatsType = "Free", -- "Default", "Free", "Custom"
     CustomHats = { -- HatsType must be set to Custom in order for it to work / Fill the Value with TextureId of the hat.
-        ["Right Arm"] = {"rbxassetid://12344591101", CFrame.new(0, 0, 0), CFrame.Angles(Rad(-125), 0, 0), true},
-        ["Left Arm"] = {"rbxassetid://12344545199", CFrame.new(0, 0, 0), CFrame.Angles(Rad(-125), 0, 0), true},
-        ["Right Leg"] = {"rbxassetid://12876444737", CFrame.new(0, 0, 0), CFrame.Angles(0, Rad(-90), Rad(90)), true},
-        ["Left Leg"] = {"rbxassetid://12876454636", CFrame.new(0, 0, 0), CFrame.Angles(0, Rad(90), Rad(90)), true},
-        ["Torso"] = {"rbxassetid://8634308160", CFrame.new(0, 0, 0), CFrame.Angles(0, 0, 0), true},
+        ["Right Arm"] = {"12344591101", CFrame.new(0, 0, 0), CFrame.Angles(Rad(-125), 0, 0), true},
+        ["Left Arm"] = {"12344545199", CFrame.new(0, 0, 0), CFrame.Angles(Rad(-125), 0, 0), true},
+        ["Right Leg"] = {"12876444737", CFrame.new(0, 0, 0), CFrame.Angles(0, Rad(-90), Rad(90)), true},
+        ["Left Leg"] = {"12876454636", CFrame.new(0, 0, 0), CFrame.Angles(0, Rad(90), Rad(90)), true},
+        ["Torso"] = {"8634308160", CFrame.new(0, 0, 0), CFrame.Angles(0, 0, 0), true},
     }
 }
 loadstring(game:HttpGet("https://raw.githubusercontent.com/toldblock/GelatekReanimateV2/main/main.lua"))()
