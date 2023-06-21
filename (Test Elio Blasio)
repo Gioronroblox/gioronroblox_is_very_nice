@@ -958,7 +958,7 @@ local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Right Arm"]
 att2.Position = Vector3.new(0, -1.75, -0.25)
-att2.Rotation = Vector3.new(0, 0, -15) --LavanderHair
+att2.Rotation = Vector3.new(90, 90, -15) --LavanderHair
 
 --[[
 local hat2 = gp(cplayer, "Carmesim_Cannonblade", "Accessory")
