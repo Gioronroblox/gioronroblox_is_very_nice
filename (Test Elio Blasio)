@@ -1,35 +1,5 @@
---[[
--gh 6311311281, 4504231783, 13456587428
-
-Limbs:
-https://www.roblox.com/catalog/12867898930/Grey-Smiley-Rectangle-Head
-https://www.roblox.com/catalog/12867904652/Light-Grey-Smiley-Rectangle-Head
-https://www.roblox.com/catalog/12867846420/Tall-Rectangle-Head-Grey
-https://www.roblox.com/catalog/12867841874/Tall-Rectangle-Head-Dark-Grey
-
-Torso:
-https://www.roblox.com/catalog/13456587428/Big-Torso-Black
-
-Head:
-https://www.roblox.com/catalog/12410453217/Giants-Eye
-
-Other:
-https://www.roblox.com/catalog/4504231783/Elemental-Crystal-Golem-Shoulder-Rock
-https://www.roblox.com/catalog/6311311281/Poison-Cannonblade
-]]--
- 
-
-game:GetService("StarterGui"):SetCore("SendNotification", { 
-	Title = "Melon's (FE) Converts/Scripts";
-	Text = "Thanks for using! QwQ";
-	Icon = "rbxthumb://type=Asset&id=11561641603&w=150&h=150"})
-Duration = 3;
-
-game:GetService("StarterGui"):SetCore("SendNotification", { 
-	Title = "Melon's (FE) Converts/Scripts";
-	Text = "Player Anchored to Avoid Fling...";
-	Icon = "rbxthumb://type=Asset&id=11561641603&w=150&h=150"})
-Duration = 3;
+local Charar = game.Players.LocalPlayer.Character
+Charar["RectangleHead"].Name = "dummyhead"
 
 game.TestService.IsSleepAllowed = false
 
@@ -868,16 +838,16 @@ local fling = false
 mouse.Button1Down:Connect(function()
 fling = true
 repeat
-game.Players.LocalPlayer.Character.RockAccessory.Handle.Position = mouse.Hit.Position
+game.Players.LocalPlayer.Character.fff_fox.Handle.Position = mouse.Hit.Position
 task.wait(0.1)
-game.Players.LocalPlayer.Character.RockAccessory.Handle.Position = game.Players.LocalPlayer.Character["Right Arm"].Position
+game.Players.LocalPlayer.Character.fff_fox.Handle.Position = game.Players.LocalPlayer.Character["Right Arm"].Position
 task.wait(0.1)
 until fling == false
 end)
 
 mouse.Button1Up:Connect(function()
     fling = false
-                    game.Players.LocalPlayer.Character.RockAccessory.Handle.Position = game.Players.LocalPlayer.Character["Right Arm"].Position
+                    game.Players.LocalPlayer.Character.fff_fox.Handle.Position = game.Players.LocalPlayer.Character["Right Arm"].Position
 end)
 
 omgHuman = game.Players.LocalPlayer.Character.HumanoidRootPart
@@ -940,54 +910,55 @@ local function gp(parent, name, className)
     return nil
 end
  
-local hat2 = gp(cplayer, "BigEye", "Accessory")
+local hat2 = gp(cplayer, "Nomads Gaze", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Head"]
-att2.Position = Vector3.new(-0, 1, 0)
+att2.Position = Vector3.new(-0, 0, 0)
 att2.Rotation = Vector3.new(0, 0, 0)
  
-local hat2 = gp(cplayer, "MeshPartAccessory", "Accessory")
+local hat2 = gp(cplayer, "Tetra-Suit", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
-att2.Parent = cplayer["Torso"]
-att2.Position = Vector3.new(-0, -0, 0)
-att2.Rotation = Vector3.new(0, 0, 0)
+att2.Parent = cplayer["Torso"] --any part of humanoid
+att2.Position = Vector3.new(-0, 0, 0)
+att2.Rotation = Vector3.new(0, 0, -0)--you can delete this 
 
-local hat2 = gp(cplayer, "RectangleFace", "Accessory")
+
+local hat2 = gp(cplayer, "Extra Left hand (Blocky)_white", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Left Arm"]
-att2.Position = Vector3.new(-0.4, -0.5, -0)
-att2.Rotation = Vector3.new(0, 0, 0)
+att2.Position = Vector3.new(-0, -0, -0)
+att2.Rotation = Vector3.new(-110, -0, 0)
 
-local hat2 = gp(cplayer, "RectangleHead1", "Accessory")
+local hat2 = gp(cplayer, "Extra Right hand (Blocky)_white", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
 att2.Parent = cplayer["Right Arm"]
-att2.Position = Vector3.new(0.4, -0.5, -0)
-att2.Rotation = Vector3.new(0, 0, 0) --LavanderHair
+att2.Position = Vector3.new(-0, -0, 0)
+att2.Rotation = Vector3.new(-110, 0, -0) --LavanderHair
 
-local hat2 = gp(cplayer, "Poison_Cannonblade", "Accessory")
+local hat2 = gp(cplayer, "dummyhead", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
-att2.Parent = cplayer["Right Arm"]
-att2.Position = Vector3.new(0, -4, -1)
-att2.Rotation = Vector3.new(60, 90, 0) --LavanderHair
+att2.Parent = cplayer["Right Leg"]
+att2.Position = Vector3.new(-0, -0.25, 0) --Robloxclassicred
+att2.Rotation = Vector3.new(90, 90, 0)
 
 local hat2 = gp(cplayer, "RectangleHead", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
-att2.Parent = cplayer["Right Leg"]
-att2.Position = Vector3.new(0.3, -0.7, 0) --Robloxclassicred
-att2.Rotation = Vector3.new(0, 0, 0)
+att2.Parent = cplayer["Left Leg"]
+att2.Position = Vector3.new(-0, -0.25, 0)
+att2.Rotation = Vector3.new(90, -90, 0)
 
-local hat2 = gp(cplayer, "RectangleFace1", "Accessory")
+local hat2 = gp(cplayer, "AJBackAccessory", "Accessory")
 local handle2 = gp(hat2, "Handle", "BasePart")
 local att2 = gp(handle2, "att1_Handle", "Attachment")
-att2.Parent = cplayer["Left Leg"]
-att2.Position = Vector3.new(-0.3, -0.7, 0) 
-att2.Rotation = Vector3.new(0, 0, 0)
+att2.Parent = cplayer["Right Arm"]
+att2.Position = Vector3.new(0, -1.75, -0.25)
+att2.Rotation = Vector3.new(60, 90, -15) --LavanderHair
 
 --[[
 local hat2 = gp(cplayer, "Carmesim_Cannonblade", "Accessory")
