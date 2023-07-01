@@ -1,0 +1,26 @@
+local Global = (getgenv and getgenv()) or getfenv(0)
+local Rad = math.rad
+Global.ReanimateSettings = {
+    AntiSleep = true, -- Recommended: True
+    AntiVoid = true, -- Recommended: True
+    NoClip = true, -- Recommended: False
+    DynamicalVelocity = true, -- Recommended: True
+    Animations = true, -- Recommended: False for scripts / Other than that True.
+    ToolFling = true, -- Recommended: Up to you.
+    NewRunServiceEvents = true, -- Recommended: True
+    KeepCharacter = true, -- Recommended: false
+    ExtraOptimization = true, -- Recommended: Up to you.
+    EagerBulkExecution = true, -- Recommended (various by pc) low end: false | medium-high: true
+
+    DefinedHats = { -- true: MeshId, false = TextureId
+        ['Torso1'] = {'rbxassetid://11499419610', CFrame.new(0,0,0), CFrame.Angles(Rad(180),0,0), false},
+        ['Torso2'] = {'nil', CFrame.new(0,0,0), CFrame.Angles(0,0,0), false},
+
+        ['Right Arm'] = {'http://www.roblox.com/asset/?id=11159284657', CFrame.new(0,0,0), CFrame.Angles(0,Rad(90), Rad(90)), false},
+        ['Left Arm'] = {'http://www.roblox.com/asset/?id=11159285454', CFrame.new(0,0,0), CFrame.Angles(0,Rad(-90), Rad(-90)), false},
+        ['Right Leg'] = {'rbxassetid://12652775021', CFrame.new(0,0.1,0), CFrame.Angles(0,Rad(90), 0), false},
+        ['Left Leg'] = {'http://www.roblox.com/asset/?id=11263219250', CFrame.new(0,-0.05,0), CFrame.Angles(0,Rad(90),Rad(90)), false},
+    }
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/toldblock/GelatekReanimateV2/main/Releases/Update1.lua"))()
