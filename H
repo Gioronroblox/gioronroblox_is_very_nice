@@ -1,4 +1,6 @@
 local Global = (getgenv and getgenv()) or getfenv(0)
+local CFN = CFrame.new
+local CFA = CFrame.Angles
 local Rad = math.rad
 Global.ReanimateSettings = {
     AntiSleep = true, -- Recommended: True
