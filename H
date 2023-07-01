@@ -13,13 +13,14 @@ Global.ReanimateSettings = {
     EagerBulkExecution = true, -- Recommended (various by pc) low end: false | medium-high: true
 
     DefinedHats = { -- true: MeshId, false = TextureId
-        ['Torso1'] = {'rbxassetid://4819722776', CFN(0,0,0), CFA(0,0,Rad(-15)), false},
-        ['Torso2'] = {'nil', CFN(0,0,0), CFA(0,0,0), false},
+{
+        ["Torso1"] = {'rbxassetid://4819722776', CFN(0,0,0), CFA(0,0,Rad(-15)), false},
+        ["Torso2"] = {'nil', CFN(0,0,0), CFA(0,0,0), false},
 
-        ['Right Arm'] = {'rbxassetid://4391374782', CFN(0,0,0), CFA(Rad(90), 0, Rad(-90)), false},
-        ['Left Arm'] = {'rbxassetid://4489233876', CFN(0,0,0), CFA(Rad(90), 0, Rad(90)), false},
-        ['Right Leg'] = {'rbxassetid://4154474807', CFN(0,0,0), CFA(Rad(-90), 0, Rad(90)), false},
-        ['Left Leg'] = {'rbxassetid://4094881938', CFN(0,0,0), CFA(Rad(-90), 0, Rad(-90)), false},
+        ["Right Arm"] = {'rbxassetid://4391374782', CFN(0,0,0), CFA(Rad(90), 0, Rad(-90)), false},
+        ["Left Arm"] = {'rbxassetid://4489233876', CFN(0,0,0), CFA(Rad(90), 0, Rad(90)), false},
+        ["Right Leg"] = {'rbxassetid://4154474807', CFN(0,0,0), CFA(Rad(-90), 0, Rad(90)), false},
+        ["Left Leg"] = {'rbxassetid://4094881938', CFN(0,0,0), CFA(Rad(-90), 0, Rad(-90)), false},
     }
 }
 
