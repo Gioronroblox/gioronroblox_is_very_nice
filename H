@@ -18,8 +18,8 @@ Global.ReanimateSettings = {
 
         ['Right Arm'] = {"rbxassetid://12344206675", CFrame.new(0,0,0), CFrame.Angles(Rad(-125),0,0), false},
         ['Left Arm'] = {"rbxassetid://12344207341", CFrame.new(0,0,0), CFrame.Angles(Rad(-125),0,0), false},
-        ['Right Leg'] = {"http://www.roblox.com/asset/?id=11159284657", CFrame.new(0,0,0), CFrame.Angles(0,Rad(90), Rad(90)), false},
-        ['Left Leg'] = {"http://www.roblox.com/asset/?id=11263219250", CFrame.new(0,0,0), CFrame.Angles(0,Rad(-90), Rad(90)), false},
+        ['Right Leg'] = {"http://www.roblox.com/asset/?id=11159284657", CFrame.new(0,0,0), CFrame.Angles(0,Rad(-90), Rad(90)), false},
+        ['Left Leg'] = {"http://www.roblox.com/asset/?id=11263219250", CFrame.new(0,0,0), CFrame.Angles(0,Rad(90), Rad(90)), false},
     }
 }
 
