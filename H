@@ -1,26 +1,45 @@
 local Global = (getgenv and getgenv()) or getfenv(0)
-local Rad = math.rad
-Global.ReanimateSettings = {
-    AntiSleep = true, -- Recommended: True
-    AntiVoid = true, -- Recommended: True
-    NoClip = true, -- Recommended: False
-    DynamicalVelocity = true, -- Recommended: True
-    Animations = true, -- Recommended: False for scripts / Other than that True.
-    ToolFling = true, -- Recommended: Up to you.
-    NewRunServiceEvents = true, -- Recommended: True
-    KeepCharacter = true, -- Recommended: false
-    ExtraOptimization = true, -- Recommended: Up to you.
-    EagerBulkExecution = true, -- Recommended (various by pc) low end: false | medium-high: true
+if not Global.KryptonReanimateConfig then
+	Global.KryptonReanimateConfig = {}
+end
 
-    DefinedHats = { -- true: MeshId, false = TextureId
-        ['Torso1'] = {"rbxassetid://13778226115", CFrame.new(0,0,0), CFrame.Angles(0,0,0), true},
-        ['Torso2'] = {'nil', CFrame.new(0,0,0), CFrame.Angles(0,0,0), false},
+local CFN, CFA, Rad = CFrame.new, CFrame.Angles, math.rad
+local function CheckSettings(Setting, DefaultValue)	
+	Global.KryptonReanimateConfig[Setting] = DefaultValue
+end
 
-        ['Right Arm'] = {"rbxassetid://12344206675", CFrame.new(0,0,0), CFrame.Angles(Rad(-125),0,0), false},
-        ['Left Arm'] = {"rbxassetid://12344207341", CFrame.new(0,0,0), CFrame.Angles(Rad(-125),0,0), false},
-        ['Right Leg'] = {"http://www.roblox.com/asset/?id=11159284657", CFrame.new(0,0,0), CFrame.Angles(0,Rad(-90), Rad(90)), false},
-        ['Left Leg'] = {"http://www.roblox.com/asset/?id=11263219250", CFrame.new(0,0,0), CFrame.Angles(0,Rad(90), Rad(90)), false},
-    }
-}
+CheckSettings("AntiSleep", true) -- (better stability)
+CheckSettings("AntiVoid", true) -- (avoids dying by void)
+CheckSettings("AntiVoidOffset", 75) -- (offset (fallenpartsdestroyheight + this)
+	-- Fling
+CheckSettings("FlingEnabled", false) -- (tool fling)
+CheckSettings("MouseFlingOnceReanimated", false) -- (automatic + prediction flinging)
+	-- Velocity / Claiming
+CheckSettings("VelocityMultiply", 5) -- multiples velocity, recommended: 5
+CheckSettings("PhysicsTweaks", true) -- enables settings() tweaks and some sethiddenprops
+	-- Rig Settings
+CheckSettings("NoClip", false) -- (allows to walk through parts)
+CheckSettings("RemoveBodyParts", true) -- (keeps bodyparts, not really stable!!!)
+	-- Misc
+CheckSettings("OldRunServices", false) -- (old runservices just in case roblox disables the new)
+CheckSettings("FastLoad", false) -- (faster loads, might be unstable in some scenarios)
+CheckSettings("Animations", true) -- (base roblox anims)	
+CheckSettings("LocalScriptSupport", false) -- makes the script work on localscripts
+	-- Funnies
+CheckSettings("BulletEffects", true) -- bullet effect
+CheckSettings("thesounds", false) -- just, dont.
+CheckSettings("Workspace.AntiSleep", false) -- gelatek reanimate type antisleep
+CheckSettings("LeaningAnims", false) -- leans whenever moving on sides, cool with animations
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/toldblock/GelatekReanimateV2/main/Releases/Update1.lua"))()
+	-- Hat Checks -- done
+CheckSettings("DefinedHats", { -- false: TextureId | true: MeshId
+	[1] = {'rbxassetid://13778226115', CFN(0,0,0), CFA(0,0,0), true}, -- Torso 1
+	[2] = {'nil', CFN(0,0,0), CFA(0,0,0), false}, -- Torso 2
+
+	[3] = {'rbxassetid://12344206675', CFN(0,0,0), CFA(Rad(-125), 0, 0), true}, -- Right Arm
+	[4] = {'rbxassetid://12344207341', CFN(0,0,0), CFA(Rad(-125), 0, 0), true}, -- Left Arm
+	[5] = {'rbxassetid://11159370334', CFN(0,0,0), CFA(0, Rad(-90), Rad(90)), true}, -- Right Leg
+	[6] = {'rbxassetid://11263221350', CFN(0,0,0), CFA(0, Rad(90), Rad(90)), true}, -- Left Leg
+})
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/toldblock/Krypton/main/src/reanimation.lua"))()
