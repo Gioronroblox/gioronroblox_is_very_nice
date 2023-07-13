@@ -1,4 +1,4 @@
-loadstring(game:HttpGet('https://pastebin.com/raw/ug4TNhzr'))()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Gioronroblox/Gioronroblox/main/(new)_Reanimation'))()
 
 plr = game.Players.LocalPlayer
 char = plr.Character
