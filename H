@@ -36,10 +36,10 @@ CheckSettings("DefinedHats", { -- false: TextureId | true: MeshId
 	[1] = {'rbxassetid://13778226115', CFN(0,0,0), CFA(0,0,0), true}, -- Torso 1
 	[2] = {'nil', CFN(0,0,0), CFA(0,0,0), false}, -- Torso 2
 
-	[3] = {"rbxassetid://12344206675", CFN(0,0,0), CFA(Rad(-125),0,0), true}, -- Right Arm
-	[4] = {"rbxassetid://12344207341", CFN(0,0,0), CFA(Rad(-125),0,0), true}, -- Left Arm
-	[5] = {'rbxassetid://11159370334', CFN(0,0,0), CFA(0, Rad(-90), Rad(90)), true}, -- Right Leg
-	[6] = {'rbxassetid://11263221350', CFN(0,0,0), CFA(0, Rad(90), Rad(90)), true}, -- Left Leg
+	[3] = {'rbxassetid://13610799467', CFN(0,0,0), CFA(Rad(90), 0, 90), true}, -- Right Arm
+	[4] = {'http://www.roblox.com/asset/?id=11159285454', CFN(0,0,0), CFA(Rad(-90), 0, 90), true}, -- Left Arm
+	[5] = {'http://www.roblox.com/asset/?id=11159284657', CFN(0,0,0), CFA(0, Rad(90), Rad(90)), true}, -- Right Leg
+	[6] = {'rbxassetid://11263221350', CFN(0,0,0), CFA(0, Rad(-90), Rad(90)), true}, -- Left Leg
 })
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/toldblock/Krypton/main/src/reanimation.lua"))()
