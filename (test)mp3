@@ -2,7 +2,7 @@ local omgcharaReal = game.Players.LocalPlayer.Character
 local Sound = Instance.new("Sound", omgcharaReal)
 local ChipS.mp3 = "Chips.mp3"
   if not isfile(ChipS.mp3) then
-writefile(ChipS.mp3, game:HttpGet("https://github.com/StrokeThePea/GelatekHubSongs/blob/main/Chips.mp3?raw=true"))
+writefile(ChipS.mp3, game:HttpGet("https://drive.google.com/uc?export=download&id=1HwtY3sJJ5pjn359tmDZvM3eYCMG0NHII"))
 end
 Sound.MaxDistance = inf
 Sound.SoundId = syn and getsynasset(ChipS.mp3) or getcustomasset(ChipS.mp3)
@@ -16,8 +16,6 @@ Charar["MeshPartAccessory"].Name = "Leg"
 
 player = game.Players.LocalPlayer
 cplayer = player.Character
-mouse = player:GetMouse()
-Mouse = mouse
 
 loadstring(game:HttpGet(('https://pastebin.com/raw/a104Jcs5'),true))()
 
